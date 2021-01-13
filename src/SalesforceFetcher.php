@@ -119,7 +119,7 @@ class SalesforceFetcher {
       TREX1__Course_Session__r.TREX1__Course__r.TREX1__Program__c,
       TREX1__Course_Session__r.TREX1__Course__r.TREX1__Program__r.name
     FROM TREX1__Course_Session_Option__c', $access_token);
-    
+
     $this->saveResultsToJson($result);
   }
 

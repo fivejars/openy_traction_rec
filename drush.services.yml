@@ -1,0 +1,6 @@
+services:
+  ypkc_salesforce.fetch:
+    class: \Drupal\ypkc_salesforce\Commands\SalesforceFetch
+    arguments: ['@ypkc_salesforce.fetcher']
+    tags:
+      - { name: drush.command }
