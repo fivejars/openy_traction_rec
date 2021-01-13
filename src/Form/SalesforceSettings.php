@@ -1,0 +1,87 @@
+<?php
+
+namespace Drupal\ypkc_salesforce\Form;
+
+use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Class SalesforceSettings.
+ *
+ * Build settings form for Salesfors integration.
+ */
+class SalesforceSettings extends ConfigFormBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'ypkc_salesforce_auth_settings_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return ['ypkc_salesforce.settings'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $config = $this->config('ypkc_salesforce.settings');
+
+    $form['consumer_key'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Salesforce consumer key'),
+      '#description' => $this->t('Consumer key of the Salesforce remote application you want to grant access to'),
+      '#required' => TRUE,
+      '#default_value' => $config->get('consumer_key'),
+    ];
+
+    $form['login_user'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Salesforce login user'),
+      '#description' => $this->t('User account to issue token to'),
+      '#required' => TRUE,
+      '#default_value' => $config->get('login_user'),
+    ];
+
+    $form['login_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Login URL'),
+      '#default_value' => $config->get('login_url'),
+      '#description' => $this->t('Enter a login URL, either https://login.salesforce.com or https://test.salesforce.com.'),
+      '#required' => TRUE,
+    ];
+
+    $form['private_key'] = [
+      '#type' => 'textarea',
+      '#rows' => 30,
+      '#title' => $this->t('RSA Private key'),
+      '#default_value' => $config->get('private_key'),
+      '#description' => $this->t('Private key, generated on 3 step in https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_key_and_cert.htm'),
+      '#required' => TRUE,
+    ];
+
+    return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+
+    $config = $this->config('ypkc_salesforce.settings');
+
+    $config->set('consumer_key', $form_state->getValue('consumer_key'));
+    $config->set('login_user', $form_state->getValue('login_user'));
+    $config->set('login_url', $form_state->getValue('login_url'));
+    $config->set('private_key', $form_state->getValue('private_key'));
+    $config->save();
+
+    parent::submitForm($form, $form_state);
+  }
+
+}

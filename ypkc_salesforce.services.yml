@@ -1,0 +1,4 @@
+services:
+  ypkc_salesforce.fetcher:
+    class: Drupal\ypkc_salesforce\SalesforceFetcher
+    arguments: ['@config.factory', '@http_client', '@file_system']
