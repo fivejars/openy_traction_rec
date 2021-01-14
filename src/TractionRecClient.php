@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Drupal\ypkc_salesforce;
-
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -11,12 +9,12 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
 /**
- * Class TractionRecClient.
+ * Salesforce HTTP client.
  */
 class TractionRecClient {
 
   /**
-   * The settings of dropzonejs.
+   * The Salesforce settings.
    *
    * @var \Drupal\Core\Config\ImmutableConfig
    */
@@ -36,6 +34,11 @@ class TractionRecClient {
    */
   protected $time;
 
+  /**
+   * Access token.
+   *
+   * @var string
+   */
   protected $accessToken;
 
   /**
@@ -55,7 +58,7 @@ class TractionRecClient {
   }
 
   /**
-   * Retrieves the access token
+   * Retrieves the access token.
    *
    * @return string
    *   Loaded access token.

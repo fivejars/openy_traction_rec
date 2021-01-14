@@ -1,10 +1,9 @@
 <?php
 
-
 namespace Drupal\ypkc_salesforce;
 
 /**
- * Class InvalidTokenException.
+ * Exception for wrong JWT access token errors.
  */
 class InvalidTokenException extends \Exception {
 

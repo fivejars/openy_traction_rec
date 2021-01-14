@@ -2,11 +2,7 @@
 
 namespace Drupal\ypkc_salesforce;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
-use Firebase\JWT\JWT;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Contains related to fetching from Salesforce functionality.
@@ -20,6 +16,11 @@ class SalesforceFetcher {
    */
   protected $storagePath = 'private://salesforce_import/';
 
+  /**
+   * Traction Rec Client service.
+   *
+   * @var \Drupal\ypkc_salesforce\TractionRecClient
+   */
   protected $tractionRecClient;
 
   /**
