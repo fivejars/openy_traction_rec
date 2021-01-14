@@ -56,6 +56,14 @@ class SalesforceSettings extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
+    $form['services_base_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Services base URL'),
+      '#default_value' => $config->get('services_base_url'),
+      '#description' => $this->t('Enter an URL, ex https://open-y-rec-dev-ed.my.salesforce.com/services/data/v49.0/'),
+      '#required' => TRUE,
+    ];
+
     $form['private_key'] = [
       '#type' => 'textarea',
       '#rows' => 30,
@@ -72,13 +80,12 @@ class SalesforceSettings extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
     $config = $this->config('ypkc_salesforce.settings');
-
     $config->set('consumer_key', $form_state->getValue('consumer_key'));
     $config->set('login_user', $form_state->getValue('login_user'));
     $config->set('login_url', $form_state->getValue('login_url'));
     $config->set('private_key', $form_state->getValue('private_key'));
+    $config->set('services_base_url', $form_state->getValue('services_base_url'));
     $config->save();
 
     parent::submitForm($form, $form_state);
