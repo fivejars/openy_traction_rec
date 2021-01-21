@@ -1,0 +1,122 @@
+[
+    {
+        "Name": "Deep Water",
+        "Id": "a0k4W00000DoH0cQAF",
+        "Description": "Deep Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+        "Rich_Description": null,
+        "Program": {
+            "Id": "a1Z4W00002A4CIaUAN",
+            "Name": "Aqua Fit"
+        }
+    },
+    {
+        "Name": "Shallow Water",
+        "Id": "a0k4W00000DoH0dQAF",
+        "Description": "Shallow Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+        "Rich_Description": null,
+        "Program": {
+            "Id": "a1Z4W00002A4CIaUAN",
+            "Name": "Aqua Fit"
+        }
+    },
+    {
+        "Name": "AF-Course1",
+        "Id": "a0k4W00000DoH0eQAF",
+        "Description": "AF-Course1 Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+        "Rich_Description": null,
+        "Program": {
+            "Id": "a1Z4W00002A4CIbUAN",
+            "Name": "Aqua Fusion"
+        }
+    },
+    {
+        "Name": "WWMC-Course1",
+        "Id": "a0k4W00000DoH0fQAF",
+        "Description": "WWMC-Course1 Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+        "Rich_Description": null,
+        "Program": {
+            "Id": "a1Z4W00002A4CIcUAN",
+            "Name": "Warm Water Movement Class"
+        }
+    },
+    {
+        "Name": "HIDW-Course1",
+        "Id": "a0k4W00000DoH0gQAF",
+        "Description": "HIDW-Course1 Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+        "Rich_Description": null,
+        "Program": {
+            "Id": "a1Z4W00002A4CIdUAN",
+            "Name": "High Intensity Deep Water Aqua Fit"
+        }
+    },
+    {
+        "Name": "Fitline Functional",
+        "Id": "a0k4W00000DoH0iQAF",
+        "Description": "Fitline Functional Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+        "Rich_Description": null,
+        "Program": {
+            "Id": "a1Z4W00002A4CIeUAN",
+            "Name": "FitLine"
+        }
+    },
+    {
+        "Name": "TRX",
+        "Id": "a0k4W00000DoH0jQAF",
+        "Description": "TRX Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+        "Rich_Description": null,
+        "Program": {
+            "Id": "a1Z4W00002A4CIeUAN",
+            "Name": "FitLine"
+        }
+    },
+    {
+        "Name": "U9 - Boys",
+        "Id": "a0k4W00000DoH0kQAF",
+        "Description": "U9 - Boys Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+        "Rich_Description": null,
+        "Program": {
+            "Id": "a1Z4W00002A4CIfUAN",
+            "Name": "Soccer"
+        }
+    },
+    {
+        "Name": "U9 - Girls",
+        "Id": "a0k4W00000DoH0lQAF",
+        "Description": "U9 - Girls Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+        "Rich_Description": null,
+        "Program": {
+            "Id": "a1Z4W00002A4CIfUAN",
+            "Name": "Soccer"
+        }
+    },
+    {
+        "Name": "Adult Mens",
+        "Id": "a0k4W00000DoH0mQAF",
+        "Description": "Adult Mens Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+        "Rich_Description": null,
+        "Program": {
+            "Id": "a1Z4W00002A4CIfUAN",
+            "Name": "Soccer"
+        }
+    },
+    {
+        "Name": "Adult Womens",
+        "Id": "a0k4W00000DoH0nQAF",
+        "Description": "Adult Womens Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+        "Rich_Description": null,
+        "Program": {
+            "Id": "a1Z4W00002A4CIfUAN",
+            "Name": "Soccer"
+        }
+    },
+    {
+        "Name": "Educational Play",
+        "Id": "a0k4W00000DoH0oQAF",
+        "Description": "Childrens educational play Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+        "Rich_Description": null,
+        "Program": {
+            "Id": "a1Z4W00002A4CIgUAN",
+            "Name": "Playtime"
+        }
+    }
+]

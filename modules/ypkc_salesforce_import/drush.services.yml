@@ -1,0 +1,6 @@
+services:
+  ypkc_salesforce_import.commands:
+    class: \Drupal\ypkc_salesforce_import\Commands\DrushCommands
+    arguments: ['@ypkc_salesforce_import.importer']
+    tags:
+      - { name: drush.command }

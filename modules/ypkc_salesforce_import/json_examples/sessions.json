@@ -1,0 +1,1605 @@
+{
+    "totalSize": 41,
+    "done": true,
+    "records": [
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3RQAQ",
+                "Name": "Only Option - with bookings",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 18,
+                "Start_Date": "2020-08-29",
+                "Start_Time": "9:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "5:00 pm",
+                "Day_of_Week": "Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 64,
+                "Age_Min": 12,
+                "Register_Online_From_Date": "2020-08-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2021-06-28",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 18,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Deep Water",
+                    "Id": "a0k4W00000DoH0cQAF",
+                    "Description": "Deep Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIaUAN",
+                        "Name": "Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3SQAQ",
+                "Name": "Campus A - I",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 13,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "10:00 am",
+                "Day_of_Week": "Monday;Wednesday;Friday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 33,
+                "Age_Min": 16,
+                "Register_Online_From_Date": "2020-05-24",
+                "Register_Online_From_Time": "3:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "10:02 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 13,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Deep Water",
+                    "Id": "a0k4W00000DoH0cQAF",
+                    "Description": "Deep Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIaUAN",
+                        "Name": "Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3TQAQ",
+                "Name": "Campus A - II",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 24,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "10:00 am",
+                "Day_of_Week": "Tuesday;Thursday;Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-08-01",
+                "Register_Online_From_Time": "12:45 AM",
+                "Register_Online_To_Date": "2021-02-08",
+                "Register_Online_To_Time": "11:15 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 24,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Deep Water",
+                    "Id": "a0k4W00000DoH0cQAF",
+                    "Description": "Deep Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIaUAN",
+                        "Name": "Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3UQAQ",
+                "Name": "Campus B - I",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 98,
+                "Start_Date": "2020-09-11",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "10:00 am",
+                "Day_of_Week": "Monday;Wednesday;Friday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-03",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2021-05-19",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 98,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Deep Water",
+                    "Id": "a0k4W00000DoH0cQAF",
+                    "Description": "Deep Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIaUAN",
+                        "Name": "Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3VQAQ",
+                "Name": "Campus B - II",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-31",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "10:00 am",
+                "Day_of_Week": "Tuesday;Thursday;Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-08-01",
+                "Register_Online_From_Time": "9:00 AM",
+                "Register_Online_To_Date": "2021-03-01",
+                "Register_Online_To_Time": "8:00 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Deep Water",
+                    "Id": "a0k4W00000DoH0cQAF",
+                    "Description": "Deep Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIaUAN",
+                        "Name": "Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3WQAQ",
+                "Name": "Monday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "4:00 pm",
+                "Day_of_Week": "Monday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-08-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2021-07-01",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Shallow Water",
+                    "Id": "a0k4W00000DoH0dQAF",
+                    "Description": "Shallow Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIaUAN",
+                        "Name": "Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3XQAQ",
+                "Name": "Tuesday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "4:00 pm",
+                "Day_of_Week": "Tuesday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-08-30",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2021-02-28",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Shallow Water",
+                    "Id": "a0k4W00000DoH0dQAF",
+                    "Description": "Shallow Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIaUAN",
+                        "Name": "Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3YQAQ",
+                "Name": "Wednesday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "4:00 pm",
+                "Day_of_Week": "Wednesday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "3:00 PM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Shallow Water",
+                    "Id": "a0k4W00000DoH0dQAF",
+                    "Description": "Shallow Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIaUAN",
+                        "Name": "Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3ZQAQ",
+                "Name": "Thursday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "4:00 pm",
+                "Day_of_Week": "Thursday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Shallow Water",
+                    "Id": "a0k4W00000DoH0dQAF",
+                    "Description": "Shallow Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIaUAN",
+                        "Name": "Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3aQAA",
+                "Name": "Friday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "4:00 pm",
+                "Day_of_Week": "Friday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Shallow Water",
+                    "Id": "a0k4W00000DoH0dQAF",
+                    "Description": "Shallow Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIaUAN",
+                        "Name": "Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3bQAA",
+                "Name": "Campus A - III",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "10:00 am",
+                "Day_of_Week": "Monday;Wednesday;Friday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "AF-Course1",
+                    "Id": "a0k4W00000DoH0eQAF",
+                    "Description": "AF-Course1 Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIbUAN",
+                        "Name": "Aqua Fusion"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3cQAA",
+                "Name": "Campus A - IV",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "10:00 am",
+                "Day_of_Week": "Tuesday;Thursday;Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "AF-Course1",
+                    "Id": "a0k4W00000DoH0eQAF",
+                    "Description": "AF-Course1 Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIbUAN",
+                        "Name": "Aqua Fusion"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3dQAA",
+                "Name": "Campus B - III",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "10:00 am",
+                "Day_of_Week": "Monday;Wednesday;Friday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "WWMC-Course1",
+                    "Id": "a0k4W00000DoH0fQAF",
+                    "Description": "WWMC-Course1 Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIcUAN",
+                        "Name": "Warm Water Movement Class"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3eQAA",
+                "Name": "Campus B - IV",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "10:00 am",
+                "Day_of_Week": "Tuesday;Thursday;Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "WWMC-Course1",
+                    "Id": "a0k4W00000DoH0fQAF",
+                    "Description": "WWMC-Course1 Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIcUAN",
+                        "Name": "Warm Water Movement Class"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3fQAA",
+                "Name": "Monday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "4:00 pm",
+                "Day_of_Week": "Monday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "WWMC-Course1",
+                    "Id": "a0k4W00000DoH0fQAF",
+                    "Description": "WWMC-Course1 Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIcUAN",
+                        "Name": "Warm Water Movement Class"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3gQAA",
+                "Name": "Tuesday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "4:00 pm",
+                "Day_of_Week": "Tuesday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "HIDW-Course1",
+                    "Id": "a0k4W00000DoH0gQAF",
+                    "Description": "HIDW-Course1 Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIdUAN",
+                        "Name": "High Intensity Deep Water Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3hQAA",
+                "Name": "Wednesday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "4:00 pm",
+                "Day_of_Week": "Wednesday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "HIDW-Course1",
+                    "Id": "a0k4W00000DoH0gQAF",
+                    "Description": "HIDW-Course1 Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIdUAN",
+                        "Name": "High Intensity Deep Water Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3iQAA",
+                "Name": "Thursday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "4:00 pm",
+                "Day_of_Week": "Thursday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "HIDW-Course1",
+                    "Id": "a0k4W00000DoH0gQAF",
+                    "Description": "HIDW-Course1 Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIdUAN",
+                        "Name": "High Intensity Deep Water Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3jQAA",
+                "Name": "Friday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 20,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "4:00 pm",
+                "Day_of_Week": "Friday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 20,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "HIDW-Course1",
+                    "Id": "a0k4W00000DoH0gQAF",
+                    "Description": "HIDW-Course1 Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIdUAN",
+                        "Name": "High Intensity Deep Water Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3kQAA",
+                "Name": "Campus A - V",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "10:00 am",
+                "Day_of_Week": "Monday;Wednesday;Friday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "HIDW-Course1",
+                    "Id": "a0k4W00000DoH0gQAF",
+                    "Description": "HIDW-Course1 Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIdUAN",
+                        "Name": "High Intensity Deep Water Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3lQAA",
+                "Name": "Campus A - VI",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "10:00 am",
+                "Day_of_Week": "Tuesday;Thursday;Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Fitline Functional",
+                    "Id": "a0k4W00000DoH0iQAF",
+                    "Description": "Fitline Functional Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIeUAN",
+                        "Name": "FitLine"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3mQAA",
+                "Name": "Campus B - V",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "10:00 am",
+                "Day_of_Week": "Monday;Wednesday;Friday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Fitline Functional",
+                    "Id": "a0k4W00000DoH0iQAF",
+                    "Description": "Fitline Functional Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIeUAN",
+                        "Name": "FitLine"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3nQAA",
+                "Name": "Campus B - VI",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 0,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "10:00 am",
+                "Day_of_Week": "Tuesday;Thursday;Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 0,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": true
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "TRX",
+                    "Id": "a0k4W00000DoH0jQAF",
+                    "Description": "TRX Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIeUAN",
+                        "Name": "FitLine"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3oQAA",
+                "Name": "Weekday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "10:00 am",
+                "Day_of_Week": "Monday;Tuesday;Wednesday;Thursday;Friday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "TRX",
+                    "Id": "a0k4W00000DoH0jQAF",
+                    "Description": "TRX Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIeUAN",
+                        "Name": "FitLine"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3pQAA",
+                "Name": "Weekend",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "10:00 am",
+                "Day_of_Week": "Sunday;Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "TRX",
+                    "Id": "a0k4W00000DoH0jQAF",
+                    "Description": "TRX Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIeUAN",
+                        "Name": "FitLine"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3qQAA",
+                "Name": "1 Ticket Spring Gala",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2021-03-01",
+                "Start_Time": "8:00 pm",
+                "End_Date": "2021-03-01",
+                "End_Time": "10:00 pm",
+                "Day_of_Week": "Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "TRX",
+                    "Id": "a0k4W00000DoH0jQAF",
+                    "Description": "TRX Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIeUAN",
+                        "Name": "FitLine"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3rQAA",
+                "Name": "5 Ticket Spring Gala",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2021-03-01",
+                "Start_Time": "8:00 pm",
+                "End_Date": "2021-03-01",
+                "End_Time": "10:00 pm",
+                "Day_of_Week": "Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "U9 - Boys",
+                    "Id": "a0k4W00000DoH0kQAF",
+                    "Description": "U9 - Boys Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIfUAN",
+                        "Name": "Soccer"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3sQAA",
+                "Name": "10 Ticket Spring Gala",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2021-03-01",
+                "Start_Time": "8:00 pm",
+                "End_Date": "2021-03-01",
+                "End_Time": "10:00 pm",
+                "Day_of_Week": "Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "U9 - Girls",
+                    "Id": "a0k4W00000DoH0lQAF",
+                    "Description": "U9 - Girls Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIfUAN",
+                        "Name": "Soccer"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3tQAA",
+                "Name": "4 month course",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 12,
+                "Start_Date": "2020-10-01",
+                "Start_Time": "8:00 pm",
+                "End_Date": "2021-02-01",
+                "End_Time": "10:00 pm",
+                "Day_of_Week": "Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-12-30",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 12,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Adult Mens",
+                    "Id": "a0k4W00000DoH0mQAF",
+                    "Description": "Adult Mens Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIfUAN",
+                        "Name": "Soccer"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3uQAA",
+                "Name": "5 Ticket Comedy",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 10,
+                "Start_Date": "2021-01-01",
+                "Start_Time": "8:00 pm",
+                "End_Date": "2021-01-01",
+                "End_Time": "10:00 pm",
+                "Day_of_Week": "Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 10,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Adult Womens",
+                    "Id": "a0k4W00000DoH0nQAF",
+                    "Description": "Adult Womens Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIfUAN",
+                        "Name": "Soccer"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3vQAA",
+                "Name": "10 Ticket Comedy",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 27,
+                "Start_Date": "2021-01-01",
+                "Start_Time": "8:00 pm",
+                "End_Date": "2021-01-01",
+                "End_Time": "10:00 pm",
+                "Day_of_Week": "Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 27,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Deep Water",
+                    "Id": "a0k4W00000DoH0cQAF",
+                    "Description": "Deep Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIaUAN",
+                        "Name": "Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3wQAA",
+                "Name": "Up close and personal with Tool - Concert tickets",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 60,
+                "Start_Date": "2020-11-01",
+                "Start_Time": "8:00 pm",
+                "End_Date": "2020-11-01",
+                "End_Time": "11:30 pm",
+                "Day_of_Week": "Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 99,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "12:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:59 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 60,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Deep Water",
+                    "Id": "a0k4W00000DoH0cQAF",
+                    "Description": "Deep Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIaUAN",
+                        "Name": "Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3xQAA",
+                "Name": "Seq priced course option",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 18,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "6:00 pm",
+                "End_Date": "2020-12-01",
+                "End_Time": "7:00 pm",
+                "Day_of_Week": "Monday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 64,
+                "Age_Min": 8,
+                "Register_Online_From_Date": "2020-09-01",
+                "Register_Online_From_Time": "2:00 AM",
+                "Register_Online_To_Date": "2020-10-31",
+                "Register_Online_To_Time": "11:02 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 18,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Deep Water",
+                    "Id": "a0k4W00000DoH0cQAF",
+                    "Description": "Deep Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIaUAN",
+                        "Name": "Aqua Fit"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3yQAA",
+                "Name": "Preschool - Anytime play - Monday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 25,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "11:00 am",
+                "Day_of_Week": "Monday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 18,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-05-24",
+                "Register_Online_From_Time": "1:00 AM",
+                "Register_Online_To_Date": "2021-02-28",
+                "Register_Online_To_Time": "10:09 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 25,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Educational Play",
+                    "Id": "a0k4W00000DoH0oQAF",
+                    "Description": "Childrens educational play Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIgUAN",
+                        "Name": "Playtime"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x3zQAA",
+                "Name": "Junior Kindergarten - Anytime play - Monday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 25,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "11:00 am",
+                "Day_of_Week": "Monday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 18,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-05-24",
+                "Register_Online_From_Time": "1:00 AM",
+                "Register_Online_To_Date": "2021-02-28",
+                "Register_Online_To_Time": "10:09 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 25,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Educational Play",
+                    "Id": "a0k4W00000DoH0oQAF",
+                    "Description": "Childrens educational play Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIgUAN",
+                        "Name": "Playtime"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x40QAA",
+                "Name": "Kindergarten - Anytime play - Monday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 25,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "8:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "11:00 am",
+                "Day_of_Week": "Monday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 18,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-05-24",
+                "Register_Online_From_Time": "1:00 AM",
+                "Register_Online_To_Date": "2021-02-28",
+                "Register_Online_To_Time": "10:09 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 25,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Educational Play",
+                    "Id": "a0k4W00000DoH0oQAF",
+                    "Description": "Childrens educational play Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIgUAN",
+                        "Name": "Playtime"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x41QAA",
+                "Name": "Grade 1 - Afterschool play - Monday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 25,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "3:00 pm",
+                "End_Date": "2021-08-01",
+                "End_Time": "6:00 pm",
+                "Day_of_Week": "Monday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 18,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-05-24",
+                "Register_Online_From_Time": "1:00 AM",
+                "Register_Online_To_Date": "2021-02-28",
+                "Register_Online_To_Time": "10:09 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 25,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Educational Play",
+                    "Id": "a0k4W00000DoH0oQAF",
+                    "Description": "Childrens educational play Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIgUAN",
+                        "Name": "Playtime"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x42QAA",
+                "Name": "Grade 2 - Afterschool play - Monday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 25,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "3:00 pm",
+                "End_Date": "2021-08-01",
+                "End_Time": "6:00 pm",
+                "Day_of_Week": "Monday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 18,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-05-24",
+                "Register_Online_From_Time": "1:00 AM",
+                "Register_Online_To_Date": "2021-02-28",
+                "Register_Online_To_Time": "10:09 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 25,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Educational Play",
+                    "Id": "a0k4W00000DoH0oQAF",
+                    "Description": "Childrens educational play Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIgUAN",
+                        "Name": "Playtime"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x43QAA",
+                "Name": "Grade 3 - Afterschool play - Monday",
+                "Code": "3AfterSchool",
+                "Available_Online": true,
+                "Capacity": 25,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "3:00 pm",
+                "End_Date": "2021-08-01",
+                "End_Time": "6:00 pm",
+                "Day_of_Week": "Monday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 18,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-05-24",
+                "Register_Online_From_Time": "1:00 AM",
+                "Register_Online_To_Date": "2021-02-28",
+                "Register_Online_To_Time": "10:09 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 25,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Educational Play",
+                    "Id": "a0k4W00000DoH0oQAF",
+                    "Description": "Childrens educational play Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIgUAN",
+                        "Name": "Playtime"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": true,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x44QAA",
+                "Name": "Grade 4 - Afterschool play - Monday",
+                "Code": null,
+                "Available_Online": true,
+                "Capacity": 25,
+                "Start_Date": "2020-08-01",
+                "Start_Time": "3:00 pm",
+                "End_Date": "2021-08-01",
+                "End_Time": "6:00 pm",
+                "Day_of_Week": "Monday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 18,
+                "Age_Min": 0,
+                "Register_Online_From_Date": "2020-05-24",
+                "Register_Online_From_Time": "1:00 AM",
+                "Register_Online_To_Date": "2021-02-28",
+                "Register_Online_To_Time": "10:09 PM",
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 25,
+                "Type": "Standard Course Option",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Educational Play",
+                    "Id": "a0k4W00000DoH0oQAF",
+                    "Description": "Childrens educational play Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIgUAN",
+                        "Name": "Playtime"
+                    }
+                }
+            }
+        },
+        {
+            "Available_Online": false,
+            "Course_Option": {
+                "Id": "a0g4W00001x0x45QAA",
+                "Name": "Only Option - classroom management co",
+                "Code": null,
+                "Available_Online": false,
+                "Capacity": 18,
+                "Start_Date": "2020-10-01",
+                "Start_Time": "9:00 am",
+                "End_Date": "2021-08-01",
+                "End_Time": "5:00 pm",
+                "Day_of_Week": "Saturday",
+                "Instructor": null,
+                "Location": null,
+                "Age_Max": 64,
+                "Age_Min": 12,
+                "Register_Online_From_Date": null,
+                "Register_Online_From_Time": null,
+                "Register_Online_To_Date": null,
+                "Register_Online_To_Time": null,
+                "Registration_Total": 0,
+                "Total_Capacity_Available": 18,
+                "Type": "Classroom Management",
+                "Unlimited_Capacity": false
+            },
+            "Course_Session": {
+                "Course": {
+                    "Name": "Deep Water",
+                    "Id": "a0k4W00000DoH0cQAF",
+                    "Description": "Deep Water Certified Instructors that give you a personalized touch. No, not that kind of touch...",
+                    "Rich_Description": null,
+                    "Program": {
+                        "Id": "a1Z4W00002A4CIaUAN",
+                        "Name": "Aqua Fit"
+                    }
+                }
+            }
+        }
+    ]
+}

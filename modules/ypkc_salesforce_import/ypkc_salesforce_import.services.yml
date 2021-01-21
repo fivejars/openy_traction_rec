@@ -1,0 +1,10 @@
+services:
+  ypkc_salesforce_import.importer:
+    class: 'Drupal\ypkc_salesforce_import\Importer'
+    arguments:
+      - '@lock'
+      - '@logger.channel.sf_import'
+
+  logger.channel.sf_import:
+    parent: logger.channel_base
+    arguments: ['ypkc_sf_import']

@@ -94,9 +94,9 @@ class SalesforceFetcher {
     $this->fileSystem->prepareDirectory($this->storagePath, FileSystemInterface::CREATE_DIRECTORY);
 
     $parents = $this->pullProgramsAndClasses($data);
-    $this->dumpJson(array_values($parents['programs']), $this->storagePath . 'programs_' . time() . '.json');
-    $this->dumpJson(array_values($parents['classes']), $this->storagePath . 'classes_' . time() . '.json');
-    $this->dumpJson($data, $this->storagePath . 'sessions_' . time() . '.json');
+    $this->dumpToJson(array_values($parents['programs']), $this->storagePath . 'programs_' . time() . '.json');
+    $this->dumpToJson(array_values($parents['classes']), $this->storagePath . 'classes_' . time() . '.json');
+    $this->dumpToJson($data, $this->storagePath . 'sessions_' . time() . '.json');
   }
 
   /**
@@ -110,7 +110,7 @@ class SalesforceFetcher {
    */
   protected function pullProgramsAndClasses(array $data): array {
     if (empty($data['records'])) {
-      return [];
+      return ['classes' => [], 'programs' => []];
     }
 
     $programs = [];
@@ -135,7 +135,7 @@ class SalesforceFetcher {
    * @param string $filename
    *   The filename.
    */
-  protected function dumpJson(array $data, $filename) {
+  protected function dumpToJson(array $data, string $filename) {
     $file = fopen($filename, 'w');
     fwrite($file, json_encode($data, JSON_PRETTY_PRINT | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT));
     fclose($file);
