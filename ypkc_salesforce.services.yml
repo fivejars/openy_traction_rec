@@ -4,4 +4,4 @@ services:
     arguments: ['@ypkc_salesforce.tr_client', '@file_system']
   ypkc_salesforce.tr_client:
     class: Drupal\ypkc_salesforce\TractionRecClient
-    arguments: [ '@config.factory', '@http_client', '@datetime.time' ]
+    arguments: [ '@config.factory', '@http_client', '@datetime.time', '@key.repository' ]

@@ -4,6 +4,7 @@ namespace Drupal\ypkc_salesforce;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\key\KeyRepositoryInterface;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -19,6 +20,13 @@ class TractionRecClient {
    * @var \Drupal\Core\Config\ImmutableConfig
    */
   protected $salesforceSettings;
+
+  /**
+   * The Salesforce private RSA key.
+   *
+   * @var string
+   */
+  protected $salesforcePrivateRsa;
 
   /**
    * The http client.
@@ -50,9 +58,12 @@ class TractionRecClient {
    *   The http client.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
+   * @param \Drupal\key\KeyRepositoryInterface $key_repository
+   *   The key repository.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time) {
+  public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time, KeyRepositoryInterface $key_repository) {
     $this->salesforceSettings = $config_factory->get('ypkc_salesforce.settings');
+    $this->salesforcePrivateRsa = $key_repository->getKey('rsa_private_key')->getKeyValue();;
     $this->http = $http;
     $this->time = $time;
   }
@@ -116,7 +127,7 @@ class TractionRecClient {
    *   JWT Assertion.
    */
   protected function generateAssertion(): string {
-    $key = $this->salesforceSettings->get('private_key');
+    $key = $this->salesforcePrivateRsa;
     $token = $this->generateAssertionClaim();
     return JWT::encode($token, $key, 'RS256');
   }

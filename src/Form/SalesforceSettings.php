@@ -64,15 +64,6 @@ class SalesforceSettings extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
-    $form['private_key'] = [
-      '#type' => 'textarea',
-      '#rows' => 30,
-      '#title' => $this->t('RSA Private key'),
-      '#default_value' => $config->get('private_key'),
-      '#description' => $this->t('Private key, generated on 3 step in https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_key_and_cert.htm'),
-      '#required' => TRUE,
-    ];
-
     return parent::buildForm($form, $form_state);
   }
 
@@ -84,7 +75,6 @@ class SalesforceSettings extends ConfigFormBase {
     $config->set('consumer_key', $form_state->getValue('consumer_key'));
     $config->set('login_user', $form_state->getValue('login_user'));
     $config->set('login_url', $form_state->getValue('login_url'));
-    $config->set('private_key', $form_state->getValue('private_key'));
     $config->set('services_base_url', $form_state->getValue('services_base_url'));
     $config->save();
 
