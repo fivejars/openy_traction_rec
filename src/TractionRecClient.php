@@ -63,7 +63,7 @@ class TractionRecClient {
    */
   public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time, KeyRepositoryInterface $key_repository) {
     $this->salesforceSettings = $config_factory->get('ypkc_salesforce.settings');
-    $this->salesforcePrivateRsa = $key_repository->getKey('rsa_private_key')->getKeyValue();;
+    $this->salesforcePrivateRsa = $key_repository->getKey('rsa_private_key')->getKeyValue();
     $this->http = $http;
     $this->time = $time;
   }
