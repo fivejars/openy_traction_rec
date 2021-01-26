@@ -4,9 +4,11 @@ namespace Drupal\ypkc_salesforce;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Salesforce HTTP client.
@@ -42,6 +44,36 @@ class TractionRecClient {
   protected $accessToken;
 
   /**
+   * Salesforce API credentials for SSO.
+   *
+   * ['credentials', 'redirect_uri']
+   *
+   * @var array
+   */
+  protected $salesforceSsoSettings;
+
+  /**
+   * Logger for salesforce_sso.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   */
+  protected $logger;
+
+  /**
+   * Request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request|null
+   */
+  protected $request;
+
+  /**
+   * Salesforce access token for SSO login through web.
+   *
+   * @var string
+   */
+  protected $webToken = '';
+
+  /**
    * Client constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -50,11 +82,21 @@ class TractionRecClient {
    *   The http client.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_channel_factory
+   *   Logger factory.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time) {
+  public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time, LoggerChannelFactoryInterface $logger_channel_factory, RequestStack $request_stack) {
     $this->salesforceSettings = $config_factory->get('ypkc_salesforce.settings');
+    $this->salesforceSsoSettings = $config_factory->get('ypkc_salesforce_sso.settings');
     $this->http = $http;
     $this->time = $time;
+    $this->logger = $logger_channel_factory->get('salesforce_sso');
+    $this->request = $request_stack->getCurrentRequest();
+    if ($code = $this->request->get('code')) {
+      $this->webToken = $this->generateToken($code);
+    }
   }
 
   /**
@@ -158,6 +200,79 @@ class TractionRecClient {
     $query_request_body = $response->getBody()->getContents();
 
     return json_decode($query_request_body, TRUE);
+  }
+
+  /**
+   * Set access token based on user code after SSO redirect.
+   *
+   * @param string $code
+   *   Access code from Salesforce.
+   *
+   * @return string
+   *   Access token.
+   */
+  private function generateToken($code) {
+    try {
+      $response = $this->http->post($this->salesforceSsoSettings->get('app_url') . '/services/oauth2/token',
+        [
+          'form_params' => [
+            'grant_type' => 'authorization_code',
+            'code' => $code,
+            'client_id' => $this->salesforceSsoSettings->get('client_id'),
+            'client_secret' => $this->salesforceSsoSettings->get('client_secret'),
+            'redirect_uri' => 'https://' . $this->request->getHost() . $this->salesforceSsoSettings->get('redirect_uri'),
+          ],
+        ]);
+
+      return json_decode($response->getBody())->access_token;
+    }
+    catch (\Exception $e) {
+      $this->logger->error($e->getMessage());
+    }
+  }
+
+  /**
+   * Get user data from Salesforce.
+   *
+   * @return object|null
+   *   User info from Salesforce.
+   */
+  public function getUserData() {
+    try {
+      $headers = ['Authorization' => 'Bearer ' . $this->webToken];
+      $user_data = $this->http->post($this->salesforceSsoSettings->get('app_url') . '/services/oauth2/userinfo',
+        ['headers' => $headers]
+      );
+
+      return json_decode($user_data->getBody());
+    }
+    catch (\Exception $e) {
+      $this->logger->error($e->getMessage());
+    }
+  }
+
+  /**
+   * Construct link for login in Salesforce app.
+   *
+   * @return string
+   *   Link to login form.
+   */
+  public function getLoginLink() {
+    return $this->salesforceSsoSettings->get('app_url') . '/services/oauth2/authorize?client_id='
+      . $this->salesforceSsoSettings->get('client_id')
+      . '&redirect_uri=https://' . $this->request->getHost() . $this->salesforceSsoSettings->get('redirect_uri')
+      . '&response_type=code&state=&scope=api%20id';
+  }
+
+  /**
+   * Check if token is generated.
+   *
+   * @return bool
+   *   Does token is generated.
+   */
+  // TODO add web to name.
+  public function isWebTokenNotEmpty() {
+    return !empty($this->webToken);
   }
 
 }
