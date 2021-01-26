@@ -13,7 +13,7 @@ class DrushCommands extends DrushCommandsBase {
   /**
    * The importer service.
    *
-   * @var Importer
+   * @var Drupal\ypkc_salesforce_import\Importer
    */
   protected $importer;
 

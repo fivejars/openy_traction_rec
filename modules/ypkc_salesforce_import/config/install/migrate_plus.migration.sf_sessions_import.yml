@@ -33,25 +33,21 @@ source:
       label: 'Class'
       selector: /Course_Session/Course/Id
     -
-      name: course
-      label: 'Course'
-      selector: /Course_Option
-    -
       name: start_date
       label: 'Start Date'
       selector: /Course_Option/Start_Date
     -
+      name: start_time
+      label: 'Start Time'
+      selector: /Course_Option/Start_Time
+    -
       name: end_date
       label: 'End Date'
       selector: /Course_Option/End_Date
-#    -
-#      name: exclusions
-#      label: 'Exclusions'
-#      selector: /exclusions
-#    -
-#      name: gender
-#      label: 'Gender'
-#      selector: /gender
+    -
+      name: days
+      label: 'Days'
+      selector: /Course_Option/Day_of_Week
     -
       name: age_min_year
       label: 'Min Age'
@@ -60,38 +56,14 @@ source:
       name: age_max_year
       label: 'Max Age'
       selector: /Course_Option/Age_Max
-#    -
-#      name: link
-#      label: 'Registration link'
-#      selector: /url
     -
       name: location
       label: 'Location'
       selector: /Course_Option/Location
-#    -
-#      name: allow_waitlist
-#      label: 'Allow wait list'
-#      selector: /allowWaitlist
-#    -
-#      name: description
-#      label: 'Allow wait list'
-#      selector: /description
     -
       name: instructor
       label: 'Instructor'
       selector: /Course_Option/Instructor
-#    -
-#      name: room
-#      label: 'Room'
-#      selector: /room
-#    -
-#      name: standard_registration_date_from
-#      label: 'Standard registration date(from)'
-#      selector: /registrationDate/from
-#    -
-#      name: standard_registration_date_to
-#      label: 'Standard registration date(to)'
-#      selector: /registrationDate/to
     -
       name: online_registration
       label: 'Online registration'
@@ -104,10 +76,6 @@ source:
       name: online_registration_date_to
       label: 'Online registration date(to)'
       selector: /Course_Option/Register_Online_To_Date
-#    -
-#      name: session_status
-#      label: 'Status'
-#      selector: /status
     -
       name: spots_allowed
       label: 'Spots allowed'
@@ -116,10 +84,6 @@ source:
       name: spots_available
       label: 'Spots available'
       selector: /Course_Option/Total_Capacity_Available
-#    -
-#      name: price
-#      label: 'Price'
-#      selector: /price
 process:
   title: title
   field_session_description: title
@@ -131,56 +95,8 @@ process:
     plugin: default_value
     default_value: session
   field_session_time:
-    plugin: sub_process
+    plugin: sf_session_time
     source: start_date
-    process:
-      temp_data:
-        -
-          plugin: ypkc_session_time
-          source: course
-      target_id:
-        -
-          plugin: extract
-          source: "@temp_data"
-          index:
-            - "target_id"
-      target_revision_id:
-        -
-          plugin: extract
-          source: "@temp_data"
-          index:
-            - "target_revision_id"
-#  field_session_exclusions:
-#    plugin: sub_process
-#    source: exclusions
-#    process:
-#      temp_data:
-#      -
-#        plugin: openy_activenet_exclusion
-#        source: "start_time"
-#      value:
-#        -
-#          plugin: extract
-#          source: "@temp_data"
-#          index:
-#          - "value"
-#      end_value:
-#        -
-#          plugin: extract
-#          source: "@temp_data"
-#          index:
-#          - "end_value"
-#  field_session_location:
-#    plugin: activenet_location
-#    source: location
-#  status: session_status
-#  uid:
-#    plugin: default_value
-#    default_value: 1
-#  field_session_reg_link/uri: link
-#  field_session_reg_link/title:
-#    plugin: default_value
-#    default_value: 'Register Now'
   field_session_min_age/value:
     -
       plugin: skip_on_value
@@ -203,12 +119,6 @@ process:
     -
       plugin: get
       source: age_max_year
-#  field_session_gender: gender
-#  field_allow_waitlist: allow_waitlist
-#  field_session_description/value: description
-#  field_session_description/format:
-#    plugin: default_value
-#    default_value: full_html
   field_session_instructor:
     -
       plugin: skip_on_value
@@ -222,53 +132,6 @@ process:
       source: instructor
       start: 0
       length: 255
-#  field_physical_location_text: room
-#  field_session_room: room
-#  field_spots_allowed:
-#    plugin: activenet_intval
-#    source: spots_allowed
-#  field_spots_available:
-#    plugin: activenet_intval
-#    source: spots_available
-#  field_standard_registration_date/value:
-#    plugin: callback
-#    callable: _activenet_migration_convert_time_to_db_format
-#    source: standard_registration_date_from
-#  field_standard_registration_date/end_value:
-#    plugin: callback
-#    callable: _activenet_migration_convert_time_to_db_format
-#    source: standard_registration_date_to
-#  field_session_online:
-#    plugin: default_value
-#    default_value: 1
-#  field_online_registration_date/value:
-#    plugin: callback
-#    callable: _activenet_migration_convert_time_to_db_format
-#    source: online_registration_date_from
-#  field_online_registration_date/end_value:
-#    plugin: callback
-#    callable: _activenet_migration_convert_time_to_db_format
-#    source: online_registration_date_to
-#  field_sales_status:
-#    plugin: default_value
-#    default_value: 'open'
-#  field_session_price:
-#    plugin: sub_process
-#    source: price
-#    process:
-#      temp_data:
-#      - plugin: openy_activenet_price
-#        source: "start_time"
-#      target_id:
-#      - plugin: extract
-#        source: "@temp_data"
-#        index:
-#        - target_id
-#      target_revision_id:
-#      - plugin: extract
-#        source: "@temp_data"
-#        index:
-#        - target_revision_id
 destination:
   plugin: 'entity:node'
 migration_dependencies:
