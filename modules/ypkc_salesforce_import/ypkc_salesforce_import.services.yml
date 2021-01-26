@@ -4,6 +4,9 @@ services:
     arguments:
       - '@lock'
       - '@logger.channel.sf_import'
+      - '@config.factory'
+      - '@migrate_tools.commands'
+      - '@plugin.manager.migration'
 
   logger.channel.sf_import:
     parent: logger.channel_base

@@ -97,6 +97,7 @@ process:
   field_session_time:
     plugin: sf_session_time
     source: start_date
+  field_session_online: online_registration
   field_session_min_age/value:
     -
       plugin: skip_on_value

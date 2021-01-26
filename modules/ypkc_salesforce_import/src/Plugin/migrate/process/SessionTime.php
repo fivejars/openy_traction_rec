@@ -5,6 +5,7 @@ namespace Drupal\ypkc_salesforce_import\Plugin\migrate\process;
 use DateTimeZone;
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 use Drupal\paragraphs\Entity\Paragraph;
@@ -25,31 +26,36 @@ class SessionTime extends ProcessPluginBase {
     $value = $row->getSource();
 
     if (empty($value['start_date']) || empty($value['start_time']) || empty($value['days'])) {
-      return null;
+      throw new MigrateSkipRowException('Datetime cannot be empty for session');
     }
 
-    $start_date = $this->convertDate($value['start_date'] . ' ' . $value['start_time']);
-    $end_date = $this->convertDate($value['end_date'] . ' ' . '11:59 pm');
+    try {
+      $start_date = $this->convertDate($value['start_date'] . ' ' . $value['start_time']);
+      $end_date = $this->convertDate($value['end_date'] . ' ' . '11:59 pm');
 
-    $days = explode(';', $value['days']);
-    $days = array_map('strtolower', $days);
+      $days = explode(';', $value['days']);
+      $days = array_map('strtolower', $days);
 
-    $paragraph = Paragraph::create([
-      'type' => 'session_time',
-      'field_session_time_actual' => 1,
-      'field_session_time_days' => $days,
-      'field_session_time_date' => [
-        'value' => $start_date,
-        'end_value' => $end_date,
-      ],
-    ]);
-    $paragraph->isNew();
-    $paragraph->save();
+      $paragraph = Paragraph::create([
+        'type' => 'session_time',
+        'field_session_time_actual' => 1,
+        'field_session_time_days' => $days,
+        'field_session_time_date' => [
+          'value' => $start_date,
+          'end_value' => $end_date,
+        ],
+      ]);
+      $paragraph->isNew();
+      $paragraph->save();
 
-    return [
-      'target_id' => $paragraph->id(),
-      'target_revision_id' => $paragraph->getRevisionId(),
-    ];
+      return [
+        'target_id' => $paragraph->id(),
+        'target_revision_id' => $paragraph->getRevisionId(),
+      ];
+    }
+    catch (\Exception $e) {
+      throw new MigrateSkipRowException($e->getMessage());
+    }
   }
 
   /**
@@ -64,7 +70,7 @@ class SessionTime extends ProcessPluginBase {
   protected function convertDate(string $datetime) {
     $site_timezone = \Drupal::config('system.date')->get('timezone.default');
 
-    return DateTimePlus::createFromFormat('Y-m-d h:i a', $datetime, $site_timezone)
+    return DateTimePlus::createFromFormat('Y-m-d h:i a', $datetime, $site_timezone, ['validate_format' => FALSE])
       ->setTimezone(new DateTimeZone('UTC'))
       ->format('Y-m-d\TH:i:s');
   }
