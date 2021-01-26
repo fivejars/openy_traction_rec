@@ -46,7 +46,7 @@ class Importer {
    *
    * @var bool
    */
-  public $isEnabled;
+  public $isEnabled = FALSE;
 
   /**
    * The config factory.
@@ -101,36 +101,6 @@ class Importer {
   }
 
   /**
-   * Executes Salesforce import.
-   *
-   * @return bool
-   *   The operation status.
-   *
-   * @throws \Exception
-   */
-  public function import(): bool {
-    if (!$this->isEnabled) {
-      $this->logger->warning('Please enable import if you want run migrations.');
-      return FALSE;
-    }
-
-    if (!$this->checkMigrationsStatus()) {
-      $this->logger->info('Can\'t start the import, import already in progress.');
-      return FALSE;
-    }
-
-    if ($this->lock->acquire(self::LOCK_NAME, 1200)) {
-      $this->logger->info('Can\'t start the import, import already in progress.');
-      return FALSE;
-    }
-
-    // @TODO: Execute import.
-
-    $this->lock->release(self::LOCK_NAME);
-    return FALSE;
-  }
-
-  /**
    * Check migration status.
    */
   public function checkMigrationsStatus(): bool {
@@ -143,7 +113,6 @@ class Importer {
 
       $migrations = $this->migrationPluginManager->createInstances($migrations);
       foreach ($migrations as $migration_id => $migration) {
-        // Allow only IDLE status.
         if ($migration->getStatus() !== MigrationInterface::STATUS_IDLE) {
           $this->logger->error($this->t('Migration @migration has status @status.', [
             '@migration' => $migration_id,
@@ -159,6 +128,33 @@ class Importer {
     }
 
     return TRUE;
+  }
+
+  /**
+   * Checks import status.
+   *
+   * @return bool
+   */
+  public function isEnabled():bool {
+    return $this->isEnabled;
+  }
+
+  /**
+   * Acquires Salesforce import lock.
+   *
+   * @return bool
+   *   Lock status.
+   *
+   */
+  public function acquireLock(): bool {
+    return $this->lock->acquire(self::LOCK_NAME, 1200);
+  }
+
+  /**
+   * Releases Salesforce lock.
+   */
+  public function releaseLock() {
+    $this->lock->release(self::LOCK_NAME);
   }
 
 }

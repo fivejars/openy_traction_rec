@@ -34,8 +34,39 @@ class DrushCommands extends DrushCommandsBase {
    * @command ypkc-sf:import
    * @aliases y-sf:import
    */
-  public function import() {
-    $this->importer->import();
+  public function import(): bool {
+    if (!$this->importer->isEnabled()) {
+      $this->logger()->notice(
+        dt('Salesforce import is not enabled!')
+      );
+      return FALSE;
+    }
+
+    if ($this->importer->acquireLock()) {
+      $this->logger()->notice(
+        dt('Can\'t run new import, another import process already in progress.')
+      );
+      return FALSE;
+    }
+
+    if (!$this->importer->checkMigrationsStatus()) {
+      $this->logger()->notice(
+        dt('One or more migrations are still running or stuck.')
+      );
+      return FALSE;
+    }
+
+    drush_print('Starting migrations...');
+    $commands = \Drupal::service('migrate_tools.commands');
+    $commands->import(
+      '',
+      ['group' => Importer::MIGRATE_GROUP, 'update' => TRUE]
+    );
+
+    $this->importer->releaseLock();
+    drush_print('Migration done.');
+
+    return TRUE;
   }
 
 }

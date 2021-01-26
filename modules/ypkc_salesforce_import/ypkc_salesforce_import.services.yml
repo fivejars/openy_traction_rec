@@ -5,8 +5,8 @@ services:
       - '@lock'
       - '@logger.channel.sf_import'
       - '@config.factory'
-      - '@migrate_tools.commands'
       - '@plugin.manager.migration'
+      - '@entity_type.manager'
 
   logger.channel.sf_import:
     parent: logger.channel_base
