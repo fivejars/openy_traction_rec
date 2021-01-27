@@ -270,7 +270,6 @@ class TractionRecClient {
    * @return bool
    *   Does token is generated.
    */
-  // TODO add web to name.
   public function isWebTokenNotEmpty() {
     return !empty($this->webToken);
   }
