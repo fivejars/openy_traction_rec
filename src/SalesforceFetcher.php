@@ -170,12 +170,13 @@ class SalesforceFetcher {
   /**
    * Builds a filename for JSON file.
    *
-   * @param $items_type
+   * @param string $items_type
    *   Items type: `programs`, `classes` or `sessions`.
    *
    * @return string
+   *   The filename string.
    */
-  protected function buildFilename($items_type): string {
+  protected function buildFilename(string $items_type): string {
     $dir_name = $this->storagePath . '/' . date('YmdHi') . '/';
     $this->fileSystem->prepareDirectory($dir_name, FileSystemInterface::CREATE_DIRECTORY);
     return $dir_name . $items_type . '.json';

@@ -89,20 +89,27 @@ class DrushCommands extends DrushCommandsBase {
     }
 
     foreach ($dirs as $dir) {
+      // Results of each fetch are saved to separated directory.
       $json_files = $this->fileSystem->scanDirectory($dir, '/\.json$/');
       if (empty($json_files)) {
         continue;
       }
 
+      // Usually we have 3 files for import:
+      // sessions.json, classes.json, programs.json.
       foreach ($json_files as $file) {
         $this->output()->writeln("Preparing $file->uri for import");
-        $this->fileSystem->copy($file->uri, 'private://salesforce_import/', FileSystemInterface::EXISTS_REPLACE );
+        $this->fileSystem->copy($file->uri, 'private://salesforce_import/', FileSystemInterface::EXISTS_REPLACE);
       }
 
       $this->migrateToolsCommands->import(
         '',
         ['group' => Importer::MIGRATE_GROUP, 'update' => TRUE]
       );
+
+      $backup_dir = Importer::BACKUP_DIRECTORY;
+      $this->fileSystem->prepareDirectory($backup_dir, FileSystemInterface::CREATE_DIRECTORY);
+      $this->fileSystem->move($dir, $backup_dir);
     }
 
     $this->importer->releaseLock();

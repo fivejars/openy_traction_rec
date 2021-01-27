@@ -32,22 +32,10 @@ class Importer {
    */
   const SOURCE_DIRECTORY = 'private://salesforce_import/json/';
 
-
   /**
-   * Regex mask for classes files (Example - classes_20180817075604.json).
-   *
-   * @var string
+   * The path to a directory for processed JSON files.
    */
-  protected $classesMask = '/classes_\d{14}\.json/';
-
-  /**
-   * Regex mask for sessions files (Example - sessions_20180817075604.json).
-   *
-   * @var string
-   */
-  protected $sessionsMask = '/sessions_\d{14}\.json/';
-
-  protected $programsMask = '/programs_\d{14}\.json/';
+  const BACKUP_DIRECTORY = 'private://salesforce_import/backup/';
 
   /**
    * The lock backend.
@@ -156,6 +144,7 @@ class Importer {
    * Checks import status.
    *
    * @return bool
+   *   TRUE if the import is enabled.
    */
   public function isEnabled():bool {
     return $this->isEnabled;
@@ -166,7 +155,6 @@ class Importer {
    *
    * @return bool
    *   Lock status.
-   *
    */
   public function acquireLock(): bool {
     return $this->lock->acquire(static::LOCK_NAME, 1200);
@@ -179,11 +167,17 @@ class Importer {
     $this->lock->release(static::LOCK_NAME);
   }
 
+  /**
+   * Provides a list of directories with the fetched JSON files.
+   *
+   * @return array
+   *   The array of directories paths.
+   */
   public function getJsonDirectoriesList(): array {
     $dirs = [];
     $scan = scandir(static::SOURCE_DIRECTORY);
 
-    foreach($scan as $file) {
+    foreach ($scan as $file) {
       $filename = static::SOURCE_DIRECTORY . "/$file";
       if (is_dir($filename) && $file != '.' && $file != '..') {
         $dirs[] = $filename;

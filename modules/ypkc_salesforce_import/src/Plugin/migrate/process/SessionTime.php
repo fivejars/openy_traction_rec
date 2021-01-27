@@ -2,7 +2,6 @@
 
 namespace Drupal\ypkc_salesforce_import\Plugin\migrate\process;
 
-use DateTimeZone;
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\MigrateSkipRowException;
@@ -71,7 +70,7 @@ class SessionTime extends ProcessPluginBase {
     $site_timezone = \Drupal::config('system.date')->get('timezone.default');
 
     return DateTimePlus::createFromFormat('Y-m-d h:i a', $datetime, $site_timezone, ['validate_format' => FALSE])
-      ->setTimezone(new DateTimeZone('UTC'))
+      ->setTimezone(new \DateTimeZone('UTC'))
       ->format('Y-m-d\TH:i:s');
   }
 
