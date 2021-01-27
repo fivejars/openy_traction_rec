@@ -28,6 +28,28 @@ class Importer {
   const MIGRATE_GROUP = 'sf_import';
 
   /**
+   * The path to a directory with JSON files for import.
+   */
+  const SOURCE_DIRECTORY = 'private://salesforce_import/json/';
+
+
+  /**
+   * Regex mask for classes files (Example - classes_20180817075604.json).
+   *
+   * @var string
+   */
+  protected $classesMask = '/classes_\d{14}\.json/';
+
+  /**
+   * Regex mask for sessions files (Example - sessions_20180817075604.json).
+   *
+   * @var string
+   */
+  protected $sessionsMask = '/sessions_\d{14}\.json/';
+
+  protected $programsMask = '/programs_\d{14}\.json/';
+
+  /**
    * The lock backend.
    *
    * @var \Drupal\Core\Lock\LockBackendInterface
@@ -108,7 +130,7 @@ class Importer {
       $migrations = $this->entityTypeManager
         ->getStorage('migration')
         ->getQuery('AND')
-        ->condition('migration_group', self::MIGRATE_GROUP)
+        ->condition('migration_group', static::MIGRATE_GROUP)
         ->execute();
 
       $migrations = $this->migrationPluginManager->createInstances($migrations);
@@ -147,14 +169,28 @@ class Importer {
    *
    */
   public function acquireLock(): bool {
-    return $this->lock->acquire(self::LOCK_NAME, 1200);
+    return $this->lock->acquire(static::LOCK_NAME, 1200);
   }
 
   /**
    * Releases Salesforce lock.
    */
   public function releaseLock() {
-    $this->lock->release(self::LOCK_NAME);
+    $this->lock->release(static::LOCK_NAME);
+  }
+
+  public function getJsonDirectoriesList(): array {
+    $dirs = [];
+    $scan = scandir(static::SOURCE_DIRECTORY);
+
+    foreach($scan as $file) {
+      $filename = static::SOURCE_DIRECTORY . "/$file";
+      if (is_dir($filename) && $file != '.' && $file != '..') {
+        $dirs[] = $filename;
+      }
+    }
+
+    return $dirs;
   }
 
 }

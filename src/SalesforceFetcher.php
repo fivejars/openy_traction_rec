@@ -14,7 +14,7 @@ class SalesforceFetcher {
    *
    * @var string
    */
-  protected $storagePath = 'private://salesforce_import/';
+  protected $storagePath = 'private://salesforce_import/json/';
 
   /**
    * Traction Rec Client service.
@@ -94,9 +94,9 @@ class SalesforceFetcher {
     $this->fileSystem->prepareDirectory($this->storagePath, FileSystemInterface::CREATE_DIRECTORY);
 
     $parents = $this->pullProgramsAndClasses($data);
-    $this->dumpToJson(array_values($parents['programs']), $this->storagePath . 'programs_' . time() . '.json');
-    $this->dumpToJson(array_values($parents['classes']), $this->storagePath . 'classes_' . time() . '.json');
-    $this->dumpToJson($data, $this->storagePath . 'sessions_' . time() . '.json');
+    $this->dumpToJson(array_values($parents['programs']), $this->buildFilename('programs'));
+    $this->dumpToJson(array_values($parents['classes']), $this->buildFilename('classes'));
+    $this->dumpToJson($data, $this->buildFilename('sessions'));
   }
 
   /**
@@ -165,6 +165,20 @@ class SalesforceFetcher {
       }
     }
     return $new_array;
+  }
+
+  /**
+   * Builds a filename for JSON file.
+   *
+   * @param $items_type
+   *   Items type: `programs`, `classes` or `sessions`.
+   *
+   * @return string
+   */
+  protected function buildFilename($items_type): string {
+    $dir_name = $this->storagePath . '/' . date('YmdHi') . '/';
+    $this->fileSystem->prepareDirectory($dir_name, FileSystemInterface::CREATE_DIRECTORY);
+    return $dir_name . $items_type . '.json';
   }
 
 }
