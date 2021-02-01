@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - ypkc_salesforce_import
+id: sf_import
+label: Salesforce import
+description: 'Classes and sessions migration'
+source_type: 'JSON files with classes and sessions'
+module: ypkc_salesforce_import
+shared_configuration: null

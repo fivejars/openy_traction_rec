@@ -14,7 +14,7 @@ class SalesforceFetcher {
    *
    * @var string
    */
-  protected $storagePath = 'private://salesforce_import/';
+  protected $storagePath = 'private://salesforce_import/json/';
 
   /**
    * Traction Rec Client service.
@@ -94,9 +94,9 @@ class SalesforceFetcher {
     $this->fileSystem->prepareDirectory($this->storagePath, FileSystemInterface::CREATE_DIRECTORY);
 
     $parents = $this->pullProgramsAndClasses($data);
-    $this->dumpJson(array_values($parents['programs']), $this->storagePath . 'programs_' . time() . '.json');
-    $this->dumpJson(array_values($parents['classes']), $this->storagePath . 'classes_' . time() . '.json');
-    $this->dumpJson($data, $this->storagePath . 'sessions_' . time() . '.json');
+    $this->dumpToJson(array_values($parents['programs']), $this->buildFilename('programs'));
+    $this->dumpToJson(array_values($parents['classes']), $this->buildFilename('classes'));
+    $this->dumpToJson($data, $this->buildFilename('sessions'));
   }
 
   /**
@@ -110,7 +110,7 @@ class SalesforceFetcher {
    */
   protected function pullProgramsAndClasses(array $data): array {
     if (empty($data['records'])) {
-      return [];
+      return ['classes' => [], 'programs' => []];
     }
 
     $programs = [];
@@ -135,7 +135,7 @@ class SalesforceFetcher {
    * @param string $filename
    *   The filename.
    */
-  protected function dumpJson(array $data, $filename) {
+  protected function dumpToJson(array $data, string $filename) {
     $file = fopen($filename, 'w');
     fwrite($file, json_encode($data, JSON_PRETTY_PRINT | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT));
     fclose($file);
@@ -165,6 +165,21 @@ class SalesforceFetcher {
       }
     }
     return $new_array;
+  }
+
+  /**
+   * Builds a filename for JSON file.
+   *
+   * @param string $items_type
+   *   Items type: `programs`, `classes` or `sessions`.
+   *
+   * @return string
+   *   The filename string.
+   */
+  protected function buildFilename(string $items_type): string {
+    $dir_name = $this->storagePath . '/' . date('YmdHi') . '/';
+    $this->fileSystem->prepareDirectory($dir_name, FileSystemInterface::CREATE_DIRECTORY);
+    return $dir_name . $items_type . '.json';
   }
 
 }
