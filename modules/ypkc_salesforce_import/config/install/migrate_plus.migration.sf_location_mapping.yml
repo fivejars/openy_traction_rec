@@ -4,7 +4,7 @@ dependencies:
   enforced:
     module:
       - ypkc_salesforce_import
-id: sf_activities_import
+id: sf_location_mapping
 migration_tags:
   - openy_import
 migration_group: sf_import
@@ -29,7 +29,7 @@ source:
       label: 'Title'
       selector: /Name
 process:
-  title: title
+  name: title
   field_traction_rec_id: id
   field_location_node:
     plugin: sf_location_by_title

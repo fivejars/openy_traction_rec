@@ -95,8 +95,8 @@ class DrushCommands extends DrushCommandsBase {
         continue;
       }
 
-      // Usually we have 3 files for import:
-      // sessions.json, classes.json, programs.json.
+      // Usually we have 4 files for import:
+      // sessions.json, classes.json, programs.json, locations.json.
       foreach ($json_files as $file) {
         $this->output()->writeln("Preparing $file->uri for import");
         $this->fileSystem->copy($file->uri, 'private://salesforce_import/', FileSystemInterface::EXISTS_REPLACE);

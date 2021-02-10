@@ -27,25 +27,6 @@ class LocationByTitle extends ProcessPluginBase implements ContainerFactoryPlugi
   protected $entityTypeManager;
 
   /**
-   * {@inheritdoc}
-   */
-  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    try {
-      $node_storage = $this->entityTypeManager->getStorage('node');
-      $locations = $node_storage->loadByProperties(['title' => $value]);
-      if (!$locations) {
-        throw new MigrateSkipRowException('Location node not found');
-      }
-
-      $node = reset($locations);
-      return ['target_id' => $node->id()];
-    }
-    catch (\Exception $e) {
-      throw new MigrateSkipRowException($e->getMessage());
-    }
-   }
-
-  /**
    * LocationByTitle constructor.
    *
    * @param array $configuration
@@ -73,5 +54,24 @@ class LocationByTitle extends ProcessPluginBase implements ContainerFactoryPlugi
       $container->get('entity_type.manager')
     );
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
+    try {
+      $node_storage = $this->entityTypeManager->getStorage('node');
+      $locations = $node_storage->loadByProperties(['title' => $value]);
+      if (!$locations) {
+        throw new MigrateSkipRowException('Location node not found');
+      }
+
+      $node = reset($locations);
+      return ['target_id' => $node->id()];
+    }
+    catch (\Exception $e) {
+      throw new MigrateSkipRowException($e->getMessage());
+    }
+   }
 
 }
