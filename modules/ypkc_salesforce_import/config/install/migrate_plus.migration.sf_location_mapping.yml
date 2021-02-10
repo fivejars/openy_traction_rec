@@ -1,0 +1,42 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - ypkc_salesforce_import
+id: sf_activities_import
+migration_tags:
+  - openy_import
+migration_group: sf_import
+label: 'Import Location Mappings'
+source:
+  plugin: url
+  data_fetcher_plugin: file
+  data_parser_plugin: json
+  item_selector: records/
+  urls: 'private://salesforce_import/locations.json'
+  track_changes: true
+  ids:
+    id:
+      type: string
+  fields:
+    -
+      name: id
+      label: 'Id'
+      selector: /Id
+    -
+      name: title
+      label: 'Title'
+      selector: /Name
+process:
+  title: title
+  field_traction_rec_id: id
+  field_location_node:
+    plugin: sf_location_by_title
+    source: title
+  uid:
+    plugin: default_value
+    default_value: 1
+destination:
+  plugin: 'entity:mapping'
+  default_bundle: traction_rec_location

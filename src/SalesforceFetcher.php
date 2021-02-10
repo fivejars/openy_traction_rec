@@ -34,21 +34,24 @@ class SalesforceFetcher {
    * SalesforceFetcher Constructor.
    *
    * @param \Drupal\ypkc_salesforce\TractionRecClient $traction_rec_client
-   *   The Traction Rec client setvice.
+   *   The Traction Rec client service.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file handler.
    */
   public function __construct(TractionRecClient $traction_rec_client, FileSystemInterface $file_system) {
     $this->tractionRecClient = $traction_rec_client;
     $this->fileSystem = $file_system;
+
+    $this->fileSystem->prepareDirectory($this->storagePath, FileSystemInterface::CREATE_DIRECTORY);
   }
 
   /**
    * Fetch results (sessions and classes) from Salesforce and save into file.
    */
   public function fetch() {
+    $this->fetchLocations();
+
     $result = $this->tractionRecClient->executeQuery('SELECT
-      TREX1__Available_Online__c,
       TREX1__Course_Option__r.id,
       TREX1__Course_Option__r.name,
       TREX1__Course_Option__r.TREX1__Code__c,
@@ -71,6 +74,7 @@ class SalesforceFetcher {
       TREX1__Course_Option__r.TREX1__Total_Capacity_Available__c,
       TREX1__Course_Option__r.TREX1__Type__c,
       TREX1__Course_Option__r.TREX1__Unlimited_Capacity__c,
+      TREX1__Course_Option__r.TREX1__Product__c,
       TREX1__Course_Session__r.TREX1__Course__r.name,
       TREX1__Course_Session__r.TREX1__Course__r.id,
       TREX1__Course_Session__r.TREX1__Course__r.TREX1__Description__c,
@@ -85,14 +89,47 @@ class SalesforceFetcher {
   }
 
   /**
+   *  Pulls location object from Salesforce.
+   *
+   * @return array
+   *   The array of fetched locations.
+   *
+   * @throws \Drupal\ypkc_salesforce\InvalidTokenException
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  public function fetchLocations(): array {
+    $result = $this->tractionRecClient->executeQuery('SELECT
+      TREX1__Location__c.id,
+      TREX1__Location__c.name,
+      TREX1__Location__c.TREX1__Address_City__c,
+      TREX1__Location__c.TREX1__Address_Country__c,
+      TREX1__Location__c.TREX1__Address_State__c,
+      TREX1__Location__c.TREX1__Address_Street__c,
+      TREX1__Location__c.TREX1__Address_Postal_Code__c
+    FROM TREX1__Location__c');
+
+    $result = $this->simplify($result);
+
+    if (empty($result['records'])) {
+      return [];
+    }
+
+    // Locations with an empty address are useless for import.
+    array_filter($result['records'], function(array $location) {
+      return empty($location['Address_City']);
+    });
+    $this->dumpToJson($result, $this->buildFilename('locations'));
+
+    return $result;
+  }
+
+  /**
    * Save retrieved results into json.
    *
    * @param array $data
    *   Data to save.
    */
   private function saveResultsToJson(array $data) {
-    $this->fileSystem->prepareDirectory($this->storagePath, FileSystemInterface::CREATE_DIRECTORY);
-
     $parents = $this->pullProgramsAndClasses($data);
     $this->dumpToJson(array_values($parents['programs']), $this->buildFilename('programs'));
     $this->dumpToJson(array_values($parents['classes']), $this->buildFilename('classes'));

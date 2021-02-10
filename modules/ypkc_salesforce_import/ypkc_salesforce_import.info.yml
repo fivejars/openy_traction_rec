@@ -3,3 +3,5 @@ type: module
 description: 'Salesforce (Traction Rec) migration for YPKC'
 core_version_requirement: ^8.8 || ^9
 package: 'YPKC'
+dependencies:
+  - ypkc_sf_location_mapping:ypkc_sf_location_mapping

@@ -1,0 +1,6 @@
+excluded:
+  - simple_sitemap.bundle_settings..menu_link_content.account
+  - simple_sitemap.bundle_settings..menu_link_content.main
+  - metatag.metatag_defaults.node__branch
+  - metatag.metatag_defaults.node__news
+required: true
