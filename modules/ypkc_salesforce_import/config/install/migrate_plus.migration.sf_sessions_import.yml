@@ -86,6 +86,9 @@ source:
       selector: /Course_Option/Total_Capacity_Available
 process:
   title: title
+  uid:
+    plugin: default_value
+    default_value: 1
   field_session_description: title
   field_session_class/target_id:
     plugin: migration
@@ -97,6 +100,9 @@ process:
   field_session_time:
     plugin: sf_session_time
     source: start_date
+  field_data_source:
+    plugin: default_value
+    default_value: traction_rec
   field_session_online: online_registration
   field_session_location/target_id:
     plugin: sf_location_by_mapping

@@ -2,6 +2,7 @@
 
 namespace Drupal\ypkc_salesforce_import\Commands;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\migrate_tools\Commands\MigrateToolsCommands;
 use Drupal\ypkc_salesforce_import\Importer;
@@ -11,6 +12,13 @@ use Drush\Commands\DrushCommands as DrushCommandsBase;
  * YPKC Salesforce import drush commands.
  */
 class DrushCommands extends DrushCommandsBase {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * The importer service.
@@ -42,12 +50,15 @@ class DrushCommands extends DrushCommandsBase {
    *   Migrate Tools drush commands service.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file handler.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(Importer $importer, MigrateToolsCommands $migrate_tools_drush, FileSystemInterface $file_system) {
+  public function __construct(Importer $importer, MigrateToolsCommands $migrate_tools_drush, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct();
     $this->importer = $importer;
     $this->migrateToolsCommands = $migrate_tools_drush;
     $this->fileSystem = $file_system;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -129,6 +140,23 @@ class DrushCommands extends DrushCommandsBase {
     $options = ['group' => Importer::MIGRATE_GROUP];
     $this->migrateToolsCommands->rollback('', $options);
     $this->output()->writeln('Rollback done!');
+  }
+
+  /**
+   * Remove all sessions from the website.
+   *
+   * @command ypkc-sf:session-flush
+   * @aliases y-sf:session-flush
+   */
+  public function flushSessions() {
+    $storage = $this->entityTypeManager->getStorage('node');
+
+    $sessions = $storage->loadByProperties(['type' => 'session']);
+
+    if ($sessions) {
+      $storage->delete($sessions);
+    }
+
   }
 
 }

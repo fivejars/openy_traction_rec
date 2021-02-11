@@ -65,7 +65,8 @@ class LocationByMapping extends MigrationLookup implements ContainerFactoryPlugi
       throw new MigrateSkipRowException('Location not found!');
     }
 
-    $mapping = $this->entityTypeManager->getStorage('mapping')->load($destination_ids);
+    $mapping_storage = $this->entityTypeManager->getStorage('mapping');
+    $mapping = $mapping_storage->load($destination_ids);
     if (!$mapping || $mapping->get('field_location_node')->isEmpty()) {
       throw new MigrateSkipRowException('Location not found!');
     }

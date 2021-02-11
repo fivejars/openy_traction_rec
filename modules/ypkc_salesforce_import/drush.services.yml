@@ -1,6 +1,10 @@
 services:
   ypkc_salesforce_import.commands:
     class: \Drupal\ypkc_salesforce_import\Commands\DrushCommands
-    arguments: ['@ypkc_salesforce_import.importer', '@migrate_tools.commands', '@file_system']
+    arguments:
+      - '@ypkc_salesforce_import.importer'
+      - '@migrate_tools.commands'
+      - '@file_system'
+      - '@entity_type.manager'
     tags:
       - { name: drush.command }
