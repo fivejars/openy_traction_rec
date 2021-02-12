@@ -202,6 +202,31 @@ class TractionRecClient {
     return json_decode($query_request_body, TRUE);
   }
 
+  public function send($method, $url, array $options = []) {
+    $access_token = $this->getAccessToken();
+    if (!$access_token) {
+      throw new InvalidTokenException();
+    }
+
+    try {
+      $options['headers'] = [
+        'Authorization' => 'Bearer ' . $access_token,
+      ];
+      $response = $this->http->request($method, $url, $options);
+    }
+    catch (RequestException $e) {
+      $response = $e->getResponse();
+    }
+
+    if (!$response) {
+      return [];
+    }
+
+    $query_request_body = $response->getBody()->getContents();
+
+    return json_decode($query_request_body, TRUE);
+  }
+
   /**
    * Set access token based on user code after SSO redirect.
    *

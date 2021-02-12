@@ -30,6 +30,8 @@ class SalesforceFetcher {
    */
   protected $fileSystem;
 
+  protected $data = [];
+
   /**
    * SalesforceFetcher Constructor.
    *
@@ -49,12 +51,11 @@ class SalesforceFetcher {
    * Fetch results (sessions and classes) from Salesforce and save into file.
    */
   public function fetch() {
-    $this->fetchLocations();
+    $this->fetchPrices();
 
     $result = $this->tractionRecClient->executeQuery('SELECT
       TREX1__Course_Option__r.id,
       TREX1__Course_Option__r.name,
-      TREX1__Course_Option__r.TREX1__Code__c,
       TREX1__Course_Option__r.TREX1__Available_Online__c,
       TREX1__Course_Option__r.TREX1__capacity__c,
       TREX1__Course_Option__r.TREX1__Start_Date__c,
@@ -64,6 +65,8 @@ class SalesforceFetcher {
       TREX1__Course_Option__r.TREX1__Day_of_Week__c,
       TREX1__Course_Option__r.TREX1__Instructor__c,
       TREX1__Course_Option__r.TREX1__Location__c,
+      TREX1__Course_Option__r.TREX1__Location__r.id,
+      TREX1__Course_Option__r.TREX1__Location__r.name,
       TREX1__Course_Option__r.TREX1__Age_Max__c,
       TREX1__Course_Option__r.TREX1__Age_Min__c,
       TREX1__Course_Option__r.TREX1__Register_Online_From_Date__c,
@@ -75,6 +78,8 @@ class SalesforceFetcher {
       TREX1__Course_Option__r.TREX1__Type__c,
       TREX1__Course_Option__r.TREX1__Unlimited_Capacity__c,
       TREX1__Course_Option__r.TREX1__Product__c,
+      TREX1__Course_Option__r.TREX1__Product__r.id,
+      TREX1__Course_Option__r.TREX1__Product__r.name,
       TREX1__Course_Session__r.TREX1__Course__r.name,
       TREX1__Course_Session__r.TREX1__Course__r.id,
       TREX1__Course_Session__r.TREX1__Course__r.TREX1__Description__c,
@@ -85,7 +90,34 @@ class SalesforceFetcher {
     FROM TREX1__Course_Session_Option__c');
 
     $result = $this->simplify($result);
-    $this->saveResultsToJson($result);
+
+    if (empty($result['records'])) {
+      return [];
+    }
+
+    $this->data = $result['records'];
+    if (isset($result['nextRecordsUrl']) && !empty($result['nextRecordsUrl'])) {
+      $url = $result['nextRecordsUrl'];
+      $this->paginationFetch($url);
+    }
+
+    $this->saveResultsToJson();
+  }
+
+  protected function paginationFetch($nextUrl) {
+    $result = $this->tractionRecClient->send('GET', 'https://ymcapkc.my.salesforce.com' . $nextUrl);
+    $result = $this->simplify($result);
+
+    if (empty($result['records'])) {
+      return [];
+    }
+
+    $this->data = array_merge($this->data, $result['records']);
+
+    if (isset($result['nextRecordsUrl']) && !empty($result['nextRecordsUrl'])) {
+      $url = $result['nextRecordsUrl'];
+      $this->paginationFetch($url);
+    }
   }
 
   /**
@@ -123,17 +155,43 @@ class SalesforceFetcher {
     return $result;
   }
 
+  protected function fetchPrices() {
+    $result = $this->tractionRecClient->executeQuery('SELECT
+      TREX1__Price_Level__c.id,
+      TREX1__Price_Level__c.name,
+      TREX1__Price_Level__c.TREX1__Product__c,
+      TREX1__Price_Level__c.TREX1__Product__r.id,
+      TREX1__Price_Level__c.TREX1__Product__r.name,
+      TREX1__Price_Level__c.TREX1__Initial_Fee_Amount__c,
+      TREX1__Price_Level__c.TREX1__Hourly_Rate__c,
+      TREX1__Price_Level__c.TREX1__Deposit_Fee_Amount__c,
+      TREX1__Price_Level__c.TREX1__Commission_Fixed_Amount__c,
+      TREX1__Price_Level__c.TREX1__Booking_Price__c,
+      TREX1__Price_Level__c.TREX1__Price_Type__c
+    FROM TREX1__Price_Level__c');
+
+    $result = $this->simplify($result);
+
+    if (empty($result['records'])) {
+      return [];
+    }
+
+    $this->dumpToJson($result, $this->buildFilename('price_levels'));
+
+    return $result;
+  }
+
   /**
    * Save retrieved results into json.
    *
    * @param array $data
    *   Data to save.
    */
-  private function saveResultsToJson(array $data) {
-    $parents = $this->pullProgramsAndClasses($data);
+  private function saveResultsToJson() {
+    $parents = $this->pullProgramsAndClasses($this->data);
     $this->dumpToJson(array_values($parents['programs']), $this->buildFilename('programs'));
     $this->dumpToJson(array_values($parents['classes']), $this->buildFilename('classes'));
-    $this->dumpToJson($data, $this->buildFilename('sessions'));
+    $this->dumpToJson($this->data, $this->buildFilename('sessions'));
   }
 
   /**
@@ -146,13 +204,13 @@ class SalesforceFetcher {
    *   The array of programs and classes.
    */
   protected function pullProgramsAndClasses(array $data): array {
-    if (empty($data['records'])) {
+    if (!$data) {
       return ['classes' => [], 'programs' => []];
     }
 
     $programs = [];
     $classes = [];
-    foreach ($data['records'] as $item) {
+    foreach ($data as $item) {
       if (!isset($item['Course_Session']) || !isset($item['Course_Session']['Course'])) {
         continue;
       }
