@@ -286,7 +286,20 @@ class TractionRecClient {
     return $this->salesforceSsoSettings->get('app_url') . '/services/oauth2/authorize?client_id='
       . $this->salesforceSsoSettings->get('client_id')
       . '&redirect_uri=https://' . $this->request->getHost() . $this->salesforceSsoSettings->get('redirect_uri')
-      . '&response_type=code&state=&scope=api%20id';
+    // @todo Fix problem with scopes here.
+    // Should be 'api id' according to https://quip.com/UKZ6ABw4YynH
+    // 'Community User Authentication Example with cURL targeting test' section.
+      . '&response_type=code&state=&scope=api';
+  }
+
+  /**
+   * Returns link for homepage(account) in Salesforce app.
+   *
+   * @return string
+   *   Link to account page.
+   */
+  public function getAccountLink() {
+    return $this->salesforceSsoSettings->get('app_url');
   }
 
   /**
