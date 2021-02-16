@@ -108,6 +108,18 @@ class SalesforceFetcher {
     $this->saveResultsToJson();
   }
 
+  /**
+   * Fetches all pages of results recursively.
+   *
+   * @param string $nextUrl
+   *   The URL of the next results page.
+   *
+   * @return array
+   *   The array with fetched data.
+   *
+   * @throws \Drupal\ypkc_salesforce\InvalidTokenException
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
   protected function paginationFetch($nextUrl) {
     $result = $this->tractionRecClient->send('GET', 'https://ymcapkc.my.salesforce.com' . $nextUrl);
     $result = $this->simplify($result);
@@ -122,10 +134,12 @@ class SalesforceFetcher {
       $url = $result['nextRecordsUrl'];
       $this->paginationFetch($url);
     }
+
+    return $this->data;
   }
 
   /**
-   *  Pulls location object from Salesforce.
+   * Pulls location object from Salesforce.
    *
    * @return array
    *   The array of fetched locations.
@@ -151,7 +165,7 @@ class SalesforceFetcher {
     }
 
     // Locations with an empty address are useless for import.
-    array_filter($result['records'], function(array $location) {
+    array_filter($result['records'], function (array $location) {
       return empty($location['Address_City']);
     });
     $this->dumpToJson($result, $this->buildFilename('locations'));
@@ -161,9 +175,6 @@ class SalesforceFetcher {
 
   /**
    * Save retrieved results into json.
-   *
-   * @param array $data
-   *   Data to save.
    */
   private function saveResultsToJson() {
     $parents = $this->pullProgramsAndClasses($this->data);

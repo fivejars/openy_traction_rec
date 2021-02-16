@@ -202,6 +202,22 @@ class TractionRecClient {
     return json_decode($query_request_body, TRUE);
   }
 
+  /**
+   * Sends Traction Rec request.
+   *
+   * @param string $method
+   *   Request method.
+   * @param string $url
+   *   The URL.
+   * @param array $options
+   *   The array of request options.
+   *
+   * @return array|mixed
+   *   The array with a response data.
+   *
+   * @throws \Drupal\ypkc_salesforce\InvalidTokenException
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
   public function send($method, $url, array $options = []) {
     $access_token = $this->getAccessToken();
     if (!$access_token) {

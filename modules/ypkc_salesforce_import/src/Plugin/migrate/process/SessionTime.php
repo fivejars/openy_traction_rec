@@ -118,7 +118,8 @@ class SessionTime extends ProcessPluginBase implements ContainerFactoryPluginInt
         'target_id' => $paragraph->id(),
         'target_revision_id' => $paragraph->getRevisionId(),
       ];
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       throw new MigrateSkipRowException($e->getMessage());
     }
   }

@@ -72,6 +72,6 @@ class LocationByTitle extends ProcessPluginBase implements ContainerFactoryPlugi
     catch (\Exception $e) {
       throw new MigrateSkipRowException($e->getMessage());
     }
-   }
+  }
 
 }
