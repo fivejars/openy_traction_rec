@@ -30,6 +30,11 @@ class SalesforceFetcher {
    */
   protected $fileSystem;
 
+  /**
+   * Fetched data.
+   *
+   * @var array
+   */
   protected $data = [];
 
   /**
@@ -51,8 +56,6 @@ class SalesforceFetcher {
    * Fetch results (sessions and classes) from Salesforce and save into file.
    */
   public function fetch() {
-    $this->fetchPrices();
-
     $result = $this->tractionRecClient->executeQuery('SELECT
       TREX1__Course_Option__r.id,
       TREX1__Course_Option__r.name,
@@ -80,6 +83,7 @@ class SalesforceFetcher {
       TREX1__Course_Option__r.TREX1__Product__c,
       TREX1__Course_Option__r.TREX1__Product__r.id,
       TREX1__Course_Option__r.TREX1__Product__r.name,
+      TREX1__Course_Option__r.TREX1__Product__r.TREX1__Price_Description__c,
       TREX1__Course_Session__r.TREX1__Course__r.name,
       TREX1__Course_Session__r.TREX1__Course__r.id,
       TREX1__Course_Session__r.TREX1__Course__r.TREX1__Description__c,
@@ -151,32 +155,6 @@ class SalesforceFetcher {
       return empty($location['Address_City']);
     });
     $this->dumpToJson($result, $this->buildFilename('locations'));
-
-    return $result;
-  }
-
-  protected function fetchPrices() {
-    $result = $this->tractionRecClient->executeQuery('SELECT
-      TREX1__Price_Level__c.id,
-      TREX1__Price_Level__c.name,
-      TREX1__Price_Level__c.TREX1__Product__c,
-      TREX1__Price_Level__c.TREX1__Product__r.id,
-      TREX1__Price_Level__c.TREX1__Product__r.name,
-      TREX1__Price_Level__c.TREX1__Initial_Fee_Amount__c,
-      TREX1__Price_Level__c.TREX1__Hourly_Rate__c,
-      TREX1__Price_Level__c.TREX1__Deposit_Fee_Amount__c,
-      TREX1__Price_Level__c.TREX1__Commission_Fixed_Amount__c,
-      TREX1__Price_Level__c.TREX1__Booking_Price__c,
-      TREX1__Price_Level__c.TREX1__Price_Type__c
-    FROM TREX1__Price_Level__c');
-
-    $result = $this->simplify($result);
-
-    if (empty($result['records'])) {
-      return [];
-    }
-
-    $this->dumpToJson($result, $this->buildFilename('price_levels'));
 
     return $result;
   }

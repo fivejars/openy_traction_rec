@@ -4,17 +4,17 @@ dependencies:
   enforced:
     module:
       - ypkc_salesforce_import
-id: sf_location_mapping
+id: sf_progrmas_import
 migration_tags:
   - openy_import
 migration_group: sf_import
-label: 'Import Location Mappings'
+label: 'Import Programs'
 source:
   plugin: url
   data_fetcher_plugin: file
   data_parser_plugin: json
-  item_selector: records/
-  urls: 'private://salesforce_import/locations.json'
+  item_selector: 0
+  urls: 'private://salesforce_import/programs.json'
   track_changes: true
   ids:
     id:
@@ -29,14 +29,19 @@ source:
       label: 'Title'
       selector: /Name
 process:
-  name: title
-  field_traction_rec_id: id
-  field_location_node:
-    plugin: sf_location_by_title
-    source: title
+  title: title
+  type:
+    plugin: default_value
+    default_value: program
+  status:
+    plugin: default_value
+    default_value: 1
+  field_data_source:
+    plugin: default_value
+    default_value: traction_rec
   uid:
     plugin: default_value
     default_value: 1
 destination:
-  plugin: 'entity:mapping'
-  default_bundle: traction_rec_location
+  plugin: 'entity:node'
+  default_bundle: activity

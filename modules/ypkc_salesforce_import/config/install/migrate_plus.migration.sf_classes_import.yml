@@ -54,6 +54,9 @@ process:
   moderation_state:
      plugin: default_value
      default_value: 'published'
+  field_data_source:
+    plugin: default_value
+    default_value: traction_rec
   field_class_activity/target_id:
     plugin: migration
     migration: sf_activities_import

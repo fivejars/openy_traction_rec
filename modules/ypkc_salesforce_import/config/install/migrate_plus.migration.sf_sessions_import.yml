@@ -13,7 +13,7 @@ source:
   plugin: url
   data_fetcher_plugin: file
   data_parser_plugin: json
-  item_selector: records/
+  item_selector: 0
   urls: 'private://salesforce_import/sessions.json'
   track_changes: true
   ids:
@@ -32,6 +32,10 @@ source:
       name: class
       label: 'Class'
       selector: /Course_Session/Course/Id
+    -
+      name: course
+      label: 'Course'
+      selector: /Course_Session/Course/Name
     -
       name: start_date
       label: 'Start Date'
@@ -59,7 +63,7 @@ source:
     -
       name: location
       label: 'Location'
-      selector: /Course_Option/Location
+      selector: /Course_Option/Location/Name
     -
       name: instructor
       label: 'Instructor'
@@ -84,6 +88,10 @@ source:
       name: spots_available
       label: 'Spots available'
       selector: /Course_Option/Total_Capacity_Available
+    -
+      name: price_description
+      label: 'Price Description'
+      selector: /Course_Option/Product/Price_Description
 process:
   title: title
   uid:
@@ -104,10 +112,13 @@ process:
     plugin: default_value
     default_value: traction_rec
   field_session_online: online_registration
-  field_session_location/target_id:
-    plugin: sf_location_by_mapping
-    migration: sf_location_mapping
+  field_session_location:
+    plugin: sf_location_by_title
     source: location
+  field_session_reg_link:
+    plugin: sf_registration_link
+    source: course
+  field_price_description: price_description
   field_session_min_age/value:
     -
       plugin: skip_on_value
