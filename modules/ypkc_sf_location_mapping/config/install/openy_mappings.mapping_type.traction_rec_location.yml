@@ -1,5 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-id: traction_rec_location
-label: 'Traction Rec Location'
