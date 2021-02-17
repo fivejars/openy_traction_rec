@@ -4,7 +4,7 @@ dependencies:
   enforced:
     module:
       - ypkc_salesforce_import
-id: sf_progrmas_import
+id: sf_programs_import
 migration_tags:
   - openy_import
 migration_group: sf_import
