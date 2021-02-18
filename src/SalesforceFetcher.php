@@ -133,7 +133,7 @@ class SalesforceFetcher {
    * @throws \Drupal\ypkc_salesforce\InvalidTokenException
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  function fetchProgramCategoryTags() {
+  public function fetchProgramCategoryTags() {
     $result = $this->tractionRecClient->executeQuery('SELECT
       TREX1__Program_Category_Tag__c.id,
       TREX1__Program_Category_Tag__c.name,
