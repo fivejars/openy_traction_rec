@@ -38,6 +38,13 @@ class SalesforceFetcher {
   protected $data = [];
 
   /**
+   * JSON Directory name.
+   *
+   * @var string
+   */
+  protected $directory;
+
+  /**
    * SalesforceFetcher Constructor.
    *
    * @param \Drupal\ypkc_salesforce\TractionRecClient $traction_rec_client
@@ -50,12 +57,29 @@ class SalesforceFetcher {
     $this->fileSystem = $file_system;
 
     $this->fileSystem->prepareDirectory($this->storagePath, FileSystemInterface::CREATE_DIRECTORY);
+    $this->directory = $this->storagePath . '/' . date('YmdHi') . '/';
   }
 
   /**
    * Fetch results (sessions and classes) from Salesforce and save into file.
    */
   public function fetch() {
+    $this->fetchProgramCategoryTags();
+    $this->fetchProgramAndCategories();
+    $this->fetchClasses();
+    $this->fetchSessions();
+  }
+
+  /**
+   * Fetches sessions data.
+   *
+   * @return array
+   *   The array of fetched data.
+   *
+   * @throws \Drupal\ypkc_salesforce\InvalidTokenException
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  public function fetchSessions() {
     $result = $this->tractionRecClient->executeQuery('SELECT
       TREX1__Course_Option__r.id,
       TREX1__Course_Option__r.name,
@@ -80,17 +104,12 @@ class SalesforceFetcher {
       TREX1__Course_Option__r.TREX1__Total_Capacity_Available__c,
       TREX1__Course_Option__r.TREX1__Type__c,
       TREX1__Course_Option__r.TREX1__Unlimited_Capacity__c,
+      TREX1__Course_Session__r.TREX1__Course__r.name,
+      TREX1__Course_Session__r.TREX1__Course__r.id,
       TREX1__Course_Option__r.TREX1__Product__c,
       TREX1__Course_Option__r.TREX1__Product__r.id,
       TREX1__Course_Option__r.TREX1__Product__r.name,
-      TREX1__Course_Option__r.TREX1__Product__r.TREX1__Price_Description__c,
-      TREX1__Course_Session__r.TREX1__Course__r.name,
-      TREX1__Course_Session__r.TREX1__Course__r.id,
-      TREX1__Course_Session__r.TREX1__Course__r.TREX1__Description__c,
-      TREX1__Course_Session__r.TREX1__Course__r.TREX1__Rich_Description__c,
-      TREX1__Course_Session__r.TREX1__Course__r.TREX1__Program__c,
-      TREX1__Course_Session__r.TREX1__Course__r.TREX1__Program__r.id,
-      TREX1__Course_Session__r.TREX1__Course__r.TREX1__Program__r.name
+      TREX1__Course_Option__r.TREX1__Product__r.TREX1__Price_Description__c
     FROM TREX1__Course_Session_Option__c');
 
     $result = $this->simplify($result);
@@ -105,7 +124,32 @@ class SalesforceFetcher {
       $this->paginationFetch($url);
     }
 
-    $this->saveResultsToJson();
+    $this->dumpToJson($this->data, $this->buildFilename('sessions'));
+  }
+
+  /**
+   * Fetches program category tags.
+   *
+   * @throws \Drupal\ypkc_salesforce\InvalidTokenException
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  function fetchProgramCategoryTags() {
+    $result = $this->tractionRecClient->executeQuery('SELECT
+      TREX1__Program_Category_Tag__c.id,
+      TREX1__Program_Category_Tag__c.name,
+      TREX1__Program__r.id,
+      TREX1__Program__r.name,
+      TREX1__Program_Category__r.id,
+      TREX1__Program_Category__r.name
+    FROM TREX1__Program_Category_Tag__c');
+
+    $result = $this->simplify($result);
+
+    if (empty($result['records'])) {
+      return;
+    }
+
+    $this->dumpToJson($result['records'], $this->buildFilename('category_tags'));
   }
 
   /**
@@ -174,41 +218,66 @@ class SalesforceFetcher {
   }
 
   /**
-   * Save retrieved results into json.
+   * Fetches classes.
+   *
+   * @throws \Drupal\ypkc_salesforce\InvalidTokenException
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  private function saveResultsToJson() {
-    $parents = $this->pullProgramsAndClasses($this->data);
-    $this->dumpToJson(array_values($parents['programs']), $this->buildFilename('programs'));
-    $this->dumpToJson(array_values($parents['classes']), $this->buildFilename('classes'));
-    $this->dumpToJson($this->data, $this->buildFilename('sessions'));
+  public function fetchClasses():void {
+    $result = $this->tractionRecClient->executeQuery('SELECT
+      TREX1__Course__c.id,
+      TREX1__Course__c.name,
+      TREX1__Course__c.TREX1__Description__c,
+      TREX1__Course__c.TREX1__Rich_Description__c,
+      TREX1__Course__c.TREX1__Program__r.id,
+      TREX1__Course__c.TREX1__Program__r.name
+    FROM TREX1__Course__c');
+
+    $result = $this->simplify($result);
+
+    if (empty($result['records'])) {
+      return;
+    }
+
+    $this->dumpToJson($result['records'], $this->buildFilename('classes'));
   }
 
   /**
-   * Pulls programs and classes data separately.
+   * Fetches the program data.
    *
-   * @param array $data
-   *   The array of query results.
-   *
-   * @return array[]
-   *   The array of programs and classes.
+   * @throws \Drupal\ypkc_salesforce\InvalidTokenException
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  protected function pullProgramsAndClasses(array $data): array {
-    if (!$data) {
-      return ['classes' => [], 'programs' => []];
+  public function fetchProgramAndCategories():void {
+    $result = $this->tractionRecClient->executeQuery('SELECT
+      TREX1__Program_Category_Tag__c.id,
+      TREX1__Program_Category_Tag__c.name,
+      TREX1__Program_Category_Tag__c.TREX1__Program__r.id,
+      TREX1__Program_Category_Tag__c.TREX1__Program__r.name,
+      TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.id,
+      TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.name
+    FROM TREX1__Program_Category_Tag__c');
+
+    $result = $this->simplify($result);
+
+    if (empty($result['records'])) {
+      return;
     }
 
     $programs = [];
-    $classes = [];
-    foreach ($data as $item) {
-      if (!isset($item['Course_Session']) || !isset($item['Course_Session']['Course'])) {
-        continue;
-      }
+    $categories = [];
+    foreach ($result['records'] as $key => $category_tag) {
+      $programs[$category_tag['Program']['Id']] = $category_tag['Program'];
 
-      $classes[$item['Course_Session']['Course']['Id']] = $item['Course_Session']['Course'];
-      $programs[$item['Course_Session']['Course']['Program']['Id']] = $item['Course_Session']['Course']['Program'];
+      $category = $category_tag['Program_Category'];
+      $category['Program'] = $category_tag['Program']['Id'];
+      $categories[$category_tag['Program_Category']['Id']] = $category;
+
+      unset($result['records'][$key]);
     }
 
-    return ['classes' => $classes, 'programs' => $programs];
+    $this->dumpToJson(array_values($programs), $this->buildFilename('programs'));
+    $this->dumpToJson(array_values($categories), $this->buildFilename('program_categories'));
   }
 
   /**
@@ -261,9 +330,8 @@ class SalesforceFetcher {
    *   The filename string.
    */
   protected function buildFilename(string $items_type): string {
-    $dir_name = $this->storagePath . '/' . date('YmdHi') . '/';
-    $this->fileSystem->prepareDirectory($dir_name, FileSystemInterface::CREATE_DIRECTORY);
-    return $dir_name . $items_type . '.json';
+    $this->fileSystem->prepareDirectory($this->directory, FileSystemInterface::CREATE_DIRECTORY);
+    return $this->directory . $items_type . '.json';
   }
 
 }

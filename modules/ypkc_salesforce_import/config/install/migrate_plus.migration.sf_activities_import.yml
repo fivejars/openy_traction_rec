@@ -14,7 +14,7 @@ source:
   data_fetcher_plugin: file
   data_parser_plugin: json
   item_selector: 0
-  urls: 'private://salesforce_import/programs.json'
+  urls: 'private://salesforce_import/classes.json'
   track_changes: true
   ids:
     id:
@@ -28,6 +28,10 @@ source:
       name: title
       label: 'Title'
       selector: /Name
+    -
+      name: program_id
+      label: 'Program ID'
+      selector: /Program/Id
 process:
   title: title
   type:
@@ -46,9 +50,13 @@ process:
     plugin: default_value
     default_value: traction_rec
   field_activity_category/target_id:
-    plugin: migration
+    plugin: sf_category_by_program
     migration: sf_sub_programs_import
-    source: id
+    source: program_id
 destination:
   plugin: 'entity:node'
   default_bundle: activity
+migration_dependencies:
+  required:
+    - sf_category_mapping
+    - sf_sub_programs_import

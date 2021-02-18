@@ -14,7 +14,7 @@ source:
   data_fetcher_plugin: file
   data_parser_plugin: json
   item_selector: 0
-  urls: 'private://salesforce_import/programs.json'
+  urls: 'private://salesforce_import/program_categories.json'
   track_changes: true
   ids:
     id:
@@ -28,6 +28,10 @@ source:
       name: title
       label: 'Title'
       selector: /Name
+    -
+      name: program
+      label: 'Program'
+      selector: /Program
 process:
   title: title
   type:
@@ -42,7 +46,7 @@ process:
   field_category_program/target_id:
     plugin: migration
     migration: sf_programs_import
-    source: id
+    source: program
   uid:
     plugin: default_value
     default_value: 1
