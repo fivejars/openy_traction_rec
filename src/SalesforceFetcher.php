@@ -267,17 +267,20 @@ class SalesforceFetcher {
     $programs = [];
     $categories = [];
     foreach ($result['records'] as $key => $category_tag) {
-      $programs[$category_tag['Program']['Id']] = $category_tag['Program'];
+      // It's confusing, but in Open Y terms we we have vice verse structure:
+      // Traction Rec Program -> Open Y Program Sub Category.
+      // Traction Rec Program Category -> Open Y Program.
+      $programs[$category_tag['Program_Category']['Id']] = $category_tag['Program_Category'];
 
-      $category = $category_tag['Program_Category'];
-      $category['Program'] = $category_tag['Program']['Id'];
-      $categories[$category_tag['Program_Category']['Id']] = $category;
+      $category = $category_tag['Program'];
+      $category['Program'] = $category_tag['Program_Category']['Id'];
+      $categories[] = $category;
 
       unset($result['records'][$key]);
     }
 
     $this->dumpToJson(array_values($programs), $this->buildFilename('programs'));
-    $this->dumpToJson(array_values($categories), $this->buildFilename('program_categories'));
+    $this->dumpToJson($categories, $this->buildFilename('program_categories'));
   }
 
   /**
