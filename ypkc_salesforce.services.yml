@@ -4,4 +4,7 @@ services:
     arguments: ['@ypkc_salesforce.tr_client', '@file_system']
   ypkc_salesforce.tr_client:
     class: Drupal\ypkc_salesforce\TractionRecClient
-    arguments: [ '@config.factory', '@http_client', '@datetime.time', '@key.repository' ]
+    arguments: [ '@config.factory', '@http_client', '@datetime.time', '@logger.factory', '@request_stack', '@key.repository']
+  ypkc_salesforce.user_authorizer:
+    class: Drupal\ypkc_salesforce\YpkcUserAuthorizer
+    arguments: ['@entity_type.manager']

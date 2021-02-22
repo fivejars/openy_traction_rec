@@ -31,8 +31,8 @@ class SalesforceFetch extends DrushCommands {
   /**
    * Run Salesforce fetcher.
    *
-   * @command ypkc:sf-fetch
-   * @aliases ypkc-sf-fetch
+   * @command ypkc:sf-fetch-all
+   * @aliases y-sf-fa
    */
   public function fetch() {
     $this->salesforceFetcher->fetch();

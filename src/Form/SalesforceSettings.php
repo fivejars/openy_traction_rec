@@ -40,6 +40,14 @@ class SalesforceSettings extends ConfigFormBase {
       '#default_value' => $config->get('consumer_key'),
     ];
 
+    $form['consumer_secret'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Salesforce Consumer Secret'),
+      '#description' => $this->t('Consumer secret of the Salesforce remote application you want to grant access to'),
+      '#required' => TRUE,
+      '#default_value' => $config->get('consumer_secret'),
+    ];
+
     $form['login_user'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Salesforce login user'),
@@ -60,7 +68,7 @@ class SalesforceSettings extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Services base URL'),
       '#default_value' => $config->get('services_base_url'),
-      '#description' => $this->t('Enter an URL, ex https://open-y-rec-dev-ed.my.salesforce.com/services/data/v49.0/'),
+      '#description' => $this->t('Enter an URL, ex https://open-y-rec-dev-ed.my.salesforce.com'),
       '#required' => TRUE,
     ];
 
@@ -73,6 +81,7 @@ class SalesforceSettings extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('ypkc_salesforce.settings');
     $config->set('consumer_key', $form_state->getValue('consumer_key'));
+    $config->set('consumer_secret', $form_state->getValue('consumer_secret'));
     $config->set('login_user', $form_state->getValue('login_user'));
     $config->set('login_url', $form_state->getValue('login_url'));
     $config->set('services_base_url', $form_state->getValue('services_base_url'));
