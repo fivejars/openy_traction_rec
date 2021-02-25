@@ -159,4 +159,14 @@ class DrushCommands extends DrushCommandsBase {
 
   }
 
+  /**
+   * Resets the import lock.
+   *
+   * @command ypkc-sf:reset-lock
+   */
+  public function resetLock() {
+    $this->output()->writeln('Reset import status...');
+    $this->importer->releaseLock();
+  }
+
 }
