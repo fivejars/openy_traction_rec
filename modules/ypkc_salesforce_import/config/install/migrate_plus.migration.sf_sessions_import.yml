@@ -98,6 +98,7 @@ source:
       selector: /Course_Option/Product/Price_Description
 process:
   title: title
+  status: online_registration
   uid:
     plugin: default_value
     default_value: 1
