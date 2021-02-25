@@ -64,7 +64,6 @@ class SalesforceFetcher {
    * Fetch results (sessions and classes) from Salesforce and save into file.
    */
   public function fetch() {
-    $this->fetchProgramCategoryTags();
     $this->fetchProgramAndCategories();
     $this->fetchClasses();
     $this->fetchSessions();
@@ -111,7 +110,7 @@ class SalesforceFetcher {
       TREX1__Course_Option__r.TREX1__Product__r.id,
       TREX1__Course_Option__r.TREX1__Product__r.name,
       TREX1__Course_Option__r.TREX1__Product__r.TREX1__Price_Description__c
-    FROM TREX1__Course_Session_Option__c');
+    FROM TREX1__Course_Session_Option__c WHERE TREX1__Course_Option__r.TREX1__Available_Online__c = true');
 
     $result = $this->simplify($result);
 
@@ -126,31 +125,6 @@ class SalesforceFetcher {
     }
 
     $this->dumpToJson($this->data, $this->buildFilename('sessions'));
-  }
-
-  /**
-   * Fetches program category tags.
-   *
-   * @throws \Drupal\ypkc_salesforce\InvalidTokenException
-   * @throws \GuzzleHttp\Exception\GuzzleException
-   */
-  public function fetchProgramCategoryTags() {
-    $result = $this->tractionRecClient->executeQuery('SELECT
-      TREX1__Program_Category_Tag__c.id,
-      TREX1__Program_Category_Tag__c.name,
-      TREX1__Program__r.id,
-      TREX1__Program__r.name,
-      TREX1__Program_Category__r.id,
-      TREX1__Program_Category__r.name
-    FROM TREX1__Program_Category_Tag__c');
-
-    $result = $this->simplify($result);
-
-    if (empty($result['records'])) {
-      return;
-    }
-
-    $this->dumpToJson($result['records'], $this->buildFilename('category_tags'));
   }
 
   /**
