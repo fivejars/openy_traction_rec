@@ -5,6 +5,7 @@ namespace Drupal\ypkc_salesforce_import\Commands;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\migrate_tools\Commands\MigrateToolsCommands;
+use Drupal\ypkc_salesforce_import\Cleaner;
 use Drupal\ypkc_salesforce_import\Importer;
 use Drush\Commands\DrushCommands as DrushCommandsBase;
 
@@ -23,9 +24,16 @@ class DrushCommands extends DrushCommandsBase {
   /**
    * The importer service.
    *
-   * @var Drupal\ypkc_salesforce_import\Importer
+   * @var \Drupal\ypkc_salesforce_import\Importer
    */
   protected $importer;
+
+  /**
+   * The YPKC sessions cleaner service.
+   *
+   * @var \Drupal\ypkc_salesforce_import\Cleaner
+   */
+  protected $cleaner;
 
   /**
    * Migrate tool drush commands.
@@ -46,6 +54,8 @@ class DrushCommands extends DrushCommandsBase {
    *
    * @param \Drupal\ypkc_salesforce_import\Importer $importer
    *   The Salesforce importer service.
+   * @param \Drupal\ypkc_salesforce_import\Cleaner $cleaner
+   *   YPKC sessions cleaner.
    * @param \Drupal\migrate_tools\Commands\MigrateToolsCommands $migrate_tools_drush
    *   Migrate Tools drush commands service.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
@@ -53,9 +63,10 @@ class DrushCommands extends DrushCommandsBase {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(Importer $importer, MigrateToolsCommands $migrate_tools_drush, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(Importer $importer, Cleaner $cleaner, MigrateToolsCommands $migrate_tools_drush, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct();
     $this->importer = $importer;
+    $this->cleaner = $cleaner;
     $this->migrateToolsCommands = $migrate_tools_drush;
     $this->fileSystem = $file_system;
     $this->entityTypeManager = $entity_type_manager;
@@ -167,6 +178,24 @@ class DrushCommands extends DrushCommandsBase {
   public function resetLock() {
     $this->output()->writeln('Reset import status...');
     $this->importer->releaseLock();
+  }
+
+  /**
+   * Resets the import lock.
+   *
+   * @param array $options
+   *   The array of command options.
+   *
+   * @command ypkc-sf:clean-up
+   *
+   * @option limit
+   *   Items to store per file. Default: 5000
+   */
+  public function cleanUp(array $options) {
+    $this->output()->writeln('Starting clean up...');
+    $limit = $options['limit'];
+    $this->cleaner->cleanUp($limit);
+    $this->output()->writeln('Clean up finished!');
   }
 
 }
