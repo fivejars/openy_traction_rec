@@ -115,7 +115,7 @@ class DrushCommands extends DrushCommandsBase {
 
       $this->migrateToolsCommands->import(
         '',
-        ['group' => Importer::MIGRATE_GROUP, 'update' => TRUE]
+        ['group' => Importer::MIGRATE_GROUP]
       );
 
       $backup_dir = Importer::BACKUP_DIRECTORY;
