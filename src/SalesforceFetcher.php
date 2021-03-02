@@ -229,8 +229,10 @@ class SalesforceFetcher {
       TREX1__Program_Category_Tag__c.name,
       TREX1__Program_Category_Tag__c.TREX1__Program__r.id,
       TREX1__Program_Category_Tag__c.TREX1__Program__r.name,
+      TREX1__Program_Category_Tag__c.TREX1__Program__r.TREX1__Available_Online__c,
       TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.id,
-      TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.name
+      TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.name,
+      TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.TREX1__Available_Online__c
     FROM TREX1__Program_Category_Tag__c');
 
     $result = $this->simplify($result);
