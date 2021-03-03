@@ -29,7 +29,7 @@ class YpkcUserAuthorizer {
   /**
    * {@inheritdoc}
    */
-  public function authorizeUser($name, $email, array $extra_data = []) {
+  public function authorizeUser($name, $email) {
 
     if (empty($name) || empty($email)) {
       return;
@@ -44,6 +44,12 @@ class YpkcUserAuthorizer {
       $user->setEmail($email);
       $user->setUsername($name);
       $user->activate();
+
+      // Temp solution: Virtual Y will be removed from the project soon.
+      if (\Drupal::moduleHandler()->moduleExists('openy_gated_content')) {
+        $user->addRole('virtual_y');
+      }
+
       $result = $account = $user->save();
       if ($result) {
         $account = user_load_by_mail($email);
