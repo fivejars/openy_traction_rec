@@ -75,10 +75,21 @@ class DrushCommands extends DrushCommandsBase {
   /**
    * Executes the Salesforce import.
    *
+   * @param array $options
+   *   Additional options for the command.
+   *
    * @command ypkc-sf:import
    * @aliases y-sf:import
+   *
+   * @option sync Sync source and destination. Delete destination records that
+   *   do not exist in the source.
+   *
+   * @return bool
+   *   Execution status.
+   *
+   * @throws \Exception
    */
-  public function import(): bool {
+  public function import(array $options): bool {
     if (!$this->importer->isEnabled()) {
       $this->logger()->notice(
         dt('Salesforce import is not enabled!')
@@ -111,27 +122,32 @@ class DrushCommands extends DrushCommandsBase {
     }
 
     foreach ($dirs as $dir) {
-      // Results of each fetch are saved to separated directory.
-      $json_files = $this->fileSystem->scanDirectory($dir, '/\.json$/');
-      if (empty($json_files)) {
-        continue;
+      try {
+        // Results of each fetch are saved to separated directory.
+        $json_files = $this->fileSystem->scanDirectory($dir, '/\.json$/');
+        if (empty($json_files)) {
+          continue;
+        }
+
+        // Usually we have several files for import:
+        // sessions.json, classes.json, programs.json, program_categories.json.
+        foreach ($json_files as $file) {
+          $this->output()->writeln("Preparing $file->uri for import");
+          $this->fileSystem->copy($file->uri, 'private://salesforce_import/', FileSystemInterface::EXISTS_REPLACE);
+        }
+
+        $this->migrateToolsCommands->import(
+          '',
+          ['group' => Importer::MIGRATE_GROUP, 'sync' => $options['sync']]
+        );
+
+        $backup_dir = Importer::BACKUP_DIRECTORY;
+        $this->fileSystem->prepareDirectory($backup_dir, FileSystemInterface::CREATE_DIRECTORY);
+        $this->fileSystem->move($dir, $backup_dir);
       }
-
-      // Usually we have several files for import:
-      // sessions.json, classes.json, programs.json, program_categories.json.
-      foreach ($json_files as $file) {
-        $this->output()->writeln("Preparing $file->uri for import");
-        $this->fileSystem->copy($file->uri, 'private://salesforce_import/', FileSystemInterface::EXISTS_REPLACE);
+      catch (\Exception $e) {
+        $this->output()->writeln($e->getMessage());
       }
-
-      $this->migrateToolsCommands->import(
-        '',
-        ['group' => Importer::MIGRATE_GROUP]
-      );
-
-      $backup_dir = Importer::BACKUP_DIRECTORY;
-      $this->fileSystem->prepareDirectory($backup_dir, FileSystemInterface::CREATE_DIRECTORY);
-      $this->fileSystem->move($dir, $backup_dir);
     }
 
     $this->importer->releaseLock();

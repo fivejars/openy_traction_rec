@@ -83,6 +83,7 @@ class SalesforceFetcher {
       TREX1__Course_Option__r.id,
       TREX1__Course_Option__r.name,
       TREX1__Course_Option__r.TREX1__Available_Online__c,
+      TREX1__Course_Option__r.TREX1__Available__c,
       TREX1__Course_Option__r.TREX1__capacity__c,
       TREX1__Course_Option__r.TREX1__Start_Date__c,
       TREX1__Course_Option__r.TREX1__Start_Time__c,
@@ -205,8 +206,9 @@ class SalesforceFetcher {
       TREX1__Course__c.TREX1__Description__c,
       TREX1__Course__c.TREX1__Rich_Description__c,
       TREX1__Course__c.TREX1__Program__r.id,
-      TREX1__Course__c.TREX1__Program__r.name
-    FROM TREX1__Course__c');
+      TREX1__Course__c.TREX1__Program__r.name,
+      TREX1__Course__c.TREX1__Available__c
+    FROM TREX1__Course__c WHERE TREX1__Available_Online__c = true');
 
     $result = $this->simplify($result);
 
@@ -224,16 +226,18 @@ class SalesforceFetcher {
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function fetchProgramAndCategories():void {
-    $result = $this->tractionRecClient->executeQuery('SELECT
+    $result = $this->tractionRecClient->executeQuery(
+      'SELECT
       TREX1__Program_Category_Tag__c.id,
       TREX1__Program_Category_Tag__c.name,
       TREX1__Program_Category_Tag__c.TREX1__Program__r.id,
       TREX1__Program_Category_Tag__c.TREX1__Program__r.name,
-      TREX1__Program_Category_Tag__c.TREX1__Program__r.TREX1__Available_Online__c,
+      TREX1__Program_Category_Tag__c.TREX1__Program__r.TREX1__Available__c,
       TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.id,
       TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.name,
-      TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.TREX1__Available_Online__c
-    FROM TREX1__Program_Category_Tag__c');
+      TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.TREX1__Available__c
+    FROM TREX1__Program_Category_Tag__c WHERE TREX1__Program__r.TREX1__Available_Online__c = true AND TREX1__Program_Category__r.TREX1__Available_Online__c = true'
+    );
 
     $result = $this->simplify($result);
 

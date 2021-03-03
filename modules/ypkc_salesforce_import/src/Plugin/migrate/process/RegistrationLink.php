@@ -70,6 +70,8 @@ class RegistrationLink extends ProcessPluginBase implements ContainerFactoryPlug
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $config = $this->configFactory->get('ypkc_salesforce_sso.settings');
     $app_url = $config->get('app_url');
+    $value = strtolower($value);
+    $value = str_replace(' ', '+', $value);
     return $app_url . '/s/registration?course=' . $value;
   }
 

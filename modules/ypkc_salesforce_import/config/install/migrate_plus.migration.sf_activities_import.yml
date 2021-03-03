@@ -32,14 +32,16 @@ source:
       name: program_id
       label: 'Program ID'
       selector: /Program/Id
+    -
+      name: available
+      label: 'Available'
+      selector: /Available
 process:
   title: title
   type:
     plugin: default_value
     default_value: activity
-  status:
-    plugin: default_value
-    default_value: 1
+  status: available
   uid:
     plugin: default_value
     default_value: 1

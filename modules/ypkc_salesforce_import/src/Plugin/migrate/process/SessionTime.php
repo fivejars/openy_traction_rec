@@ -91,7 +91,10 @@ class SessionTime extends ProcessPluginBase implements ContainerFactoryPluginInt
       $start_date = $this->convertDate(
         $value['start_date'] . ' ' . $value['start_time']
       );
-      $end_date = $this->convertDate($value['end_date'] . ' ' . '11:59 pm');
+
+      $end_date = $value['end_date'];
+      $end_time = $value['end_time'] ?? '11:59 pm';
+      $end_date = $this->convertDate($end_date . ' ' . $end_time);
 
       if (empty($value['days'])) {
         $value['days'] = $start_date->format('l');

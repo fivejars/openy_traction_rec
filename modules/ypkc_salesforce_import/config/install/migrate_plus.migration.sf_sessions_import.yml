@@ -53,6 +53,10 @@ source:
       label: 'End Date'
       selector: /Course_Option/End_Date
     -
+      name: end_time
+      label: 'End Time'
+      selector: /Course_Option/End_Time
+    -
       name: days
       label: Days
       selector: /Course_Option/Day_of_Week
@@ -77,6 +81,10 @@ source:
       label: 'Online registration'
       selector: /Course_Option/Available_Online
     -
+      name: available
+      label: 'Available'
+      selector: /Course_Option/Available
+    -
       name: online_registration_date_from
       label: 'Online registration date(from)'
       selector: /Course_Option/Register_Online_From_Date
@@ -98,12 +106,12 @@ source:
       selector: /Course_Option/Product/Price_Description
 process:
   title: title
-  status: online_registration
+  status: available
   uid:
     plugin: default_value
     default_value: 1
   field_session_description: course_description
-  field_availability: spots_allowed
+  field_availability: spots_available
   field_session_class/target_id:
     plugin: migration
     migration: sf_classes_import

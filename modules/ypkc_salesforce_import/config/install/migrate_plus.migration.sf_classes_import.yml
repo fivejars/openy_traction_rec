@@ -36,6 +36,10 @@ source:
       name: description
       label: 'Description'
       selector: /Description
+    -
+      name: available
+      label: 'Available'
+      selector: /Available
 process:
   title: title
   field_class_description/value: description
@@ -45,9 +49,7 @@ process:
   type:
     plugin: default_value
     default_value: class
-  status:
-    plugin: default_value
-    default_value: 1
+  status: available
   uid:
     plugin: default_value
     default_value: 1
