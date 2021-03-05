@@ -31,13 +31,6 @@ class SalesforceFetcher {
   protected $fileSystem;
 
   /**
-   * Fetched data.
-   *
-   * @var array
-   */
-  protected $data = [];
-
-  /**
    * JSON Directory name.
    *
    * @var string
@@ -119,13 +112,15 @@ class SalesforceFetcher {
       return [];
     }
 
-    $this->data = $result['records'];
+    $dumper = new JsonStreamDumper($this->buildFilename('sessions'));
+    $dumper->pushMultiple($result['records']);
+
     if (isset($result['nextRecordsUrl']) && !empty($result['nextRecordsUrl'])) {
       $url = $result['nextRecordsUrl'];
-      $this->paginationFetch($url);
+      $this->paginationFetch($url, $dumper);
     }
 
-    $this->dumpToJson($this->data, $this->buildFilename('sessions'));
+    $dumper->close();
   }
 
   /**
@@ -133,6 +128,8 @@ class SalesforceFetcher {
    *
    * @param string $nextUrl
    *   The URL of the next results page.
+   * @param \Drupal\ypkc_salesforce\JsonStreamDumper $dumper
+   *   Json dumper.
    *
    * @return array
    *   The array with fetched data.
@@ -140,7 +137,7 @@ class SalesforceFetcher {
    * @throws \Drupal\ypkc_salesforce\InvalidTokenException
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  protected function paginationFetch($nextUrl) {
+  protected function paginationFetch(string $nextUrl, JsonStreamDumper $dumper) {
     $result = $this->tractionRecClient->send('GET', 'https://ymcapkc.my.salesforce.com' . $nextUrl);
     $result = $this->simplify($result);
 
@@ -148,14 +145,14 @@ class SalesforceFetcher {
       return [];
     }
 
-    $this->data = array_merge($this->data, $result['records']);
+    $dumper->pushMultiple($result['records']);
 
     if (isset($result['nextRecordsUrl']) && !empty($result['nextRecordsUrl'])) {
       $url = $result['nextRecordsUrl'];
-      $this->paginationFetch($url);
+      $this->paginationFetch($url, $dumper);
     }
 
-    return $this->data;
+    return $result['records'];
   }
 
   /**
