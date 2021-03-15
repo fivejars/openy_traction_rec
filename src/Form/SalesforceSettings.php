@@ -81,6 +81,13 @@ class SalesforceSettings extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
+    $form['fetch_status'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable JSON fetch'),
+      '#default_value' => $config->get('fetch_status'),
+      '#description' => $this->t('Enables fetching of JSON files from Salesforce'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -95,6 +102,7 @@ class SalesforceSettings extends ConfigFormBase {
     $config->set('login_url', $form_state->getValue('login_url'));
     $config->set('private_key', $form_state->getValue('private_key'));
     $config->set('services_base_url', $form_state->getValue('services_base_url'));
+    $config->set('fetch_status', $form_state->getValue('fetch_status'));
     $config->save();
 
     parent::submitForm($form, $form_state);
