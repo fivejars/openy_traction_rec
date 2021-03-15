@@ -23,7 +23,7 @@ class YearsToMonths extends ProcessPluginBase {
       return $value * 12;
     }
 
-    return parent::transform($value, $migrate_executable, $row, $destination_property);
+    return null;
   }
 
 }
