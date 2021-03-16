@@ -28,14 +28,16 @@ source:
       name: title
       label: 'Title'
       selector: /Name
+    -
+      name: available
+      label: 'Available'
+      selector: /Available
 process:
   title: title
   type:
     plugin: default_value
     default_value: program
-  status:
-    plugin: default_value
-    default_value: 1
+  status: available
   field_data_source:
     plugin: default_value
     default_value: traction_rec

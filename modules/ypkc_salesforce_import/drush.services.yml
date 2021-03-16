@@ -3,6 +3,7 @@ services:
     class: \Drupal\ypkc_salesforce_import\Commands\DrushCommands
     arguments:
       - '@ypkc_salesforce_import.importer'
+      - '@ypkc_salesforce_import.cleaner'
       - '@migrate_tools.commands'
       - '@file_system'
       - '@entity_type.manager'

@@ -8,6 +8,13 @@ services:
       - '@plugin.manager.migration'
       - '@entity_type.manager'
 
+  ypkc_salesforce_import.cleaner:
+    class: 'Drupal\ypkc_salesforce_import\Cleaner'
+    arguments:
+      - '@database'
+      - '@entity_type.manager'
+      - '@logger.factory'
+
   logger.channel.sf_import:
     parent: logger.channel_base
     arguments: ['ypkc_sf_import']

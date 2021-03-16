@@ -37,6 +37,10 @@ source:
       label: 'Course'
       selector: /Course_Session/Course/Name
     -
+      name: course_description
+      label: Course Description
+      selector: /Course_Session/Course/Description
+    -
       name: start_date
       label: 'Start Date'
       selector: /Course_Option/Start_Date
@@ -49,8 +53,12 @@ source:
       label: 'End Date'
       selector: /Course_Option/End_Date
     -
+      name: end_time
+      label: 'End Time'
+      selector: /Course_Option/End_Time
+    -
       name: days
-      label: 'Days'
+      label: Days
       selector: /Course_Option/Day_of_Week
     -
       name: age_min_year
@@ -62,16 +70,20 @@ source:
       selector: /Course_Option/Age_Max
     -
       name: location
-      label: 'Location'
+      label: Location
       selector: /Course_Option/Location/Name
     -
       name: instructor
-      label: 'Instructor'
+      label: Instructor
       selector: /Course_Option/Instructor
     -
       name: online_registration
       label: 'Online registration'
       selector: /Course_Option/Available_Online
+    -
+      name: available
+      label: 'Available'
+      selector: /Course_Option/Available
     -
       name: online_registration_date_from
       label: 'Online registration date(from)'
@@ -94,10 +106,12 @@ source:
       selector: /Course_Option/Product/Price_Description
 process:
   title: title
+  status: available
   uid:
     plugin: default_value
     default_value: 1
-  field_session_description: title
+  field_session_description: course_description
+  field_availability: spots_available
   field_session_class/target_id:
     plugin: migration
     migration: sf_classes_import
@@ -128,7 +142,7 @@ process:
       value:
         - null
     -
-      plugin: get
+      plugin: sf_years_to_month
       source: age_min_year
   field_session_max_age/value:
     -
@@ -139,7 +153,7 @@ process:
       value:
         - null
     -
-      plugin: get
+      plugin: sf_years_to_month
       source: age_max_year
   field_session_instructor:
     -
