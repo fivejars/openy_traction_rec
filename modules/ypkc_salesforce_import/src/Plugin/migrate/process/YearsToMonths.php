@@ -23,7 +23,7 @@ class YearsToMonths extends ProcessPluginBase {
       return $value * 12;
     }
 
-    return null;
+    return NULL;
   }
 
 }
