@@ -24,13 +24,6 @@ class TractionRecClient {
   protected $salesforceSettings;
 
   /**
-   * The Salesforce private RSA key.
-   *
-   * @var string
-   */
-  protected $salesforcePrivateRsa;
-
-  /**
    * The http client.
    *
    * @var \GuzzleHttp\Client
@@ -94,13 +87,10 @@ class TractionRecClient {
    *   Logger factory.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
-   * @param \Drupal\key\KeyRepositoryInterface $key_repository
-   *   The key repository.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time, LoggerChannelFactoryInterface $logger_channel_factory, RequestStack $request_stack, KeyRepositoryInterface $key_repository) {
+  public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time, LoggerChannelFactoryInterface $logger_channel_factory, RequestStack $request_stack) {
     $this->salesforceSettings = $config_factory->get('ypkc_salesforce.settings');
     $this->salesforceSsoSettings = $config_factory->get('ypkc_salesforce_sso.settings');
-    $this->salesforcePrivateRsa = $key_repository->getKey('rsa_private_key')->getKeyValue();
     $this->http = $http;
     $this->time = $time;
     $this->logger = $logger_channel_factory->get('salesforce_sso');
@@ -169,7 +159,7 @@ class TractionRecClient {
    *   JWT Assertion.
    */
   protected function generateAssertion(): string {
-    $key = $this->salesforcePrivateRsa;
+    $key = $this->salesforceSettings->get('private_key');
     $token = $this->generateAssertionClaim();
     return JWT::encode($token, $key, 'RS256');
   }
