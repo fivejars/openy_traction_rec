@@ -78,8 +78,8 @@ class SessionTime extends ProcessPluginBase implements ContainerFactoryPluginInt
   ) {
     $value = $row->getSource();
 
-    if (empty($value['start_date'])) {
-      throw new MigrateSkipRowException('Datetime cannot be empty for session');
+    if (empty($value['start_date']) || empty($value['days'])) {
+      throw new MigrateSkipRowException('Datetime or day cannot be empty for session');
     }
 
     // Default time.
@@ -95,10 +95,6 @@ class SessionTime extends ProcessPluginBase implements ContainerFactoryPluginInt
       $end_date = $value['end_date'];
       $end_time = $value['end_time'] ?? '11:59 pm';
       $end_date = $this->convertDate($end_date . ' ' . $end_time);
-
-      if (empty($value['days'])) {
-        $value['days'] = $start_date->format('l');
-      }
 
       $days = explode(';', $value['days']);
       $days = array_map('strtolower', $days);

@@ -101,6 +101,10 @@ source:
       label: 'Spots available'
       selector: /Course_Option/Total_Capacity_Available
     -
+      name: unlimited_capacity
+      label: 'Unlimited Capacity'
+      selector: /Course_Option/Unlimited_Capacity
+    -
       name: price_description
       label: 'Price Description'
       selector: /Course_Option/Product/Price_Description
@@ -111,7 +115,9 @@ process:
     plugin: default_value
     default_value: 1
   field_session_description: course_description
-  field_availability: spots_available
+  field_availability:
+    plugin: sf_availability
+    source: spots_available
   field_session_class/target_id:
     plugin: migration
     migration: sf_classes_import
