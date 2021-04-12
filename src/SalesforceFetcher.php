@@ -107,6 +107,7 @@ class SalesforceFetcher {
     FROM TREX1__Course_Session_Option__c 
     WHERE TREX1__Course_Option__r.TREX1__Available_Online__c = true 
       AND TREX1__Course_Option__r.TREX1__Day_of_Week__c  != null 
+      AND TREX1__Course_Option__r.TREX1__Register_Online_To_Date__c > YESTERDAY
       AND TREX1__Course_Option__r.TREX1__Start_Date__c != null');
 
     $result = $this->simplify($result);
