@@ -56,7 +56,21 @@ class Importer {
    *
    * @var bool
    */
-  public $isEnabled = FALSE;
+  protected $isEnabled = FALSE;
+
+  /**
+   * JSON backup status.
+   *
+   * @var bool
+   */
+  protected $isBackupEnabled = FALSE;
+
+  /**
+   * JSON backup limit.
+   *
+   * @var int
+   */
+  protected $backupLimit = 15;
 
   /**
    * The config factory.
@@ -107,7 +121,9 @@ class Importer {
     $this->entityTypeManager = $entity_type_manager;
 
     $settings = $this->configFactory->get('ypkc_salesforce_import.settings');
-    $this->isEnabled = $settings->get('enabled');
+    $this->isEnabled = (bool) $settings->get('enabled');
+    $this->isBackupEnabled = (bool) $settings->get('backup_json');
+    $this->backupLimit = (int) $settings->get('backup_limit');
   }
 
   /**
@@ -148,6 +164,26 @@ class Importer {
    */
   public function isEnabled():bool {
     return $this->isEnabled;
+  }
+
+  /**
+   * Checks JSON files backup ststus.
+   *
+   * @return bool
+   *   TRUE if JSON files backup is enabled.
+   */
+  public function isBackupEnabled(): bool {
+    return $this->isBackupEnabled;
+  }
+
+  /**
+   * Returns JSON backup limit setting.
+   *
+   * @return int
+   *   The number of folders with JSON files to store.
+   */
+  public function getJsonBackupLimit(): int {
+    return $this->backupLimit;
   }
 
   /**

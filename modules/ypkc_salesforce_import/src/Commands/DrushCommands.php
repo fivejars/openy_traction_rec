@@ -8,6 +8,7 @@ use Drupal\migrate_tools\Commands\MigrateToolsCommands;
 use Drupal\ypkc_salesforce_import\Cleaner;
 use Drupal\ypkc_salesforce_import\Importer;
 use Drush\Commands\DrushCommands as DrushCommandsBase;
+use Drush\Drush;
 
 /**
  * YPKC Salesforce import drush commands.
@@ -141,9 +142,15 @@ class DrushCommands extends DrushCommandsBase {
           ['group' => Importer::MIGRATE_GROUP, 'sync' => $options['sync']]
         );
 
-        $backup_dir = Importer::BACKUP_DIRECTORY;
-        $this->fileSystem->prepareDirectory($backup_dir, FileSystemInterface::CREATE_DIRECTORY);
-        $this->fileSystem->move($dir, $backup_dir);
+        // Save JSON files only if backup of JSON files is enabled.
+        if ($this->importer->isBackupEnabled()) {
+          $backup_dir = Importer::BACKUP_DIRECTORY;
+          $this->fileSystem->prepareDirectory($backup_dir, FileSystemInterface::CREATE_DIRECTORY);
+          $this->fileSystem->move($dir, $backup_dir);
+        }
+        else {
+          $this->fileSystem->deleteRecursive($dir);
+        }
       }
       catch (\Exception $e) {
         $this->output()->writeln($e->getMessage());
@@ -211,6 +218,28 @@ class DrushCommands extends DrushCommandsBase {
     $this->output()->writeln('Starting clean up...');
     $limit = $options['limit'];
     $this->cleaner->cleanUp($limit);
+
+    // We want to store only latest backups of JSON files.
+    if ($this->importer->isBackupEnabled()) {
+      $backup_dir = $this->fileSystem->realpath(Importer::BACKUP_DIRECTORY);
+      $backup_limit = $this->importer->getJsonBackupLimit();
+      $backup_limit++;
+
+      $command = "cd $backup_dir";
+      $command .= '|';
+      $command .= 'ls -t';
+      $command .= '|';
+      $command .= "tail -n +$backup_limit";
+      $command .= '|';
+      $command .= "cd $backup_dir; xargs rm -rf";
+
+      $process = Drush::shell($command);
+      $process->run();
+      if (!$process->isSuccessful()) {
+        $this->logger->warning('Impossible to remove JSOM files: ' . $process->getErrorOutput());
+      }
+    }
+
     $this->output()->writeln('Clean up finished!');
   }
 
