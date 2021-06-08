@@ -226,12 +226,12 @@ class DrushCommands extends DrushCommandsBase {
       $backup_limit++;
 
       $command = "cd $backup_dir";
-      $command .= '|';
+      $command .= '&&';
       $command .= 'ls -t';
       $command .= '|';
       $command .= "tail -n +$backup_limit";
       $command .= '|';
-      $command .= "cd $backup_dir; xargs rm -rf";
+      $command .= "xargs -d '\n' rm -rf";
 
       $process = Drush::shell($command);
       $process->run();
