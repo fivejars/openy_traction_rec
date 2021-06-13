@@ -1,10 +1,17 @@
 services:
+  logger.channel.salesforce:
+    parent: logger.channel_base
+    arguments:
+      - 'salesforce'
   ypkc_salesforce.fetcher:
     class: Drupal\ypkc_salesforce\SalesforceFetcher
-    arguments: ['@ypkc_salesforce.tr_client', '@file_system']
+    arguments: ['@ypkc_salesforce.traction_rec', '@file_system']
+  ypkc_salesforce.traction_rec:
+    class: Drupal\ypkc_salesforce\TractionRec
+    arguments: [ '@ypkc_salesforce.tr_client', '@logger.channel.salesforce' ]
   ypkc_salesforce.tr_client:
     class: Drupal\ypkc_salesforce\TractionRecClient
     arguments: [ '@config.factory', '@http_client', '@datetime.time', '@logger.factory', '@request_stack']
   ypkc_salesforce.user_authorizer:
-    class: Drupal\ypkc_salesforce\YpkcUserAuthorizer
-    arguments: ['@entity_type.manager']
+    class: Drupal\ypkc_salesforce\TractionRecUserAuthorizer
+    arguments: ['@entity_type.manager', '@module_handler']
