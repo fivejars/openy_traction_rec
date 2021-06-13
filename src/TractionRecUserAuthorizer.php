@@ -3,11 +3,12 @@
 namespace Drupal\ypkc_salesforce;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * User Authorizer class.
  */
-class YpkcUserAuthorizer {
+class TractionRecUserAuthorizer {
 
   /**
    * User entity storage.
@@ -17,12 +18,22 @@ class YpkcUserAuthorizer {
   protected $userStorage;
 
   /**
-   * YpkcUserAuthorizer constructor.
+   * The module handler to invoke the alter hook.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * TractionRecUserAuthorizer constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   Entity Type Manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager) {
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, ModuleHandlerInterface $module_handler) {
+    $this->moduleHandler = $module_handler;
     $this->userStorage = $entityTypeManager->getStorage('user');
   }
 
@@ -46,7 +57,7 @@ class YpkcUserAuthorizer {
       $user->activate();
 
       // Temp solution: Virtual Y will be removed from the project soon.
-      if (\Drupal::moduleHandler()->moduleExists('openy_gated_content')) {
+      if ($this->moduleHandler->moduleExists('openy_gated_content')) {
         $user->addRole('virtual_y');
       }
 

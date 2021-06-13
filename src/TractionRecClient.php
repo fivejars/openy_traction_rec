@@ -53,7 +53,7 @@ class TractionRecClient {
   protected $salesforceSsoSettings;
 
   /**
-   * Logger for salesforce_sso.
+   * Logger for salesforce queries.
    *
    * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
@@ -92,7 +92,7 @@ class TractionRecClient {
     $this->salesforceSsoSettings = $config_factory->get('ypkc_salesforce_sso.settings');
     $this->http = $http;
     $this->time = $time;
-    $this->logger = $logger_channel_factory->get('salesforce_sso');
+    $this->logger = $logger_channel_factory->get('salesforce');
     $this->request = $request_stack->getCurrentRequest();
     if ($code = $this->request->get('code')) {
       $this->webToken = $this->generateToken($code);
@@ -175,7 +175,7 @@ class TractionRecClient {
    * @throws \GuzzleHttp\Exception\GuzzleException
    * @throws \Drupal\ypkc_salesforce\InvalidTokenException
    */
-  public function executeQuery($query) {
+  public function executeQuery(string $query) {
     $access_token = $this->getAccessToken();
     if (!$access_token) {
       throw new InvalidTokenException();

@@ -26,7 +26,7 @@ class Cleaner {
   protected $entityTypeManager;
 
   /**
-   * Logger for salesforce_sso.
+   * Logger for salesforce.
    *
    * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
