@@ -1,9 +1,11 @@
 <?php
 
+namespace Drupal\ypkc_salesforce;
+
 /**
- * Interface TractionRecInterface.
+ * Interface for TractionRec abstract layer.
  */
-interface TractionRecInterface {
+interface YpkcSalesforceInterface {
 
   /**
    * Loads all TractionRec locations.

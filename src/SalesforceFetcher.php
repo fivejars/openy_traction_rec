@@ -3,7 +3,6 @@
 namespace Drupal\ypkc_salesforce;
 
 use Drupal\Core\File\FileSystemInterface;
-use TractionRecInterface;
 
 /**
  * Contains related to fetching from Salesforce functionality.
@@ -20,7 +19,7 @@ class SalesforceFetcher {
   /**
    * Traction Rec wrapper.
    *
-   * @var \TractionRecInterface
+   * @var YpkcSalesforceInterface
    */
   protected $tractionRec;
 
@@ -41,13 +40,12 @@ class SalesforceFetcher {
   /**
    * SalesforceFetcher Constructor.
    *
-   * @param \TractionRecInterface $traction_rec
+   * @param YpkcSalesforceInterface $traction_rec
    *   The Traction Rec wrapper.
-   *
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file handler.
    */
-  public function __construct(TractionRecInterface $traction_rec, FileSystemInterface $file_system) {
+  public function __construct(YpkcSalesforceInterface $traction_rec, FileSystemInterface $file_system) {
     $this->tractionRec = $traction_rec;
     $this->fileSystem = $file_system;
 
