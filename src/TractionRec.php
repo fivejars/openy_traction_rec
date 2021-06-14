@@ -4,12 +4,11 @@ namespace Drupal\ypkc_salesforce;
 
 use Drupal\Core\Logger\LoggerChannelInterface;
 use GuzzleHttp\Exception\GuzzleException;
-use TractionRecInterface;
 
 /**
- * TractionRec wrapper.
+ * TractionRec abstraction layer.
  */
-class TractionRec implements TractionRecInterface {
+class TractionRec implements YpkcSalesforceInterface {
 
   /**
    * Traction Rec Client service.
@@ -92,7 +91,7 @@ class TractionRec implements TractionRecInterface {
   public function loadProgramCategoryTags(): array {
     try {
       $result = $this->tractionRecClient->executeQuery(
- 'SELECT
+        'SELECT
         TREX1__Program_Category_Tag__c.id,
         TREX1__Program_Category_Tag__c.name,
         TREX1__Program_Category_Tag__c.TREX1__Program__r.id,
@@ -157,7 +156,7 @@ class TractionRec implements TractionRecInterface {
 
       return $this->simplify($result);
     }
-    catch(\Exception | GuzzleException $e) {
+    catch (\Exception | GuzzleException $e) {
       $message = 'Can\'t load the list of course options: ' . $e->getMessage();
       $this->logger->error($message);
       return [];
