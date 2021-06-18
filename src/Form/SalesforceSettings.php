@@ -72,6 +72,14 @@ class SalesforceSettings extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
+    $form['community_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Community URL'),
+      '#default_value' => $config->get('community_url'),
+      '#description' => $this->t('Enter an URL, ex https://mycommunity.ymcapkc.org'),
+      '#required' => TRUE,
+    ];
+
     $form['private_key'] = [
       '#type' => 'textarea',
       '#rows' => 30,
@@ -102,6 +110,7 @@ class SalesforceSettings extends ConfigFormBase {
     $config->set('login_url', $form_state->getValue('login_url'));
     $config->set('private_key', $form_state->getValue('private_key'));
     $config->set('services_base_url', $form_state->getValue('services_base_url'));
+    $config->set('community_url', $form_state->getValue('community_url'));
     $config->set('fetch_status', $form_state->getValue('fetch_status'));
     $config->save();
 
