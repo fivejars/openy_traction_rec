@@ -4,16 +4,19 @@ namespace Drupal\ypkc_salesforce_import;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManager;
+use Drupal\migrate_tools\Commands\MigrateToolsCommands;
+use SalesforceImporterInterface;
 
 /**
  * Wrapper for Salesforce import operations.
  */
-class Importer {
+class Importer implements SalesforceImporterInterface {
 
   use StringTranslationTrait;
 
@@ -94,6 +97,20 @@ class Importer {
   protected $entityTypeManager;
 
   /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
+   * Migrate tool drush commands.
+   *
+   * @var \Drupal\migrate_tools\Commands\MigrateToolsCommands
+   */
+  protected $migrateToolsCommands;
+
+  /**
    * Importer constructor.
    *
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
@@ -112,13 +129,15 @@ class Importer {
     LoggerChannelInterface $logger,
     ConfigFactoryInterface $config_factory,
     MigrationPluginManager $migrationPluginManager,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
+    FileSystemInterface $file_system
   ) {
     $this->lock = $lock;
     $this->logger = $logger;
     $this->configFactory = $config_factory;
     $this->migrationPluginManager = $migrationPluginManager;
     $this->entityTypeManager = $entity_type_manager;
+    $this->fileSystem = $file_system;
 
     $settings = $this->configFactory->get('ypkc_salesforce_import.settings');
     $this->isEnabled = (bool) $settings->get('enabled');
@@ -127,7 +146,49 @@ class Importer {
   }
 
   /**
-   * Check migration status.
+   * {@inheritdoc}
+   */
+  public function directoryImport($dir) {
+    if (PHP_SAPI !== 'cli') {
+      return;
+    }
+
+    // 'migrate_tools.commands' service is available only in Drush context.
+    // That's why we can't add the service using normal DI.
+    $this->migrateToolsCommands = \Drupal::service('migrate_tools.commands');
+
+    try {
+      // Results of each fetch are saved to a separated directory.
+      $json_files = $this->fileSystem->scanDirectory($dir, '/\.json$/');
+      if (empty($json_files)) {
+        return;
+      }
+
+      // Usually we have several files for import:
+      // sessions.json, classes.json, programs.json, program_categories.json.
+      foreach ($json_files as $file) {
+        $this->fileSystem->copy($file->uri, 'private://salesforce_import/', FileSystemInterface::EXISTS_REPLACE);
+      }
+
+      $this->migrateToolsCommands->import('', ['group' => Importer::MIGRATE_GROUP]);
+
+      // Save JSON files only if backup of JSON files is enabled.
+      if ($this->isBackupEnabled()) {
+        $backup_directory = static::BACKUP_DIRECTORY;
+        $this->fileSystem->prepareDirectory($backup_directory, FileSystemInterface::CREATE_DIRECTORY);
+        $this->fileSystem->move($dir, $backup_directory);
+      }
+      else {
+        $this->fileSystem->deleteRecursive($dir);
+      }
+    }
+    catch (\Exception $e) {
+      $this->logger->error($e->getMessage());
+    }
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function checkMigrationsStatus(): bool {
     try {
@@ -157,20 +218,14 @@ class Importer {
   }
 
   /**
-   * Checks import status.
-   *
-   * @return bool
-   *   TRUE if the import is enabled.
+   * {@inheritdoc}
    */
-  public function isEnabled():bool {
+  public function isEnabled(): bool {
     return $this->isEnabled;
   }
 
   /**
-   * Checks JSON files backup ststus.
-   *
-   * @return bool
-   *   TRUE if JSON files backup is enabled.
+   * {@inheritdoc}
    */
   public function isBackupEnabled(): bool {
     return $this->isBackupEnabled;
@@ -187,27 +242,21 @@ class Importer {
   }
 
   /**
-   * Acquires Salesforce import lock.
-   *
-   * @return bool
-   *   Lock status.
+   * {@inheritdoc}
    */
   public function acquireLock(): bool {
     return $this->lock->acquire(static::LOCK_NAME, 1200);
   }
 
   /**
-   * Releases Salesforce lock.
+   * {@inheritdoc}
    */
   public function releaseLock() {
     $this->lock->release(static::LOCK_NAME);
   }
 
   /**
-   * Provides a list of directories with the fetched JSON files.
-   *
-   * @return array
-   *   The array of directories paths.
+   * {@inheritdoc}
    */
   public function getJsonDirectoriesList(): array {
     $dirs = [];

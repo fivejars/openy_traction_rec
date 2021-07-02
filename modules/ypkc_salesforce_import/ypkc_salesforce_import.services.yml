@@ -7,6 +7,7 @@ services:
       - '@config.factory'
       - '@plugin.manager.migration'
       - '@entity_type.manager'
+      - '@file_system'
 
   ypkc_salesforce_import.cleaner:
     class: 'Drupal\ypkc_salesforce_import\Cleaner'
@@ -14,6 +15,12 @@ services:
       - '@database'
       - '@entity_type.manager'
       - '@logger.factory'
+
+  ypkc_salesforce_import.fetcher_subscriber:
+    class: '\Drupal\ypkc_salesforce_import\EventSubscriber\FetchEventSubscriber'
+    arguments: ['@queue']
+    tags:
+      - { name: 'event_subscriber' }
 
   logger.channel.sf_import:
     parent: logger.channel_base
