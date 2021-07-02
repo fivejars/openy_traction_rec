@@ -147,7 +147,7 @@ class Importer implements SalesforceImporterInterface {
   /**
    * {@inheritdoc}
    */
-  public function directoryImport($dir) {
+  public function directoryImport($dir, array $options = []) {
     if (PHP_SAPI !== 'cli') {
       return;
     }
@@ -169,7 +169,10 @@ class Importer implements SalesforceImporterInterface {
         $this->fileSystem->copy($file->uri, 'private://salesforce_import/', FileSystemInterface::EXISTS_REPLACE);
       }
 
-      $this->migrateToolsCommands->import('', ['group' => Importer::MIGRATE_GROUP]);
+      $this->migrateToolsCommands->import(
+        '',
+        ['group' => Importer::MIGRATE_GROUP, 'sync' => $options['sync']]
+      );
 
       // Save JSON files only if backup of JSON files is enabled.
       if ($this->isBackupEnabled()) {

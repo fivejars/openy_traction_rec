@@ -2,6 +2,9 @@
 
 namespace Drupal\ypkc_salesforce_import;
 
+/**
+ * Salesforce importer Interface.
+ */
 interface SalesforceImporterInterface {
 
   /**
@@ -10,7 +13,7 @@ interface SalesforceImporterInterface {
    * @param string $dir
    *   The directory with fetched JSON data.
    */
-  public function directoryImport(string $dir);
+  public function directoryImport(string $dir, array $options = []);
 
   /**
    * Check salesforce migrations statuses.

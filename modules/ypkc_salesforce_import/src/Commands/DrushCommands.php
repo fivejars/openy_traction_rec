@@ -116,45 +116,12 @@ class DrushCommands extends DrushCommandsBase {
 
     $dirs = $this->importer->getJsonDirectoriesList();
     if (empty($dirs)) {
-      $this->logger()->info(
-        dt('Nothing to import.')
-      );
+      $this->logger()->info(dt('Nothing to import.'));
       return FALSE;
     }
 
     foreach ($dirs as $dir) {
-      try {
-        // Results of each fetch are saved to separated directory.
-        $json_files = $this->fileSystem->scanDirectory($dir, '/\.json$/');
-        if (empty($json_files)) {
-          continue;
-        }
-
-        // Usually we have several files for import:
-        // sessions.json, classes.json, programs.json, program_categories.json.
-        foreach ($json_files as $file) {
-          $this->output()->writeln("Preparing $file->uri for import");
-          $this->fileSystem->copy($file->uri, 'private://salesforce_import/', FileSystemInterface::EXISTS_REPLACE);
-        }
-
-        $this->migrateToolsCommands->import(
-          '',
-          ['group' => Importer::MIGRATE_GROUP, 'sync' => $options['sync']]
-        );
-
-        // Save JSON files only if backup of JSON files is enabled.
-        if ($this->importer->isBackupEnabled()) {
-          $backup_dir = Importer::BACKUP_DIRECTORY;
-          $this->fileSystem->prepareDirectory($backup_dir, FileSystemInterface::CREATE_DIRECTORY);
-          $this->fileSystem->move($dir, $backup_dir);
-        }
-        else {
-          $this->fileSystem->deleteRecursive($dir);
-        }
-      }
-      catch (\Exception $e) {
-        $this->output()->writeln($e->getMessage());
-      }
+      $this->importer->directoryImport($dir, $options);
     }
 
     $this->importer->releaseLock();
@@ -170,10 +137,15 @@ class DrushCommands extends DrushCommandsBase {
    * @aliases y-sf:rollback
    */
   public function rollback() {
-    $this->output()->writeln('Rollbacking Salesforce migrations...');
-    $options = ['group' => Importer::MIGRATE_GROUP];
-    $this->migrateToolsCommands->rollback('', $options);
-    $this->output()->writeln('Rollback done!');
+    try {
+      $this->output()->writeln('Rollbacking Salesforce migrations...');
+      $options = ['group' => Importer::MIGRATE_GROUP];
+      $this->migrateToolsCommands->rollback('', $options);
+      $this->output()->writeln('Rollback done!');
+    }
+    catch (\Exception $e) {
+      $this->logger()->error($e->getMessage());
+    }
   }
 
   /**
@@ -236,7 +208,7 @@ class DrushCommands extends DrushCommandsBase {
       $process = Drush::shell($command);
       $process->run();
       if (!$process->isSuccessful()) {
-        $this->logger->warning('Impossible to remove JSOM files: ' . $process->getErrorOutput());
+        $this->logger->warning('Impossible to remove JSON files: ' . $process->getErrorOutput());
       }
     }
 
