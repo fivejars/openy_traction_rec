@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\ypkc_salesforce_import;
+
 interface SalesforceImporterInterface {
 
   /**
