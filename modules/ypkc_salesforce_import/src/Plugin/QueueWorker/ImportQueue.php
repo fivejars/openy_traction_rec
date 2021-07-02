@@ -2,8 +2,10 @@
 
 namespace Drupal\ypkc_salesforce_import\Plugin\QueueWorker;
 
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
+use Drupal\ypkc_salesforce_import\SalesforceImporterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,6 +27,13 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
   protected $salesforceImporter;
 
   /**
+   * Logger channel.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   */
+  protected $logger;
+
+  /**
    * Constructors Salesforce ImportQueue plugin.
    *
    * @param array $configuration
@@ -34,8 +43,16 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    SalesforceImporterInterface $salesforce_importer,
+    LoggerChannelInterface $logger
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->salesforceImporter = $salesforce_importer;
+    $this->logger = $logger;
   }
 
   /**
@@ -46,7 +63,8 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('ypkc_salesforce_import.importer')
+      $container->get('ypkc_salesforce_import.importer'),
+      $container->get('logger.channel.sf_import')
     );
   }
 
@@ -72,13 +90,28 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    *   The data that was passed to
    *   \Drupal\Core\Queue\QueueInterface::createItem() when the item was queued.
    */
-  protected function processSalesforceImport($data) {
+  protected function processSalesforceImport($data): bool {
     if (!isset($data['directory'])) {
-      return;
+      return FALSE;
     }
 
-    $importer = \Drupal::service('ypkc_salesforce_import.importer');
-    $importer->directoryImport($data['directory']);
+    if (!$this->salesforceImporter->isEnabled()) {
+      $this->logger->info('Salesforce import is not enabled!');
+      return FALSE;
+    }
+
+    if (!$this->salesforceImporter->acquireLock()) {
+      $this->logger->info('Can\'t run new import, another import process already in progress.');
+      return FALSE;
+    }
+
+    if (!$this->salesforceImporter->checkMigrationsStatus()) {
+      $this->logger->info('One or more migrations are still running or stuck.');
+      return FALSE;
+    }
+
+    $this->salesforceImporter->directoryImport($data['directory']);
+    return TRUE;
   }
 
   /**
