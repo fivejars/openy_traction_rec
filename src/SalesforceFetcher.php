@@ -3,6 +3,8 @@
 namespace Drupal\ypkc_salesforce;
 
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\ypkc_salesforce\Event\SalesforcePostFetchEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Contains related to fetching from Salesforce functionality.
@@ -31,6 +33,13 @@ class SalesforceFetcher {
   protected $fileSystem;
 
   /**
+   * The event dispatcher used to notify subscribers.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * JSON Directory name.
    *
    * @var string
@@ -45,9 +54,10 @@ class SalesforceFetcher {
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file handler.
    */
-  public function __construct(YpkcSalesforceInterface $traction_rec, FileSystemInterface $file_system) {
+  public function __construct(YpkcSalesforceInterface $traction_rec, FileSystemInterface $file_system, EventDispatcherInterface $event_dispatcher) {
     $this->tractionRec = $traction_rec;
     $this->fileSystem = $file_system;
+    $this->eventDispatcher = $event_dispatcher;
 
     $this->fileSystem->prepareDirectory($this->storagePath, FileSystemInterface::CREATE_DIRECTORY);
     $this->directory = $this->storagePath . '/' . date('YmdHi') . '/';
@@ -60,6 +70,11 @@ class SalesforceFetcher {
     $this->fetchProgramAndCategories();
     $this->fetchClasses();
     $this->fetchSessions();
+
+    // Instantiate our event.
+    $event = new SalesforcePostFetchEvent($this->directory);
+    // Get the event_dispatcher service and dispatch the event.
+    $this->eventDispatcher->dispatch(SalesforcePostFetchEvent::EVENT_NAME, $event);
   }
 
   /**
@@ -191,11 +206,16 @@ class SalesforceFetcher {
    *   The array of data.
    * @param string $filename
    *   The filename.
+   *
+   * @return string
+   *   The dumped file name.
    */
-  protected function dumpToJson(array $data, string $filename) {
+  protected function dumpToJson(array $data, string $filename): string {
     $file = fopen($filename, 'w');
     fwrite($file, json_encode($data, JSON_PRETTY_PRINT | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT));
     fclose($file);
+
+    return $filename;
   }
 
   /**
