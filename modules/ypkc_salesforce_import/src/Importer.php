@@ -11,7 +11,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManager;
 use Drupal\migrate_tools\Commands\MigrateToolsCommands;
-use SalesforceImporterInterface;
 
 /**
  * Wrapper for Salesforce import operations.
