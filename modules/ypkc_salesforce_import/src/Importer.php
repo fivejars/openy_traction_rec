@@ -10,7 +10,6 @@ use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManager;
-use Drupal\migrate_tools\Commands\MigrateToolsCommands;
 
 /**
  * Wrapper for Salesforce import operations.
@@ -122,6 +121,8 @@ class Importer implements SalesforceImporterInterface {
    *   Migration Plugin Manager service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The filesystem serrvice.
    */
   public function __construct(
     LockBackendInterface $lock,

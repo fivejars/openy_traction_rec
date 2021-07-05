@@ -22,6 +22,7 @@ class FetchEventSubscriber implements EventSubscriberInterface {
    * FetchEventSubscriber constructor.
    *
    * @param \Drupal\Core\Queue\QueueFactory $queue_factory
+   *   The queue factory.
    */
   public function __construct(QueueFactory $queue_factory) {
     $this->importQueue = $queue_factory->get('ypkc_import');

@@ -43,6 +43,21 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    */
+
+  /**
+   * Constructors Salesforce ImportQueue plugin.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\ypkc_salesforce_import\SalesforceImporterInterface $salesforce_importer
+   *   The Salesforce importer.
+   * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
+   *   The logger.
+   */
   public function __construct(
     array $configuration,
     $plugin_id,
@@ -122,7 +137,7 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    *   \Drupal\Core\Queue\QueueInterface::createItem() when the item was queued.
    */
   protected function processCsvImport($data) {
-    // @TODO: Run CSV import.
+    // @todo Run CSV import.
   }
 
 }
