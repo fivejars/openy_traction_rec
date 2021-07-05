@@ -12,6 +12,8 @@ interface SalesforceImporterInterface {
    *
    * @param string $dir
    *   The directory with fetched JSON data.
+   * @param array $options
+   *   The array of import options.
    */
   public function directoryImport(string $dir, array $options = []);
 

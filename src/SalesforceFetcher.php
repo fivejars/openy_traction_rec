@@ -47,12 +47,14 @@ class SalesforceFetcher {
   protected $directory;
 
   /**
-   * SalesforceFetcher Constructor.
+   * Constructors SalesforceFetcher.
    *
    * @param YpkcSalesforceInterface $traction_rec
    *   The Traction Rec wrapper.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file handler.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher.
    */
   public function __construct(YpkcSalesforceInterface $traction_rec, FileSystemInterface $file_system, EventDispatcherInterface $event_dispatcher) {
     $this->tractionRec = $traction_rec;
