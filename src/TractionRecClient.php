@@ -107,7 +107,7 @@ class TractionRecClient {
    *
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function getAccessToken() {
+  public function getAccessToken(): string {
     if (!empty($this->accessToken)) {
       return $this->accessToken;
     }
@@ -175,7 +175,7 @@ class TractionRecClient {
    * @throws \GuzzleHttp\Exception\GuzzleException
    * @throws \Drupal\ypkc_salesforce\InvalidTokenException
    */
-  public function executeQuery(string $query) {
+  public function executeQuery(string $query): array {
     $access_token = $this->getAccessToken();
     if (!$access_token) {
       throw new InvalidTokenException();
@@ -218,7 +218,7 @@ class TractionRecClient {
    * @throws \Drupal\ypkc_salesforce\InvalidTokenException
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function send($method, $url, array $options = []) {
+  public function send(string $method, string $url, array $options = []) {
     $access_token = $this->getAccessToken();
     if (!$access_token) {
       throw new InvalidTokenException();
@@ -252,7 +252,7 @@ class TractionRecClient {
    * @return string
    *   Access token.
    */
-  private function generateToken($code) {
+  private function generateToken(string $code): string {
     try {
       $response = $this->http->post($this->salesforceSsoSettings->get('app_url') . '/services/oauth2/token',
         [
@@ -314,7 +314,7 @@ class TractionRecClient {
    * @return string
    *   Link to account page.
    */
-  public function getAccountLink() {
+  public function getAccountLink(): string {
     return $this->salesforceSsoSettings->get('app_url');
   }
 
@@ -324,7 +324,7 @@ class TractionRecClient {
    * @return bool
    *   Does token is generated.
    */
-  public function isWebTokenNotEmpty() {
+  public function isWebTokenNotEmpty(): bool {
     return !empty($this->webToken);
   }
 

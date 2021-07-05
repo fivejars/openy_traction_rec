@@ -32,9 +32,16 @@ class SettingsForm extends ConfigFormBase {
 
     $form['enabled'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Enabled'),
+      '#title' => $this->t('Enable TractionRec Sync'),
       '#default_value' => $config->get('enabled'),
-      '#description' => $this->t('Enable Salesforce import'),
+      '#description' => $this->t('Enable Salesforce synchronization.'),
+    ];
+
+    $form['fetch_status'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable JSON fetch'),
+      '#default_value' => $config->get('fetch_status'),
+      '#description' => $this->t('Enables fetching of JSON files from Salesforce'),
     ];
 
     $form['backup_json'] = [
@@ -79,6 +86,7 @@ class SettingsForm extends ConfigFormBase {
     $config->set('enabled', $values['enabled']);
     $config->set('backup_json', $values['backup_json']);
     $config->set('backup_limit', $values['backup_limit']);
+    $config->set('fetch_status', $values['fetch_status']);
     $config->save();
 
     parent::submitForm($form, $form_state);

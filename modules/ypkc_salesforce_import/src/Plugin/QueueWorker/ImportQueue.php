@@ -5,6 +5,7 @@ namespace Drupal\ypkc_salesforce_import\Plugin\QueueWorker;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
+use Drupal\ypkc_salesforce_import\Cleaner;
 use Drupal\ypkc_salesforce_import\SalesforceImporterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -14,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @QueueWorker(
  *   id = "ypkc_import",
  *   title = @Translation("YPKC import"),
- *   cron = {"time" = 120}
+ *   cron = {"time" = 300}
  * )
  */
 class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInterface {
@@ -27,22 +28,18 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
   protected $salesforceImporter;
 
   /**
+   * The YPKC cleaner service.
+   *
+   * @var \Drupal\ypkc_salesforce_import\Cleaner
+   */
+  protected $cleaner;
+
+  /**
    * Logger channel.
    *
    * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
   protected $logger;
-
-  /**
-   * Constructors Salesforce ImportQueue plugin.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   */
 
   /**
    * Constructors Salesforce ImportQueue plugin.
@@ -63,11 +60,13 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
     $plugin_id,
     $plugin_definition,
     SalesforceImporterInterface $salesforce_importer,
+    Cleaner $cleaner,
     LoggerChannelInterface $logger
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->salesforceImporter = $salesforce_importer;
     $this->logger = $logger;
+    $this->cleaner = $cleaner;
   }
 
   /**
@@ -79,6 +78,7 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
       $plugin_id,
       $plugin_definition,
       $container->get('ypkc_salesforce_import.importer'),
+      $container->get('ypkc_salesforce_import.cleaner'),
       $container->get('logger.channel.sf_import')
     );
   }
@@ -92,8 +92,16 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
         $this->processSalesforceImport($data);
         break;
 
+      case 'salesforce_sync':
+        $this->processSalesforceImport($data, TRUE);
+        break;
+
       case 'csv':
         $this->processCsvImport($data);
+        break;
+
+      case 'cleanup':
+        $this->processCleanUp($data);
         break;
     }
   }
@@ -105,7 +113,7 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    *   The data that was passed to
    *   \Drupal\Core\Queue\QueueInterface::createItem() when the item was queued.
    */
-  protected function processSalesforceImport($data): bool {
+  protected function processSalesforceImport($data, $sync = FALSE): bool {
     if (!isset($data['directory'])) {
       return FALSE;
     }
@@ -125,7 +133,7 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
       return FALSE;
     }
 
-    $this->salesforceImporter->directoryImport($data['directory']);
+    $this->salesforceImporter->directoryImport($data['directory'], ['sync' => $sync]);
     return TRUE;
   }
 
@@ -138,6 +146,18 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    */
   protected function processCsvImport($data) {
     // @todo Run CSV import.
+  }
+
+  /**
+   * Processes clean up actions.
+   *
+   * @param $data
+   *   The data that was passed to
+   *   \Drupal\Core\Queue\QueueInterface::createItem() when the item was queued.
+   */
+  protected function processCleanUp($data) {
+    $this->cleaner->cleanDatabase();
+    $this->cleaner->cleanBackupFiles();
   }
 
 }

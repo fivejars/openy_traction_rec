@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\ypkc_salesforce;
+namespace Drupal\ypkc_salesforce_import;
 
 /**
  * Stream Dumper.

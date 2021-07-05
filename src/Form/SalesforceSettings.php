@@ -6,30 +6,28 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class SalesforceSettings.
- *
- * Build settings form for Salesfors integration.
+ * Settings form for Salesforce integration.
  */
 class SalesforceSettings extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'ypkc_salesforce_auth_settings_form';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEditableConfigNames() {
+  protected function getEditableConfigNames(): array {
     return ['ypkc_salesforce.settings'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     $config = $this->config('ypkc_salesforce.settings');
 
     $form['consumer_key'] = [
@@ -89,13 +87,6 @@ class SalesforceSettings extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
-    $form['fetch_status'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enable JSON fetch'),
-      '#default_value' => $config->get('fetch_status'),
-      '#description' => $this->t('Enables fetching of JSON files from Salesforce'),
-    ];
-
     return parent::buildForm($form, $form_state);
   }
 
@@ -111,7 +102,6 @@ class SalesforceSettings extends ConfigFormBase {
     $config->set('private_key', $form_state->getValue('private_key'));
     $config->set('services_base_url', $form_state->getValue('services_base_url'));
     $config->set('community_url', $form_state->getValue('community_url'));
-    $config->set('fetch_status', $form_state->getValue('fetch_status'));
     $config->save();
 
     parent::submitForm($form, $form_state);

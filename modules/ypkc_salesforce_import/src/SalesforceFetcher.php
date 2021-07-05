@@ -1,9 +1,11 @@
 <?php
 
-namespace Drupal\ypkc_salesforce;
+namespace Drupal\ypkc_salesforce_import;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\ypkc_salesforce\Event\SalesforcePostFetchEvent;
+use Drupal\ypkc_salesforce\TractionRecInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -21,7 +23,7 @@ class SalesforceFetcher {
   /**
    * Traction Rec wrapper.
    *
-   * @var YpkcSalesforceInterface
+   * @var TractionRecInterface
    */
   protected $tractionRec;
 
@@ -40,6 +42,13 @@ class SalesforceFetcher {
   protected $eventDispatcher;
 
   /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * JSON Directory name.
    *
    * @var string
@@ -49,17 +58,23 @@ class SalesforceFetcher {
   /**
    * Constructors SalesforceFetcher.
    *
-   * @param YpkcSalesforceInterface $traction_rec
+   * @param TractionRecInterface $traction_rec
    *   The Traction Rec wrapper.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file handler.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
-  public function __construct(YpkcSalesforceInterface $traction_rec, FileSystemInterface $file_system, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(
+    TractionRecInterface $traction_rec,
+    FileSystemInterface $file_system,
+    EventDispatcherInterface $event_dispatcher,
+    ConfigFactoryInterface $config_factory
+  ) {
     $this->tractionRec = $traction_rec;
     $this->fileSystem = $file_system;
     $this->eventDispatcher = $event_dispatcher;
+    $this->configFactory = $config_factory;
 
     $this->fileSystem->prepareDirectory($this->storagePath, FileSystemInterface::CREATE_DIRECTORY);
     $this->directory = $this->storagePath . '/' . date('YmdHi') . '/';
@@ -68,7 +83,7 @@ class SalesforceFetcher {
   /**
    * Fetch results (sessions and classes) from Salesforce and save into file.
    */
-  public function fetch() {
+  public function fetch(): string {
     $this->fetchProgramAndCategories();
     $this->fetchClasses();
     $this->fetchSessions();
@@ -77,6 +92,7 @@ class SalesforceFetcher {
     $event = new SalesforcePostFetchEvent($this->directory);
     // Get the event_dispatcher service and dispatch the event.
     $this->eventDispatcher->dispatch(SalesforcePostFetchEvent::EVENT_NAME, $event);
+    return $this->directory;
   }
 
   /**
@@ -199,6 +215,27 @@ class SalesforceFetcher {
 
     $this->dumpToJson(array_values($programs), $this->buildFilename('programs'));
     $this->dumpToJson($categories, $this->buildFilename('program_categories'));
+  }
+
+  /**
+   * Provides the JSON directory path.
+   *
+   * @return string
+   *   The directory to fetch JSON data.
+   */
+  public function getJsonDirectory(): string {
+    return $this->directory;
+  }
+
+  /**
+   * Checks the Fetcher status.
+   *
+   * @return bool
+   *   TRUE if fetcher is enabled.
+   */
+  public function isEnabled(): bool {
+    $settings = $this->configFactory->get('ypkc_salesforce_import.settings');
+    return (bool) $settings->get('fetch_status');
   }
 
   /**

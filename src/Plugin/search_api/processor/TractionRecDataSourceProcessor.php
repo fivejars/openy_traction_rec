@@ -33,7 +33,6 @@ class TractionRecDataSourceProcessor extends ProcessorPluginBase {
       // Non-traction rec sessions must not be used in Activity Finder.
       if ($object->get('field_data_source')->value != 'traction_rec') {
         unset($items[$item_id]);
-        continue;
       }
     }
   }

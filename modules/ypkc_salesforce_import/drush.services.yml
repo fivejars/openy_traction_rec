@@ -7,5 +7,7 @@ services:
       - '@migrate_tools.commands'
       - '@file_system'
       - '@entity_type.manager'
+      - '@queue'
+      - '@ypkc_salesforce_import.fetcher'
     tags:
       - { name: drush.command }
