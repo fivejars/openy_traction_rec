@@ -6,9 +6,9 @@ use Drupal\Core\Logger\LoggerChannelInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
 /**
- * TractionRec abstraction layer.
+ * TractionRec API wrapper.
  */
-class TractionRec implements YpkcSalesforceInterface {
+class TractionRec implements TractionRecInterface {
 
   /**
    * Traction Rec Client service.

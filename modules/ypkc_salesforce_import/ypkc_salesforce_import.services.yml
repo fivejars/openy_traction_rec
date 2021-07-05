@@ -15,6 +15,12 @@ services:
       - '@database'
       - '@entity_type.manager'
       - '@logger.factory'
+      - '@ypkc_salesforce_import.importer'
+      - '@file_system'
+
+  ypkc_salesforce_import.fetcher:
+    class: Drupal\ypkc_salesforce_import\SalesforceFetcher
+    arguments: [ '@ypkc_salesforce.traction_rec', '@file_system', '@event_dispatcher' ]
 
   ypkc_salesforce_import.fetcher_subscriber:
     class: '\Drupal\ypkc_salesforce_import\EventSubscriber\FetchEventSubscriber'

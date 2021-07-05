@@ -170,9 +170,10 @@ class Importer implements SalesforceImporterInterface {
         $this->fileSystem->copy($file->uri, 'private://salesforce_import/', FileSystemInterface::EXISTS_REPLACE);
       }
 
+      $sync = $options['sync'] ?? FALSE;
       $this->migrateToolsCommands->import(
         '',
-        ['group' => Importer::MIGRATE_GROUP, 'sync' => $options['sync']]
+        ['group' => Importer::MIGRATE_GROUP, 'sync' => $sync]
       );
 
       // Save JSON files only if backup of JSON files is enabled.

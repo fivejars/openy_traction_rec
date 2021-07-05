@@ -2,13 +2,15 @@
 
 namespace Drupal\ypkc_salesforce_import\Commands;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Queue\QueueFactory;
 use Drupal\migrate_tools\Commands\MigrateToolsCommands;
 use Drupal\ypkc_salesforce_import\Cleaner;
 use Drupal\ypkc_salesforce_import\Importer;
+use Drupal\ypkc_salesforce_import\SalesforceFetcher;
 use Drush\Commands\DrushCommands as DrushCommandsBase;
-use Drush\Drush;
 
 /**
  * YPKC Salesforce import drush commands.
@@ -51,6 +53,27 @@ class DrushCommands extends DrushCommandsBase {
   protected $fileSystem;
 
   /**
+   * The Salesforce import queue.
+   *
+   * @var \Drupal\Core\Queue\QueueInterface
+   */
+  protected $importQueue;
+
+  /**
+   * Salesforce fetcher service.
+   *
+   * @var \Drupal\ypkc_salesforce_import\SalesforceFetcher
+   */
+  protected $salesforceFetcher;
+
+  /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * DrushCommands constructor.
    *
    * @param \Drupal\ypkc_salesforce_import\Importer $importer
@@ -64,13 +87,23 @@ class DrushCommands extends DrushCommandsBase {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(Importer $importer, Cleaner $cleaner, MigrateToolsCommands $migrate_tools_drush, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    Importer $importer,
+    Cleaner $cleaner,
+    MigrateToolsCommands $migrate_tools_drush,
+    FileSystemInterface $file_system,
+    EntityTypeManagerInterface $entity_type_manager,
+    QueueFactory $queue_factory,
+    SalesforceFetcher $sf_fetch
+  ) {
     parent::__construct();
     $this->importer = $importer;
     $this->cleaner = $cleaner;
     $this->migrateToolsCommands = $migrate_tools_drush;
     $this->fileSystem = $file_system;
     $this->entityTypeManager = $entity_type_manager;
+    $this->importQueue = $queue_factory->get('ypkc_import');
+    $this->salesforceFetcher = $sf_fetch;
   }
 
   /**
@@ -176,7 +209,7 @@ class DrushCommands extends DrushCommandsBase {
   }
 
   /**
-   * Resets the import lock.
+   * Clean up actions.
    *
    * @param array $options
    *   The array of command options.
@@ -188,31 +221,78 @@ class DrushCommands extends DrushCommandsBase {
    */
   public function cleanUp(array $options) {
     $this->output()->writeln('Starting clean up...');
+
     $limit = $options['limit'];
-    $this->cleaner->cleanUp($limit);
 
-    // We want to store only latest backups of JSON files.
-    if ($this->importer->isBackupEnabled()) {
-      $backup_dir = $this->fileSystem->realpath(Importer::BACKUP_DIRECTORY);
-      $backup_limit = $this->importer->getJsonBackupLimit();
-      $backup_limit++;
-
-      $command = "cd $backup_dir";
-      $command .= '&&';
-      $command .= 'ls -t';
-      $command .= '|';
-      $command .= "tail -n +$backup_limit";
-      $command .= '|';
-      $command .= "xargs -d '\n' rm -rf";
-
-      $process = Drush::shell($command);
-      $process->run();
-      if (!$process->isSuccessful()) {
-        $this->logger->warning('Impossible to remove JSON files: ' . $process->getErrorOutput());
-      }
-    }
+    $this->cleaner->cleanDatabase($limit);
+    $this->cleaner->cleanBackupFiles();
 
     $this->output()->writeln('Clean up finished!');
+  }
+
+  /**
+   * Run Salesforce fetcher.
+   *
+   * @command ypkc:sf-fetch-all
+   * @aliases y-sf-fa
+   */
+  public function fetch() {
+    if (!$this->salesforceFetcher->isEnabled()) {
+      $this->logger()->notice(dt('Fetcher is disabled!'));
+      return FALSE;
+    }
+
+    $this->salesforceFetcher->fetch();
+  }
+
+  /**
+   * Clean up actions.
+   *
+   * @param array $options
+   *   The array of command options.
+   *
+   * @command ypkc-sf:queue-clean-up
+   */
+  public function addCleanUpToQueue(array $options) {
+    $data = [
+      'type' => 'cleanup',
+    ];
+
+    $this->importQueue->createItem($data);
+  }
+
+  /**
+   * Add full-sync action to the queue.
+   *
+   * @param array $options
+   *   The array of command options.
+   *
+   * @command ypkc-sf:queue-import-sync
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  public function addSyncActionToQueue(array $options) {
+    if (!$this->salesforceFetcher->isEnabled()) {
+      $this->logger()->notice(dt('Fetcher is disabled!'));
+      return FALSE;
+    }
+
+    try {
+      $this->salesforceFetcher->fetchProgramAndCategories();
+      $this->salesforceFetcher->fetchClasses();
+      $this->salesforceFetcher->fetchSessions();
+
+      $directory = $this->salesforceFetcher->getJsonDirectory();
+
+      $data = [
+        'type' => 'salesforce_sync',
+        'directory' => $directory,
+      ];
+
+      $this->importQueue->createItem($data);
+    }
+    catch (\Exception $e) {
+      $this->logger()->error($e->getMessage());
+    }
   }
 
 }
