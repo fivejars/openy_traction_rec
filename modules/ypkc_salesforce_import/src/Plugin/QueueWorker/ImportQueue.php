@@ -42,7 +42,7 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
   protected $logger;
 
   /**
-   * Constructors Salesforce ImportQueue plugin.
+   * ImportQueue constructor.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -52,6 +52,8 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    *   The plugin implementation definition.
    * @param \Drupal\ypkc_salesforce_import\SalesforceImporterInterface $salesforce_importer
    *   The Salesforce importer.
+   * @param \Drupal\ypkc_salesforce_import\Cleaner $cleaner
+   *   The YPKC Cleaner.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
    *   The logger.
    */
@@ -101,7 +103,7 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
         break;
 
       case 'cleanup':
-        $this->processCleanUp($data);
+        $this->processCleanUp();
         break;
     }
   }
@@ -112,8 +114,13 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    * @param mixed $data
    *   The data that was passed to
    *   \Drupal\Core\Queue\QueueInterface::createItem() when the item was queued.
+   * @param bool $sync
+   *   Full sync flag.
+   *
+   * @return bool
+   *   Action status.
    */
-  protected function processSalesforceImport($data, $sync = FALSE): bool {
+  protected function processSalesforceImport($data, bool $sync = FALSE): bool {
     if (!isset($data['directory'])) {
       return FALSE;
     }
@@ -150,12 +157,8 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
 
   /**
    * Processes clean up actions.
-   *
-   * @param $data
-   *   The data that was passed to
-   *   \Drupal\Core\Queue\QueueInterface::createItem() when the item was queued.
    */
-  protected function processCleanUp($data) {
+  protected function processCleanUp() {
     $this->cleaner->cleanDatabase();
     $this->cleaner->cleanBackupFiles();
   }

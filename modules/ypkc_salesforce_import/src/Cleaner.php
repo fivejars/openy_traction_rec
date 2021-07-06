@@ -57,6 +57,10 @@ class Cleaner {
    *   The entity type manager.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_channel_factory
    *   Logger factory.
+   * @param \Drupal\ypkc_salesforce_import\SalesforceImporterInterface $importer
+   *   The YPKC Importer.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system service.
    */
   public function __construct(Connection $database, EntityTypeManagerInterface $entity_type_manager, LoggerChannelFactoryInterface $logger_channel_factory, SalesforceImporterInterface $importer, FileSystemInterface $file_system) {
     $this->database = $database;

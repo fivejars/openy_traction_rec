@@ -23,7 +23,7 @@ class SalesforceFetcher {
   /**
    * Traction Rec wrapper.
    *
-   * @var TractionRecInterface
+   * @var \Drupal\ypkc_salesforce\TractionRecInterface
    */
   protected $tractionRec;
 
@@ -58,12 +58,14 @@ class SalesforceFetcher {
   /**
    * Constructors SalesforceFetcher.
    *
-   * @param TractionRecInterface $traction_rec
+   * @param \Drupal\ypkc_salesforce\TractionRecInterface $traction_rec
    *   The Traction Rec wrapper.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file handler.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    */
   public function __construct(
     TractionRecInterface $traction_rec,
