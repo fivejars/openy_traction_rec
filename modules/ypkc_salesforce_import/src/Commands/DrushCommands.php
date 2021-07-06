@@ -2,7 +2,6 @@
 
 namespace Drupal\ypkc_salesforce_import\Commands;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Queue\QueueFactory;
@@ -86,6 +85,10 @@ class DrushCommands extends DrushCommandsBase {
    *   The file handler.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Queue\QueueFactory $queue_factory
+   *   The queue factory.
+   * @param \Drupal\ypkc_salesforce_import\SalesforceFetcher $sf_fetch
+   *   The YPKC TractionRec Fetcher.
    */
   public function __construct(
     Importer $importer,
@@ -268,6 +271,7 @@ class DrushCommands extends DrushCommandsBase {
    *   The array of command options.
    *
    * @command ypkc-sf:queue-import-sync
+   *
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function addSyncActionToQueue(array $options) {
