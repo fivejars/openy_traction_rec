@@ -159,7 +159,6 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    * Processes clean up actions.
    */
   protected function processCleanUp() {
-    $this->cleaner->cleanDatabase();
     $this->cleaner->cleanBackupFiles();
   }
 
