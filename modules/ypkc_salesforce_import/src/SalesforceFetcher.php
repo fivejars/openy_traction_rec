@@ -127,7 +127,7 @@ class SalesforceFetcher {
    *
    * @param string $nextUrl
    *   The URL of the next results page.
-   * @param \Drupal\ypkc_salesforce\JsonStreamDumper $dumper
+   * @param \Drupal\ypkc_salesforce_import\JsonStreamDumper $dumper
    *   Json dumper.
    *
    * @return array
