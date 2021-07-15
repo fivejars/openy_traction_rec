@@ -105,6 +105,14 @@ source:
       label: 'Unlimited Capacity'
       selector: /Course_Option/Unlimited_Capacity
     -
+      name: waitlist_unlimited_capacity
+      label: 'Waitlist unlimited Capacity'
+      selector: /Course_Option/Unlimited_Waitlist_Capacity
+    -
+      name: waitlist_capacity
+      label: 'Waitlist capacity'
+      selector: /Course_Option/Waitlist_Total
+    -
       name: price_description
       label: 'Price Description'
       selector: /Course_Option/Product/Price_Description
@@ -118,6 +126,10 @@ process:
   field_availability:
     plugin: sf_availability
     source: spots_available
+  waitlist_unlimited_capacity: waitlist_unlimited_capacity
+  waitlist_capacity:
+    plugin: get
+    source: waitlist_capacity
   field_session_class/target_id:
     plugin: migration
     migration: sf_classes_import
