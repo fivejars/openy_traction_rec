@@ -167,6 +167,43 @@ class TractionRec implements TractionRecInterface {
   /**
    * {@inheritdoc}
    */
+  public function loadMemberships(string $location = null): array {
+    try {
+      $query = 'SELECT
+        TREX1__Membership_Type__c.id,
+        TREX1__Membership_Type__c.name,
+        TREX1__Membership_Type__c.TREX1__Description__c,
+        TREX1__Membership_Type__c.TREX1__Available_For_Purchase__c,
+        TREX1__Membership_Type__c.TREX1__Available_Online__c,
+        TREX1__Membership_Type__c.TREX1__Cancellation_Fee__c,
+        TREX1__Membership_Type__c.TREX1__Cancellation_Policy__c,
+        TREX1__Membership_Type__c.TREX1__Freeze_Monthly_Fee__c,
+        TREX1__Membership_Type__c.TREX1__Category__r.id,
+        TREX1__Membership_Type__c.TREX1__Category__r.name,
+        TREX1__Membership_Type__c.TREX1__Category__r.TREX1__Category_Description__c,
+        TREX1__Membership_Type__c.TREX1__Location__r.id,
+        TREX1__Membership_Type__c.TREX1__Location__r.name,
+        TREX1__Membership_Type__c.TREX1__Product__r.id,
+        TREX1__Membership_Type__c.TREX1__Product__r.name,
+        TREX1__Membership_Type__c.TREX1__Product__r.TREX1__Price_Description__c
+        FROM TREX1__Membership_Type__c WHERE TREX1__Membership_Type__c.TREX1__Available_For_Purchase__c = true';
+
+      if ($location) {
+        $query .= " AND TREX1__Membership_Type__c.TREX1__Location__r.id = '$location'";
+      }
+      $result = $this->tractionRecClient->executeQuery($query);
+      return $this->simplify($result);
+    }
+    catch (\Exception | GuzzleException $e) {
+      $message = 'Can\'t load the list of program category tags: ' . $e->getMessage();
+      $this->logger->error($message);
+      return [];
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function loadNextPage(string $nextUrl): array {
     try {
       $result = $this->tractionRecClient->send('GET', 'https://ymcapkc.my.salesforce.com' . $nextUrl);

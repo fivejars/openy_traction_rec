@@ -40,6 +40,17 @@ interface TractionRecInterface {
   public function loadCourseOptions(): array;
 
   /**
+   * Loads membership types.
+   *
+   * @param string|null $location
+   *   (Optional) TractionRec branch ID. Filters membership types by location.
+   *
+   * @return array
+   *   The array of loaded membership types.
+   */
+  public function loadMemberships(string $location = null): array;
+
+  /**
    * Loads results for the next page.
    *
    * @param string $nextUrl
