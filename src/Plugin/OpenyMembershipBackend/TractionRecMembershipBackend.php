@@ -4,7 +4,6 @@ namespace Drupal\ypkc_salesforce\Plugin\OpenyMembershipBackend;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\NodeInterface;
 use Drupal\openy_membership\OpenyMembershipBackendPluginBase;
@@ -97,7 +96,7 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
     }
 
     foreach ($membership_types['records'] as $type) {
-      $data[$type['Id']] = [
+      $membership = [
         'id' => $type['Id'],
         'title' => $type['Name'],
         'field_description' => $type['Name'],
@@ -106,11 +105,12 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
           "title" => $type['Location']['Name'],
         ],
       ];
-      $data[$type['Id']]['variations'][] = [
+      $membership['variations'][] = [
         'id' => $type['Product']['Id'],
         'price' => $type['Product']['Price_Description'],
         'title' => $type['Product']['Name'],
       ];
+      $data[$type['Id']] = $membership;
     }
 
     return $data;

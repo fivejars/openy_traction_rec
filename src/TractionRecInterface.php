@@ -48,7 +48,7 @@ interface TractionRecInterface {
    * @return array
    *   The array of loaded membership types.
    */
-  public function loadMemberships(string $location = null): array;
+  public function loadMemberships(string $location = NULL): array;
 
   /**
    * Loads results for the next page.
