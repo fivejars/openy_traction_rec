@@ -186,7 +186,10 @@ class TractionRec implements TractionRecInterface {
         TREX1__Membership_Type__c.TREX1__Product__r.id,
         TREX1__Membership_Type__c.TREX1__Product__r.name,
         TREX1__Membership_Type__c.TREX1__Product__r.TREX1__Price_Description__c
-        FROM TREX1__Membership_Type__c WHERE TREX1__Membership_Type__c.TREX1__Available_For_Purchase__c = true';
+        FROM TREX1__Membership_Type__c 
+        WHERE 
+              TREX1__Membership_Type__c.TREX1__Available_For_Purchase__c = true 
+          AND TREX1__Membership_Type__c.TREX1__Available_Online__c = true';
 
       if ($location) {
         $query .= " AND TREX1__Membership_Type__c.TREX1__Location__r.id = '$location'";
