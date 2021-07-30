@@ -71,8 +71,12 @@ class RegistrationLink extends ProcessPluginBase implements ContainerFactoryPlug
     $config = $this->configFactory->get('ypkc_salesforce.settings');
     $community_url = $config->get('community_url');
 
-    $course_session_id =  $row->get('course_session_id');
-    $query = http_build_query(['courseSessionId' => $course_session_id, 'courseOptionId' => $value]);
+    $course_session_id = $row->get('course_session_id');
+    $params = [
+      'courseSessionId' => $course_session_id,
+      'courseOptionId' => $value,
+    ];
+    $query = http_build_query($params);
     return $community_url . '/s/registration?' . $query;
   }
 
