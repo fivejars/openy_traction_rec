@@ -63,9 +63,6 @@ process:
     plugin: migration
     migration: sf_activities_import
     source: id
-  field_traction_rec_id:
-    plugin: get
-    source: id
 destination:
   plugin: 'entity:node'
   default_bundle: class

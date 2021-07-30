@@ -116,6 +116,10 @@ source:
       name: price_description
       label: 'Price Description'
       selector: /Course_Option/Product/Price_Description
+    -
+      name: course_session_id
+      label: 'Course Session ID'
+      selector: /Course_Session/Id
 process:
   title: title
   status: available
@@ -186,9 +190,8 @@ process:
       source: instructor
       start: 0
       length: 255
-  field_traction_rec_id:
-    plugin: get
-    source: id
+  field_traction_rec_id: id
+  field_tr_course_session_id: course_session_id
 destination:
   plugin: 'entity:node'
 migration_dependencies:
