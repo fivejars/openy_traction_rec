@@ -153,7 +153,7 @@ process:
     source: location
   field_session_reg_link:
     plugin: sf_registration_link
-    source: course
+    source: id
   field_price_description: price_description
   field_session_min_age/value:
     -
@@ -190,8 +190,6 @@ process:
       source: instructor
       start: 0
       length: 255
-  field_traction_rec_id: id
-  field_tr_course_session_id: course_session_id
 destination:
   plugin: 'entity:node'
 migration_dependencies:
