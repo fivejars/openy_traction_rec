@@ -101,10 +101,6 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
       case 'csv':
         $this->processCsvImport($data);
         break;
-
-      case 'cleanup':
-        $this->processCleanUp();
-        break;
     }
   }
 
@@ -153,13 +149,6 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    */
   protected function processCsvImport($data) {
     // @todo Run CSV import.
-  }
-
-  /**
-   * Processes clean up actions.
-   */
-  protected function processCleanUp() {
-    $this->cleaner->cleanBackupFiles();
   }
 
 }

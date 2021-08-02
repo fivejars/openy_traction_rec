@@ -224,12 +224,7 @@ class DrushCommands extends DrushCommandsBase {
    */
   public function cleanUp(array $options) {
     $this->output()->writeln('Starting clean up...');
-
-    $limit = $options['limit'];
-
-    $this->cleaner->cleanDatabase($limit);
     $this->cleaner->cleanBackupFiles();
-
     $this->output()->writeln('Clean up finished!');
   }
 
@@ -246,22 +241,6 @@ class DrushCommands extends DrushCommandsBase {
     }
 
     $this->salesforceFetcher->fetch();
-  }
-
-  /**
-   * Clean up actions.
-   *
-   * @param array $options
-   *   The array of command options.
-   *
-   * @command ypkc-sf:queue-clean-up
-   */
-  public function addCleanUpToQueue(array $options) {
-    $data = [
-      'type' => 'cleanup',
-    ];
-
-    $this->importQueue->createItem($data);
   }
 
   /**
