@@ -269,6 +269,7 @@ class TractionRecClient {
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
+      return '';
     }
   }
 
@@ -280,6 +281,10 @@ class TractionRecClient {
    */
   public function getUserData() {
     try {
+      if (!$this->webToken) {
+        return null;
+      }
+
       $headers = ['Authorization' => 'Bearer ' . $this->webToken];
       $user_data = $this->http->post($this->salesforceSsoSettings->get('app_url') . '/services/oauth2/userinfo',
         ['headers' => $headers]
@@ -289,6 +294,7 @@ class TractionRecClient {
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
+      return null;
     }
   }
 

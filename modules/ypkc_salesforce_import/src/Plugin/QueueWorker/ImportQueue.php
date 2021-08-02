@@ -89,18 +89,23 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    * {@inheritdoc}
    */
   public function processItem($data) {
-    switch ($data['type']) {
-      case 'salesforce':
-        $this->processSalesforceImport($data);
-        break;
+    try {
+      switch ($data['type']) {
+        case 'salesforce':
+          $this->processSalesforceImport($data);
+          break;
 
-      case 'salesforce_sync':
-        $this->processSalesforceImport($data, TRUE);
-        break;
+        case 'salesforce_sync':
+          $this->processSalesforceImport($data, TRUE);
+          break;
 
-      case 'csv':
-        $this->processCsvImport($data);
-        break;
+        case 'csv':
+          $this->processCsvImport($data);
+          break;
+      }
+    }
+    catch (\Exception $e) {
+      $this->logger->error($e->getMessage());
     }
   }
 
