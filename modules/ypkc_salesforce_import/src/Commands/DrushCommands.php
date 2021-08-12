@@ -224,12 +224,7 @@ class DrushCommands extends DrushCommandsBase {
    */
   public function cleanUp(array $options) {
     $this->output()->writeln('Starting clean up...');
-
-    $limit = $options['limit'];
-
-    $this->cleaner->cleanDatabase($limit);
     $this->cleaner->cleanBackupFiles();
-
     $this->output()->writeln('Clean up finished!');
   }
 
