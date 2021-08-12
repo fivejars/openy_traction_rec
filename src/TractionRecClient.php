@@ -282,7 +282,7 @@ class TractionRecClient {
   public function getUserData() {
     try {
       if (!$this->webToken) {
-        return null;
+        return NULL;
       }
 
       $headers = ['Authorization' => 'Bearer ' . $this->webToken];
@@ -294,7 +294,7 @@ class TractionRecClient {
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
-      return null;
+      return NULL;
     }
   }
 
