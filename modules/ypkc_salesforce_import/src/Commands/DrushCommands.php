@@ -218,18 +218,10 @@ class DrushCommands extends DrushCommandsBase {
    *   The array of command options.
    *
    * @command ypkc-sf:clean-up
-   *
-   * @option limit
-   *   Items to store per file. Default: 5000
    */
   public function cleanUp(array $options) {
     $this->output()->writeln('Starting clean up...');
-
-    $limit = $options['limit'];
-
-    $this->cleaner->cleanDatabase($limit);
     $this->cleaner->cleanBackupFiles();
-
     $this->output()->writeln('Clean up finished!');
   }
 
