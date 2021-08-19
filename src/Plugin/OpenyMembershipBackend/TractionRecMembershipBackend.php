@@ -2,7 +2,6 @@
 
 namespace Drupal\ypkc_salesforce\Plugin\OpenyMembershipBackend;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
