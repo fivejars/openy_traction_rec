@@ -2,6 +2,7 @@
 
 namespace Drupal\ypkc_salesforce\Plugin\OpenyMembershipBackend;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -128,9 +129,19 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
 
     $result = [];
     foreach ($branches as $branch) {
+      if ($branch->get('field_location_address')->isEmpty()) {
+        continue;
+      }
+
+      $address = $branch->get('field_location_address')->first()->getValue();
+      $address_string = $address['address_line1'];
+      $address_string .= ' ' . $address['locality'];
+      $address_string .= ', ' . $address['administrative_area'];
+      $address_string .= ' ' . $address['postal_code'];
+
       $result[$branch->id()] = [
         'name' => $branch->label(),
-        'address' => $branch->get('field_location_address')->getString(),
+        'address' => $address_string,
         'value' => $branch->id(),
       ];
     }
