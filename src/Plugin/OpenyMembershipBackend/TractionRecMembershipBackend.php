@@ -105,9 +105,18 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
           "title" => $type['Location']['Name'],
         ],
       ];
+
+      // Needs to split a string that comes from TractionRec
+      // and make modification for it.
+      $price = str_replace('Mo', 'Month',
+        preg_replace(
+        '/^(\d+\s\w+\s\w+)\s(\d+\w+)/',
+        '${1} | $${2}',
+        $type['Product']['Price_Description']));
+
       $membership['variations'][] = [
         'id' => $type['Product']['Id'],
-        'price' => $type['Product']['Price_Description'],
+        'price' => $price,
         'title' => $type['Product']['Name'],
       ];
       $data[$type['Id']] = $membership;
