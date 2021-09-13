@@ -100,11 +100,21 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
         'id' => $type['Id'],
         'title' => $type['Name'],
         'field_description' => $type['Name'],
-        "branch" => [
-          "id" => $branch,
-          "title" => $type['Location']['Name'],
+        'branch' => [
+          'id' => $branch,
+          'title' => $type['Location']['Name'],
         ],
       ];
+
+      // We fetch these specific fields from TractionRec.
+      for ($i = 1; $i <= 3; $i++) {
+        $membership['ages'][] = [
+          'name' => $type['Group_' . $i . '_Name'],
+          'min' => $type['Group_' . $i . '_Min_Age'],
+          'max' => $type['Group_' . $i . '_Max_Age'],
+          'allowed' => $type['Group_' . $i . '_Max_Allowed'],
+        ];
+      }
 
       // Needs to split a string that comes from TractionRec
       // and make modification for it.

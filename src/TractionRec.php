@@ -151,9 +151,9 @@ class TractionRec implements TractionRecInterface {
         TREX1__Course_Option__r.TREX1__Product__r.TREX1__Price_Description__c,
         TREX1__Course_Option__r.TREX1__Unlimited_Waitlist_Capacity__c,
         TREX1__Course_Option__r.TREX1__Waitlist_Total__c
-      FROM TREX1__Course_Session_Option__c 
-      WHERE TREX1__Course_Option__r.TREX1__Available_Online__c = true 
-        AND TREX1__Course_Option__r.TREX1__Day_of_Week__c  != null 
+      FROM TREX1__Course_Session_Option__c
+      WHERE TREX1__Course_Option__r.TREX1__Available_Online__c = true
+        AND TREX1__Course_Option__r.TREX1__Day_of_Week__c  != null
         AND TREX1__Course_Option__r.TREX1__Register_Online_To_Date__c > YESTERDAY
         AND TREX1__Course_Option__r.TREX1__End_Date__c >= TODAY
         AND TREX1__Course_Option__r.TREX1__Start_Date__c != null');
@@ -188,10 +188,22 @@ class TractionRec implements TractionRecInterface {
         TREX1__Membership_Type__c.TREX1__Location__r.name,
         TREX1__Membership_Type__c.TREX1__Product__r.id,
         TREX1__Membership_Type__c.TREX1__Product__r.name,
-        TREX1__Membership_Type__c.TREX1__Product__r.TREX1__Price_Description__c
-        FROM TREX1__Membership_Type__c 
-        WHERE 
-              TREX1__Membership_Type__c.TREX1__Available_For_Purchase__c = true 
+        TREX1__Membership_Type__c.TREX1__Product__r.TREX1__Price_Description__c,
+        TREX1__Membership_Type__c.TREX1__Group_1_Min_Age__c,
+        TREX1__Membership_Type__c.TREX1__Group_1_Max_Age__c,
+        TREX1__Membership_Type__c.TREX1__Group_1_Max_Allowed__c,
+        TREX1__Membership_Type__c.TREX1__Group_1_Name__c,
+        TREX1__Membership_Type__c.TREX1__Group_2_Min_Age__c,
+        TREX1__Membership_Type__c.TREX1__Group_2_Max_Age__c,
+        TREX1__Membership_Type__c.TREX1__Group_2_Max_Allowed__c,
+        TREX1__Membership_Type__c.TREX1__Group_2_Name__c,
+        TREX1__Membership_Type__c.TREX1__Group_3_Min_Age__c,
+        TREX1__Membership_Type__c.TREX1__Group_3_Max_Age__c,
+        TREX1__Membership_Type__c.TREX1__Group_3_Name__c,
+        TREX1__Membership_Type__c.TREX1__Group_3_Max_Allowed__c
+        FROM TREX1__Membership_Type__c
+        WHERE
+              TREX1__Membership_Type__c.TREX1__Available_For_Purchase__c = true
           AND TREX1__Membership_Type__c.TREX1__Available_Online__c = true';
 
       if ($location) {
