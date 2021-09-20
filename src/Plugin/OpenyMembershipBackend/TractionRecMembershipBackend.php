@@ -73,7 +73,7 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getMembershipTypesByBranch(int $branch, array $params): array {
+  public function getMembershipTypesByBranch(int $branch, array $params = []): array {
     $data = [];
 
     if (!$branch) {
@@ -135,7 +135,7 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
       $data[$type['Id']] = $membership;
     }
 
-    return $data;
+    return $this->filterByParams($data, $params);
   }
 
   /**
@@ -178,6 +178,62 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
     $community_url = $config->get('community_url');
 
     return $community_url . '/s/memberships?t=' . $membership;
+  }
+
+  /**
+   * Filters products by additional parameters.
+   *
+   * @param array $products
+   *   The array of membership type products.
+   * @param array $params
+   *   The array of additional params.
+   *
+   * @return array
+   *   The filtered array.
+   */
+  protected function filterByParams(array $products, array $params): array {
+    if (empty($params)) {
+      return $products;
+    }
+
+    if (!empty($params['ages'])) {
+      $ages = $params['ages'];
+      $age_filters = [];
+      foreach (explode(',', $ages) as $age_item) {
+        [$range, $count] = explode('=', $age_item);
+        [$min, $max] = explode('-', $range);
+
+        $age_filters[] = [
+          'min' => (int) $min,
+          'max' => (int) $max,
+          'count' => (int) $count,
+        ];
+      }
+
+      foreach ($products as $product_key => $product) {
+        $valid_groups = 0;
+        foreach ($age_filters as $filter_key => $age_filter) {
+          if (!$age_filter['count']) {
+            unset($age_filters[$filter_key]);
+            continue;
+          }
+
+          foreach ($product['ages'] as $product_ages) {
+            $is_valid_age = $product_ages['min'] >= $age_filter['min'] && $product_ages['max'] <= $age_filter['max'];
+            $is_valid_count = $product_ages['allowed'] >= $age_filter['count'];
+            if ($is_valid_age && $is_valid_count) {
+              $valid_groups++;
+            }
+          }
+        }
+
+        if (count($age_filters) !== $valid_groups) {
+          unset($products[$product_key]);
+        }
+      }
+    }
+
+    return $products;
   }
 
 }
