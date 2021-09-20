@@ -73,7 +73,7 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getMembershipTypesByBranch(int $branch): array {
+  public function getMembershipTypesByBranch(int $branch, array $params): array {
     $data = [];
 
     if (!$branch) {
@@ -106,18 +106,21 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
         ],
       ];
 
-      // We fetch these specific fields from TractionRec.
+      // TractionRec has 3 age Groups.
       for ($i = 1; $i <= 3; $i++) {
+        if (empty($type['Group_' . $i . '_Max_Allowed']) || is_null($type['Group_' . $i . '_Min_Age'])) {
+          continue;
+        }
+
         $membership['ages'][] = [
           'name' => $type['Group_' . $i . '_Name'],
-          'min' => $type['Group_' . $i . '_Min_Age'],
-          'max' => $type['Group_' . $i . '_Max_Age'],
-          'allowed' => $type['Group_' . $i . '_Max_Allowed'],
+          'min' => (int) $type['Group_' . $i . '_Min_Age'],
+          'max' => (int) $type['Group_' . $i . '_Max_Age'],
+          'allowed' => (int) $type['Group_' . $i . '_Max_Allowed'],
         ];
       }
 
-      // Needs to split a string that comes from TractionRec
-      // and make modification for it.
+      // We need custom formatting for the price description.
       $price = str_replace('Mo', 'Month',
         preg_replace(
         '/^(\d+\s\w+\s\w+)\s(\d+\w+)/',
