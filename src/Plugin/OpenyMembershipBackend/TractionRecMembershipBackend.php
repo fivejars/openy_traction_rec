@@ -38,6 +38,17 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
   protected $configFactory;
 
   /**
+   * The map of Membership type ages. Provides info about max and min ages.
+   *
+   * @var \int[][]
+   */
+  protected $agesMap = [
+    'youth' => [0, 17],
+    'young adult' => [18, 29],
+    'adult' => [30, 110],
+  ];
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -120,6 +131,25 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
         ];
       }
 
+      // Single membership types, don't have age settings in the TractionRec.
+      // We should fill them with default values.
+      if (empty($membership['ages'])) {
+        $age['allowed'] = 100;
+
+        if ($this->isPersonalMembership($membership['title'])) {
+          $map_key = $this->getAgeMapKeyByMembershipName($membership['title']);
+
+          if (!$map_key || !isset($this->agesMap[$map_key])) {
+            continue;
+          }
+
+          [$min, $max] = $this->agesMap[$map_key];
+          $age['min'] = $min;
+          $age['max'] = $max;
+        }
+        $membership['ages'][] = $age;
+      }
+
       // We need custom formatting for the price description.
       $price = str_replace('Mo', 'Month',
         preg_replace(
@@ -136,6 +166,51 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
     }
 
     return $this->filterByParams($data, $params);
+  }
+
+  /**
+   * Gets the key of age map by membership type name.
+   *
+   * @param string $membership_type
+   *   The name of membership type.
+   *
+   * @return string
+   *   Needed key for the age mapping array.
+   */
+  protected function getAgeMapKeyByMembershipName(string $membership_type): string {
+    foreach (array_keys($this->agesMap) as $age) {
+      if (strpos(strtolower($membership_type), $age) !== FALSE) {
+        if ($age == 'adult' && strpos(strtolower($membership_type), 'young') !== FALSE) {
+          continue;
+        }
+
+        return $age;
+      }
+    }
+
+    return '';
+  }
+
+  /**
+   * Returns TRUE if provided membership type is single membership.
+   *
+   * @param string $membership_type
+   *   The membership type name.
+   *
+   * @return bool
+   *   TRUE if membership type for only 1 person.
+   */
+  protected function isPersonalMembership(string $membership_type): bool {
+    $membership_type = strtolower($membership_type);
+    $keywords = ['single', 'only', 'add'];
+
+    foreach ($keywords as $keyword) {
+      if (strpos($membership_type, $keyword) !== FALSE) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
   }
 
   /**
