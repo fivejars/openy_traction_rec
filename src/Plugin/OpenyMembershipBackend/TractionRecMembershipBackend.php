@@ -134,7 +134,7 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
       // Single membership types, don't have age settings in the TractionRec.
       // We should fill them with default values.
       if (empty($membership['ages'])) {
-        $age['allowed'] = 100;
+        $age['allowed'] = 1;
 
         if ($this->isPersonalMembership($membership['title'])) {
           $map_key = $this->getAgeMapKeyByMembershipName($membership['title']);
@@ -150,6 +150,12 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
         $membership['ages'][] = $age;
       }
 
+      foreach ($membership['ages'] as $age_group) {
+        if ($age_group['allowed']) {
+          $membership['required_age_groups']++;
+        }
+      }
+
       // We need custom formatting for the price description.
       $price = str_replace('Mo', 'Month',
         preg_replace(
@@ -162,6 +168,7 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
         'price' => $price,
         'title' => $type['Product']['Name'],
       ];
+
       $data[$type['Id']] = $membership;
     }
 
@@ -273,7 +280,9 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
 
     if (!empty($params['ages'])) {
       $ages = $params['ages'];
+
       $age_filters = [];
+      $non_empty_filters = 0;
       foreach (explode(',', $ages) as $age_item) {
         [$range, $count] = explode('=', $age_item);
         [$min, $max] = explode('-', $range);
@@ -283,9 +292,18 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
           'max' => (int) $max,
           'count' => (int) $count,
         ];
+
+        if ($count) {
+          $non_empty_filters++;
+        }
       }
 
       foreach ($products as $product_key => $product) {
+        if ($non_empty_filters < $product['required_age_groups']) {
+          unset($products[$product_key]);
+          continue;
+        }
+
         $valid_groups = 0;
         foreach ($age_filters as $filter_key => $age_filter) {
           if (!$age_filter['count']) {
@@ -302,7 +320,7 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
           }
         }
 
-        if (count($age_filters) !== $valid_groups) {
+        if ($non_empty_filters !== $valid_groups) {
           unset($products[$product_key]);
         }
       }
