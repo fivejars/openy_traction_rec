@@ -106,6 +106,8 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
       return [];
     }
 
+    $this->excludeIrrelevantTypes($membership_types);
+
     foreach ($membership_types['records'] as $type) {
       $membership = [
         'id' => $type['Id'],
@@ -134,7 +136,7 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
       // Single membership types, don't have age settings in the TractionRec.
       // We should fill them with default values.
       if (empty($membership['ages'])) {
-        $age['allowed'] = 1;
+        $age['allowed'] = 10;
 
         if ($this->isPersonalMembership($membership['title'])) {
           $map_key = $this->getAgeMapKeyByMembershipName($membership['title']);
@@ -209,7 +211,7 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
    */
   protected function isPersonalMembership(string $membership_type): bool {
     $membership_type = strtolower($membership_type);
-    $keywords = ['single', 'only', 'add'];
+    $keywords = ['single', 'only'];
 
     foreach ($keywords as $keyword) {
       if (strpos($membership_type, $keyword) !== FALSE) {
@@ -218,6 +220,21 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
     }
 
     return FALSE;
+  }
+
+  /**
+   * Excludes membership types that shouldn't be displayed in results.
+   *
+   * @param array $membership_types
+   *   The array of TractionRec membership types.
+   */
+  protected function excludeIrrelevantTypes(array &$membership_types) {
+    foreach ($membership_types as $key => $membership_type) {
+      $membership_type = strtolower($membership_type);
+      if (strpos($membership_type, 'add') !== FALSE) {
+        unset($membership_types[$key]);
+      }
+    }
   }
 
   /**
