@@ -4,6 +4,7 @@ namespace Drupal\ypkc_salesforce\Plugin\OpenyMembershipBackend;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\NodeInterface;
 use Drupal\openy_membership\OpenyMembershipBackendPluginBase;
@@ -38,6 +39,13 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
   protected $configFactory;
 
   /**
+   * The module handler to invoke the alter hook.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * The map of Membership type ages. Provides info about max and min ages.
    *
    * @var \int[][]
@@ -58,12 +66,14 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
     EntityTypeManagerInterface $entity_type_manager,
     LoggerInterface $logger,
     TractionRecInterface $traction_rec,
-    ConfigFactoryInterface $config
+    ConfigFactoryInterface $config,
+    ModuleHandlerInterface $module_handler
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $logger);
     $this->logger = $logger;
     $this->tractionRec = $traction_rec;
     $this->configFactory = $config;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -77,7 +87,8 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
       $container->get('entity_type.manager'),
       $container->get('logger.factory')->get('openy_membership'),
       $container->get('ypkc_salesforce.traction_rec'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('module_handler')
     );
   }
 
@@ -173,6 +184,8 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
 
       $data[$type['Id']] = $membership;
     }
+
+    $this->moduleHandler->alter('traction_rec_branch_memberships_data', $data, $branch);
 
     return $this->filterByParams($data, $params);
   }
