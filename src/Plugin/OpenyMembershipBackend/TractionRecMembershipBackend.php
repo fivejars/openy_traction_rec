@@ -52,7 +52,7 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
    */
   protected $agesMap = [
     'youth' => [0, 17],
-    'young adult' => [18, 29],
+    'young_adult' => [18, 29],
     'adult' => [30, 110],
   ];
 
@@ -128,44 +128,41 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
           'id' => $branch,
           'title' => $type['Location']['Name'],
         ],
+        'included_age_groups' => [],
       ];
 
       // TractionRec has 3 age Groups.
       for ($i = 1; $i <= 3; $i++) {
-        if (empty($type['Group_' . $i . '_Max_Allowed']) || is_null($type['Group_' . $i . '_Min_Age'])) {
+        if (is_null($type['Group_' . $i . '_Min_Age']) || is_null($type['Group_' . $i . '_Max_Age'])) {
           continue;
         }
 
-        $membership['ages'][] = [
-          'name' => $type['Group_' . $i . '_Name'],
-          'min' => (int) $type['Group_' . $i . '_Min_Age'],
-          'max' => (int) $type['Group_' . $i . '_Max_Age'],
-          'allowed' => (int) $type['Group_' . $i . '_Max_Allowed'],
+        $min_max_ages = [
+          (int) $type['Group_' . $i . '_Min_Age'],
+          (int) $type['Group_' . $i . '_Max_Age'],
         ];
+
+        $membership['ages'][] = $min_max_ages;
       }
 
       // Single membership types, don't have age settings in the TractionRec.
       // We should fill them with default values.
       if (empty($membership['ages'])) {
-        $age['allowed'] = 10;
-
         if ($this->isPersonalMembership($membership['title'])) {
           $map_key = $this->getAgeMapKeyByMembershipName($membership['title']);
 
           if (!$map_key || !isset($this->agesMap[$map_key])) {
             continue;
           }
-
-          [$min, $max] = $this->agesMap[$map_key];
-          $age['min'] = $min;
-          $age['max'] = $max;
+          $membership['ages'][] = $this->agesMap[$map_key];
         }
-        $membership['ages'][] = $age;
       }
 
-      foreach ($membership['ages'] as $age_group) {
-        if ($age_group['allowed']) {
-          $membership['required_age_groups']++;
+      foreach ($membership['ages'] as $membership_min_max_ages) {
+        foreach ($this->agesMap as $age_group => $age_group_ages) {
+          if ($membership_min_max_ages === $age_group_ages) {
+            $membership['included_age_groups'][] = $age_group;
+          }
         }
       }
 
@@ -185,9 +182,10 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
       $data[$type['Id']] = $membership;
     }
 
-    $this->moduleHandler->alter('traction_rec_branch_memberships_data', $data, $branch);
+    $data = $this->filterByParams($data, $params);
 
-    return $this->filterByParams($data, $params);
+    $this->moduleHandler->alter('traction_rec_branch_memberships_data', $data, $branch);
+    return $data;
   }
 
   /**
@@ -201,7 +199,9 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
    */
   protected function getAgeMapKeyByMembershipName(string $membership_type): string {
     foreach (array_keys($this->agesMap) as $age) {
-      if (strpos(strtolower($membership_type), $age) !== FALSE) {
+      $membership_type = strtolower($membership_type);
+      $membership_type = str_replace(' ', '_', $membership_type);
+      if (strpos($membership_type, $age) !== FALSE) {
         if ($age == 'adult' && strpos(strtolower($membership_type), 'young') !== FALSE) {
           continue;
         }
@@ -242,10 +242,10 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
    *   The array of TractionRec membership types.
    */
   protected function excludeIrrelevantTypes(array &$membership_types) {
-    foreach ($membership_types as $key => $membership_type) {
-      $membership_type = strtolower($membership_type);
+    foreach ($membership_types['records'] as $key => $membership_type) {
+      $membership_type = strtolower($membership_type['Name']);
       if (strpos($membership_type, 'add') !== FALSE) {
-        unset($membership_types[$key]);
+        unset($membership_types['records'][$key]);
       }
     }
   }
@@ -304,55 +304,50 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
    *   The filtered array.
    */
   protected function filterByParams(array $products, array $params): array {
-    if (empty($params)) {
+    if (empty($params) || empty($params['age_groups'])) {
       return $products;
     }
 
-    if (!empty($params['ages'])) {
-      $ages = $params['ages'];
+    $age_groups = explode(',', $params['age_groups']);
 
-      $age_filters = [];
-      $non_empty_filters = 0;
-      foreach (explode(',', $ages) as $age_item) {
-        [$range, $count] = explode('=', $age_item);
-        [$min, $max] = explode('-', $range);
-
-        $age_filters[] = [
-          'min' => (int) $min,
-          'max' => (int) $max,
-          'count' => (int) $count,
-        ];
-
-        if ($count) {
-          $non_empty_filters++;
+    // Only one age group is selected by user.
+    // Only Single memberships(one age group is included) should be displayed.
+    // Ex. Youth age group is selected by user. `Only Youth` is displayed.
+    if (count($age_groups) === 1) {
+      foreach ($products as $product_key => $product) {
+        if (count($product['included_age_groups']) !== 1 || reset($product['included_age_groups']) !== reset($age_groups)) {
+          unset($products[$product_key]);
         }
       }
 
+      return $products;
+    }
+
+    // Family types shouldn't be displayed in results if youth is not selected.
+    $adult_groups = ['adult', 'young_adult'];
+    if (count($age_groups) === 2 && array_intersect($age_groups, $adult_groups)) {
       foreach ($products as $product_key => $product) {
-        if ($non_empty_filters < $product['required_age_groups']) {
+        if (count($product['included_age_groups']) > 1) {
           unset($products[$product_key]);
           continue;
         }
 
-        $valid_groups = 0;
-        foreach ($age_filters as $filter_key => $age_filter) {
-          if (!$age_filter['count']) {
-            unset($age_filters[$filter_key]);
-            continue;
-          }
-
-          foreach ($product['ages'] as $product_ages) {
-            $is_valid_age = $product_ages['min'] >= $age_filter['min'] && $product_ages['max'] <= $age_filter['max'];
-            $is_valid_count = $product_ages['allowed'] >= $age_filter['count'];
-            if ($is_valid_age && $is_valid_count) {
-              $valid_groups++;
-            }
-          }
-        }
-
-        if ($non_empty_filters !== $valid_groups) {
+        if (!in_array(reset($product['included_age_groups']), $age_groups)) {
           unset($products[$product_key]);
         }
+      }
+      return $products;
+    }
+
+    // Selecting youth, young adult, and adult.
+    // the Young Adult, Adult, and all family results should be displayed.
+    // Youth Only should be skipped.
+    foreach ($products as $product_key => $product) {
+      if (count($product['included_age_groups']) == 1 && reset($product['included_age_groups']) == 'youth') {
+        unset($products[$product_key]);
+      }
+      if (empty(array_intersect($product['included_age_groups'], $age_groups))) {
+        unset($products[$product_key]);
       }
     }
 
