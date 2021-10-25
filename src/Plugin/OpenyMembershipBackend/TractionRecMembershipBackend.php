@@ -310,10 +310,12 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
 
     $age_groups = explode(',', $params['age_groups']);
 
+    $group_count = count($age_groups);
+
     // Only one age group is selected by user.
     // Only Single memberships(one age group is included) should be displayed.
     // Ex. Youth age group is selected by user. `Only Youth` is displayed.
-    if (count($age_groups) === 1) {
+    if ($group_count === 1) {
       foreach ($products as $product_key => $product) {
         if (count($product['included_age_groups']) !== 1 || reset($product['included_age_groups']) !== reset($age_groups)) {
           unset($products[$product_key]);
@@ -323,8 +325,8 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
       return $products;
     }
 
-    if (count($age_groups) === 2) {
-      // Family types shouldn't be displayed in results if youth is not selected.
+    if ($group_count === 2) {
+      // Family types shouldn't be displayed if youth is not selected.
       $adult_groups = ['adult', 'young_adult'];
       if (array_intersect($age_groups, $adult_groups) && !in_array('youth', $age_groups)) {
         foreach ($products as $product_key => $product) {
