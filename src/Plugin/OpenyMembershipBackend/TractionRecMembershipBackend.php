@@ -323,30 +323,36 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
       return $products;
     }
 
-    // Family types shouldn't be displayed in results if youth is not selected.
-    $adult_groups = ['adult', 'young_adult'];
-    if (count($age_groups) === 2 && array_intersect($age_groups, $adult_groups)) {
-      foreach ($products as $product_key => $product) {
-        if (count($product['included_age_groups']) > 1) {
-          unset($products[$product_key]);
-          continue;
-        }
+    if (count($age_groups) === 2) {
+      // Family types shouldn't be displayed in results if youth is not selected.
+      $adult_groups = ['adult', 'young_adult'];
+      if (array_intersect($age_groups, $adult_groups) && !in_array('youth', $age_groups)) {
+        foreach ($products as $product_key => $product) {
+          if (count($product['included_age_groups']) > 1) {
+            unset($products[$product_key]);
+            continue;
+          }
 
-        if (!in_array(reset($product['included_age_groups']), $age_groups)) {
-          unset($products[$product_key]);
+          if (!in_array(reset($product['included_age_groups']), $age_groups)) {
+            unset($products[$product_key]);
+          }
+        }
+        return $products;
+      }
+
+      if (in_array('youth', $age_groups)) {
+        foreach ($products as $product_key => $product) {
+          if (array_diff($age_groups, $product['included_age_groups'])) {
+            unset($products[$product_key]);
+          }
         }
       }
-      return $products;
     }
 
     // Selecting youth, young adult, and adult.
-    // the Young Adult, Adult, and all family results should be displayed.
-    // Youth Only should be skipped.
+    // Only family results should be displayed.
     foreach ($products as $product_key => $product) {
-      if (count($product['included_age_groups']) == 1 && reset($product['included_age_groups']) == 'youth') {
-        unset($products[$product_key]);
-      }
-      if (empty(array_intersect($product['included_age_groups'], $age_groups))) {
+      if (count($product['included_age_groups']) == 1) {
         unset($products[$product_key]);
       }
     }
