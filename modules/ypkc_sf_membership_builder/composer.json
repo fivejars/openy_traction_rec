@@ -1,0 +1,11 @@
+{
+    "name": "org/ypkc_sf_membership_builder",
+    "type": "drupal-drush",
+    "extra": {
+        "drush": {
+            "services": {
+                "drush.services.yml": "^10"
+            }
+        }
+    }
+}
