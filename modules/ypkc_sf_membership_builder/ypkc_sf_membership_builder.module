@@ -39,18 +39,6 @@ function ypkc_sf_membership_builder_taxonomy_term_presave(TermInterface $entity)
 
   // Calculate hash used to track changes for TractionRec import.
   $entity->set('field_hash', $tr_importer->calcTermHash($entity));
-
-  // All descriptions should have automatically generated string with the price.
-  // The string is changed automatically when TractionRec price updates.
-  $price_description = $entity->get('field_price_description')->value;
-  $price = (int) filter_var($price_description, FILTER_SANITIZE_NUMBER_INT);
-  if ($price) {
-    $description_suffix = t('Monthly memberships are available for $@price', ['@price' => $price]);
-    $description = $entity->getDescription();
-    $description .= '</br>';
-    $description .= $description_suffix;
-    $entity->setDescription($description);
-  }
 }
 
 /**

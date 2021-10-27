@@ -157,6 +157,13 @@ class TractionRecMembershipBackend extends OpenyMembershipBackendPluginBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags(): array {
+    return ['taxonomy_term_list'];
+  }
+
+  /**
    * Filters products by additional parameters.
    *
    * @param array $products
