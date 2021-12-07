@@ -60,9 +60,10 @@ process:
     plugin: default_value
     default_value: traction_rec
   field_class_activity/target_id:
-    plugin: migration
+    plugin: migration_lookup
     migration: sf_activities_import
     source: id
+    no_stub: true
 destination:
   plugin: 'entity:node'
   default_bundle: class

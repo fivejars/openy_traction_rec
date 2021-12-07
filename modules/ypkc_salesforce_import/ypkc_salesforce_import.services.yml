@@ -32,6 +32,11 @@ services:
     tags:
       - { name: 'event_subscriber' }
 
+  ypkc_salesforce_import.migrate_subscriber:
+    class: '\Drupal\ypkc_salesforce_import\EventSubscriber\MigrateEventSubscriber'
+    tags:
+      - { name: 'event_subscriber' }
+
   logger.channel.sf_import:
     parent: logger.channel_base
     arguments: ['ypkc_sf_import']

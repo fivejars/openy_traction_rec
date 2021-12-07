@@ -135,9 +135,10 @@ process:
     plugin: get
     source: waitlist_capacity
   field_session_class/target_id:
-    plugin: migration
+    plugin: migration_lookup
     migration: sf_classes_import
     source: class
+    no_stub: true
   type:
     plugin: default_value
     default_value: session
@@ -192,6 +193,3 @@ process:
       length: 255
 destination:
   plugin: 'entity:node'
-migration_dependencies:
-  required:
-    - ypkc_salesforce_import
