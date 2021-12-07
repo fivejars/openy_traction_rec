@@ -226,6 +226,22 @@ class DrushCommands extends DrushCommandsBase {
   }
 
   /**
+   * Clean up actions.
+   *
+   * @param array $options
+   *   The array of command options.
+   *
+   * @option limit Max number of entities to remove at one cron run. Default: 10000
+   *
+   * @command ypkc-sf:db-clean-up
+   */
+  public function databaseCleanUp(array $options) {
+    $this->output()->writeln('Starting database clean up...');
+    $this->cleaner->cleanDatabase($options['limit']);
+    $this->output()->writeln('Database clean up finished!');
+  }
+
+  /**
    * Run Salesforce fetcher.
    *
    * @command ypkc:sf-fetch-all
