@@ -9,7 +9,6 @@ use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
-use Drupal\paragraphs\Entity\Paragraph;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -99,23 +98,18 @@ class SessionTime extends ProcessPluginBase implements ContainerFactoryPluginInt
       $days = explode(';', $value['days']);
       $days = array_map('strtolower', $days);
 
-      $paragraph = Paragraph::create(
-        [
-          'type' => 'session_time',
-          'field_session_time_actual' => 1,
-          'field_session_time_days' => $days,
-          'field_session_time_date' => [
-            'value' => $start_date->format('Y-m-d\TH:i:s'),
-            'end_value' => $end_date->format('Y-m-d\TH:i:s'),
-          ],
-        ]
-      );
-      $paragraph->isNew();
-      $paragraph->save();
-
+      // We shouldn't create a paragraph entity here.
+      // Because it won't be attached to any parent entity if row is skipped.
+      // So the plugin just provides needed data.
+      // And paragraph will be created in MigrateEventSubscriber::onPreRowSave()
       return [
-        'target_id' => $paragraph->id(),
-        'target_revision_id' => $paragraph->getRevisionId(),
+        'type' => 'session_time',
+        'field_session_time_actual' => 1,
+        'field_session_time_days' => $days,
+        'field_session_time_date' => [
+          'value' => $start_date->format('Y-m-d\TH:i:s'),
+          'end_value' => $end_date->format('Y-m-d\TH:i:s'),
+        ],
       ];
     }
     catch (\Exception $e) {

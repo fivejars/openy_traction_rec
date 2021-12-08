@@ -46,9 +46,10 @@ process:
     plugin: default_value
     default_value: traction_rec
   field_category_program/target_id:
-    plugin: migration
+    plugin: migration_lookup
     migration: sf_programs_import
     source: program
+    no_stub: true
   uid:
     plugin: default_value
     default_value: 1
