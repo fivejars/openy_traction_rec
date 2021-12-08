@@ -27,7 +27,6 @@ class MigrateEventSubscriber implements EventSubscriberInterface {
    * @param \Drupal\migrate\Event\MigratePreRowSaveEvent $event
    *   The event.
    *
-   * @return void
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function onPreRowSave(MigratePreRowSaveEvent $event) {
