@@ -30,24 +30,28 @@ class MigrateEventSubscriber implements EventSubscriberInterface {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function onPreRowSave(MigratePreRowSaveEvent $event) {
+    // We don't create paragraph in process plugin,
+    // because it won't be attached to any parent if row is skipped.
+    // So we creating it here when the row is ready for saving.
     $row = $event->getRow();
     $values = $row->getDestinationProperty('field_session_time');
 
-    if ($values) {
-      // We don't create paragraph in process plugin,
-      // because it won't be attached to any parent if row is skipped.
-      // So we creating it here when the row is ready for saving.
-      $paragraph = Paragraph::create($values);
-      $paragraph->isNew();
-      $paragraph->save();
-
-      $values = [
-        'target_id' => $paragraph->id(),
-        'target_revision_id' => $paragraph->getRevisionId(),
-      ];
-
-      $row->setDestinationProperty('field_session_time', $values);
+    // Skip if paragraph has already created in plugin.
+    if (!$values || isset($values['target_id'])) {
+      return;
     }
+
+    // Create new paragraph if data is passed instead of target_id.
+    $paragraph = Paragraph::create($values);
+    $paragraph->isNew();
+    $paragraph->save();
+
+    $values = [
+      'target_id' => $paragraph->id(),
+      'target_revision_id' => $paragraph->getRevisionId(),
+    ];
+
+    $row->setDestinationProperty('field_session_time', $values);
   }
 
 }

@@ -63,7 +63,7 @@ class LocationByTitle extends ProcessPluginBase implements ContainerFactoryPlugi
       $node_storage = $this->entityTypeManager->getStorage('node');
       $locations = $node_storage->loadByProperties(['title' => $value]);
       if (!$locations) {
-        throw new MigrateSkipRowException('Location node not found');
+        throw new MigrateSkipRowException("Location node not found: $value");
       }
 
       $node = reset($locations);
