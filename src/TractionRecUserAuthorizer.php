@@ -53,7 +53,7 @@ class TractionRecUserAuthorizer {
       $user->setPassword(user_password());
       $user->enforceIsNew();
       $user->setEmail($email);
-      $user->setUsername($name);
+      $user->setUsername($email);
       $user->activate();
 
       // Temp solution: Virtual Y will be removed from the project soon.
@@ -76,7 +76,6 @@ class TractionRecUserAuthorizer {
     }
 
     user_login_finalize($account);
-
   }
 
 }
