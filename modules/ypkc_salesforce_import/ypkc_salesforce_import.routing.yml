@@ -1,9 +1,0 @@
-ypkc_salesforce_import.settings:
-  path: '/admin/openy/integrations/sf-importer'
-  defaults:
-    _form: '\Drupal\ypkc_salesforce_import\Form\SettingsForm'
-    _title: 'Salesforce importer settings'
-  requirements:
-    _permission: 'administer sf importer'
-  options:
-    _admin_route: TRUE

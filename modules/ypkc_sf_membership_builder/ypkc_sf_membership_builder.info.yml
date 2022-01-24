@@ -1,7 +1,0 @@
-name: 'YPKC Membership Builder TractionRec integration'
-type: module
-description: 'Provides TractionRec integration for the Membership Builder'
-core_version_requirement: ^8.8 || ^9
-package: YPKC
-dependencies:
-  - ypkc_salesforce:ypkc_salesforce

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\ypkc_salesforce;
+namespace Drupal\openy_traction_rec;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -88,8 +88,8 @@ class TractionRecClient {
    *   The request stack.
    */
   public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time, LoggerChannelFactoryInterface $logger_channel_factory, RequestStack $request_stack) {
-    $this->salesforceSettings = $config_factory->get('ypkc_salesforce.settings');
-    $this->salesforceSsoSettings = $config_factory->get('ypkc_salesforce_sso.settings');
+    $this->salesforceSettings = $config_factory->get('openy_traction_rec.settings');
+    $this->salesforceSsoSettings = $config_factory->get('openy_traction_rec_sso.settings');
     $this->http = $http;
     $this->time = $time;
     $this->logger = $logger_channel_factory->get('salesforce');
@@ -173,7 +173,7 @@ class TractionRecClient {
    *   Retrieved results from Salesforce.
    *
    * @throws \GuzzleHttp\Exception\GuzzleException
-   * @throws \Drupal\ypkc_salesforce\InvalidTokenException
+   * @throws \Drupal\openy_traction_rec\InvalidTokenException
    */
   public function executeQuery(string $query): array {
     $access_token = $this->getAccessToken();
@@ -215,7 +215,7 @@ class TractionRecClient {
    * @return array|mixed
    *   The array with a response data.
    *
-   * @throws \Drupal\ypkc_salesforce\InvalidTokenException
+   * @throws \Drupal\openy_traction_rec\InvalidTokenException
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function send(string $method, string $url, array $options = []) {

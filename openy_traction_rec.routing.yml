@@ -1,0 +1,7 @@
+openy_traction_rec.settings:
+  path: /admin/openy/integrations/salesforce/settings
+  defaults:
+    _form: '\Drupal\openy_traction_rec\Form\SalesforceSettings'
+    _title: 'Salesforce auth settings'
+  requirements:
+    _role: 'administrator'

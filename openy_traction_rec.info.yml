@@ -1,0 +1,5 @@
+name: OPENY Salesforce
+type: module
+description: 'Provides OPENY-specific Salesforce(TractionRec) integration.'
+package: OPENY
+core_version_requirement: ^8.8 || ^9

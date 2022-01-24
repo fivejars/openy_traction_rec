@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\ypkc_salesforce\Event;
+namespace Drupal\openy_traction_rec\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
@@ -12,7 +12,7 @@ class SalesforcePostFetchEvent extends Event {
   /**
    * The event name.
    */
-  const EVENT_NAME = 'ypkc_salesforce.post_fetch';
+  const EVENT_NAME = 'openy_traction_rec.post_fetch';
 
   /**
    * The directory with fetched files.

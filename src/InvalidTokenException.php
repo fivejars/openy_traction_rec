@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\ypkc_salesforce;
+namespace Drupal\openy_traction_rec;
 
 /**
  * Exception for wrong JWT access token errors.

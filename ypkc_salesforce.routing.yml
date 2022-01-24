@@ -1,7 +1,0 @@
-ypkc_salesforce.settings:
-  path: /admin/openy/integrations/salesforce/settings
-  defaults:
-    _form: '\Drupal\ypkc_salesforce\Form\SalesforceSettings'
-    _title: 'Salesforce auth settings'
-  requirements:
-    _role: 'administrator'

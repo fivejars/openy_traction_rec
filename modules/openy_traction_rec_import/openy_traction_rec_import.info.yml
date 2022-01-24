@@ -1,0 +1,7 @@
+name: 'OPENY traction rec import'
+type: module
+description: 'Traction Rec migration for OPENY'
+core_version_requirement: ^8.8 || ^9
+package: 'OPENY'
+dependencies:
+  - openy_traction_rec:openy_traction_rec

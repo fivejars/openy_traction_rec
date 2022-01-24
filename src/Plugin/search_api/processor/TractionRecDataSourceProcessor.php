@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\ypkc_salesforce\Plugin\search_api\processor;
+namespace Drupal\openy_traction_rec\Plugin\search_api\processor;
 
 use Drupal\search_api\Processor\ProcessorPluginBase;
 
@@ -8,7 +8,7 @@ use Drupal\search_api\Processor\ProcessorPluginBase;
  * Excludes non-traction rec entities from being indexes.
  *
  * @SearchApiProcessor(
- *   id = "ypkc_traction_rec_datasource",
+ *   id = "openy_trasnsaction_rectraction_rec_datasource",
  *   label = @Translation("Traction Rec Data Source"),
  *   description = @Translation("Exclude entities from being indexed, if they don't have Traction Rec data source."),
  *   stages = {

@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - openy_traction_rec_import
+id: sf_import
+label: Salesforce import
+description: 'Classes and sessions migration'
+source_type: 'JSON files with classes and sessions'
+module: openy_traction_rec_import
+shared_configuration: null

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\ypkc_salesforce;
+namespace Drupal\openy_traction_rec;
 
 use Drupal\Core\Logger\LoggerChannelInterface;
 use GuzzleHttp\Exception\GuzzleException;
@@ -13,7 +13,7 @@ class TractionRec implements TractionRecInterface {
   /**
    * Traction Rec Client service.
    *
-   * @var \Drupal\ypkc_salesforce\TractionRecClient
+   * @var \Drupal\openy_traction_rec\TractionRecClient
    */
   protected $tractionRecClient;
 
@@ -27,7 +27,7 @@ class TractionRec implements TractionRecInterface {
   /**
    * TractionRec constructor.
    *
-   * @param \Drupal\ypkc_salesforce\TractionRecClient $traction_rec_client
+   * @param \Drupal\openy_traction_rec\TractionRecClient $traction_rec_client
    *   The TractionRec API client.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $loggerChannel
    *   Logger channel.

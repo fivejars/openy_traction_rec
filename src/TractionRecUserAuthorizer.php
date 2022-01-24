@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\ypkc_salesforce;
+namespace Drupal\openy_traction_rec;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;

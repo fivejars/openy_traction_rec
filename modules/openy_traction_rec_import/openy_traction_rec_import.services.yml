@@ -1,0 +1,42 @@
+services:
+  openy_traction_rec_import.importer:
+    class: 'Drupal\openy_traction_rec_import\Importer'
+    arguments:
+      - '@lock'
+      - '@logger.channel.sf_import'
+      - '@config.factory'
+      - '@plugin.manager.migration'
+      - '@entity_type.manager'
+      - '@file_system'
+
+  openy_traction_rec_import.cleaner:
+    class: 'Drupal\openy_traction_rec_import\Cleaner'
+    arguments:
+      - '@database'
+      - '@entity_type.manager'
+      - '@logger.factory'
+      - '@openy_traction_rec_import.importer'
+      - '@file_system'
+
+  openy_traction_rec_import.fetcher:
+    class: Drupal\openy_traction_rec_import\SalesforceFetcher
+    arguments:
+      - '@openy_traction_rec.traction_rec'
+      - '@file_system'
+      - '@event_dispatcher'
+      - '@config.factory'
+
+  openy_traction_rec_import.fetcher_subscriber:
+    class: '\Drupal\openy_traction_rec_import\EventSubscriber\FetchEventSubscriber'
+    arguments: ['@queue']
+    tags:
+      - { name: 'event_subscriber' }
+
+  openy_traction_rec_import.migrate_subscriber:
+    class: '\Drupal\openy_traction_rec_import\EventSubscriber\MigrateEventSubscriber'
+    tags:
+      - { name: 'event_subscriber' }
+
+  logger.channel.sf_import:
+    parent: logger.channel_base
+    arguments: ['openy_trasnsaction_recsf_import']
