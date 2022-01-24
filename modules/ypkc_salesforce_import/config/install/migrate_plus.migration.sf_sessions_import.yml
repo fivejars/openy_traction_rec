@@ -1,0 +1,195 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - ypkc_salesforce_import
+id: sf_sessions_import
+migration_tags:
+  - openy_import
+migration_group: sf_import
+label: 'Import Sessions'
+source:
+  plugin: url
+  data_fetcher_plugin: file
+  data_parser_plugin: json
+  item_selector: 0
+  urls: 'private://salesforce_import/sessions.json'
+  track_changes: true
+  ids:
+    id:
+      type: string
+  fields:
+    -
+      name: title
+      label: 'Title'
+      selector: /Course_Option/Name
+    -
+      name: id
+      label: 'Id'
+      selector: /Course_Option/Id
+    -
+      name: class
+      label: 'Class'
+      selector: /Course_Session/Course/Id
+    -
+      name: course
+      label: 'Course'
+      selector: /Course_Session/Course/Name
+    -
+      name: course_description
+      label: Course Description
+      selector: /Course_Session/Course/Description
+    -
+      name: start_date
+      label: 'Start Date'
+      selector: /Course_Option/Start_Date
+    -
+      name: start_time
+      label: 'Start Time'
+      selector: /Course_Option/Start_Time
+    -
+      name: end_date
+      label: 'End Date'
+      selector: /Course_Option/End_Date
+    -
+      name: end_time
+      label: 'End Time'
+      selector: /Course_Option/End_Time
+    -
+      name: days
+      label: Days
+      selector: /Course_Option/Day_of_Week
+    -
+      name: age_min_year
+      label: 'Min Age'
+      selector: /Course_Option/Age_Min
+    -
+      name: age_max_year
+      label: 'Max Age'
+      selector: /Course_Option/Age_Max
+    -
+      name: location
+      label: Location
+      selector: /Course_Option/Location/Name
+    -
+      name: instructor
+      label: Instructor
+      selector: /Course_Option/Instructor
+    -
+      name: online_registration
+      label: 'Online registration'
+      selector: /Course_Option/Available_Online
+    -
+      name: available
+      label: 'Available'
+      selector: /Course_Option/Available
+    -
+      name: online_registration_date_from
+      label: 'Online registration date(from)'
+      selector: /Course_Option/Register_Online_From_Date
+    -
+      name: online_registration_date_to
+      label: 'Online registration date(to)'
+      selector: /Course_Option/Register_Online_To_Date
+    -
+      name: spots_allowed
+      label: 'Spots allowed'
+      selector: /Course_Option/Capacity
+    -
+      name: spots_available
+      label: 'Spots available'
+      selector: /Course_Option/Total_Capacity_Available
+    -
+      name: unlimited_capacity
+      label: 'Unlimited Capacity'
+      selector: /Course_Option/Unlimited_Capacity
+    -
+      name: waitlist_unlimited_capacity
+      label: 'Waitlist unlimited Capacity'
+      selector: /Course_Option/Unlimited_Waitlist_Capacity
+    -
+      name: waitlist_capacity
+      label: 'Waitlist capacity'
+      selector: /Course_Option/Waitlist_Total
+    -
+      name: price_description
+      label: 'Price Description'
+      selector: /Course_Option/Product/Price_Description
+    -
+      name: course_session_id
+      label: 'Course Session ID'
+      selector: /Course_Session/Id
+process:
+  title: title
+  status: available
+  uid:
+    plugin: default_value
+    default_value: 1
+  field_session_description: course_description
+  field_availability:
+    plugin: sf_availability
+    source: spots_available
+  waitlist_unlimited_capacity: waitlist_unlimited_capacity
+  waitlist_capacity:
+    plugin: get
+    source: waitlist_capacity
+  field_session_class/target_id:
+    plugin: migration_lookup
+    migration: sf_classes_import
+    source: class
+    no_stub: true
+  type:
+    plugin: default_value
+    default_value: session
+  field_session_time:
+    plugin: sf_session_time
+    source: start_date
+  field_data_source:
+    plugin: default_value
+    default_value: traction_rec
+  field_session_online: online_registration
+  field_session_location:
+    plugin: sf_location_by_title
+    source: location
+  field_session_reg_link:
+    plugin: sf_registration_link
+    source: id
+  field_price_description: price_description
+  field_session_min_age/value:
+    -
+      plugin: skip_on_value
+      equals: true
+      source: age_min_year
+      method: process
+      value:
+        - null
+    -
+      plugin: sf_years_to_month
+      source: age_min_year
+  field_session_max_age/value:
+    -
+      plugin: skip_on_value
+      equals: true
+      source: age_min_year
+      method: process
+      value:
+        - null
+    -
+      plugin: sf_years_to_month
+      source: age_max_year
+  field_session_instructor:
+    -
+      plugin: skip_on_value
+      equals: true
+      source: instructor
+      method: process
+      value:
+        - null
+    -
+      plugin: substr
+      source: instructor
+      start: 0
+      length: 255
+destination:
+  plugin: 'entity:node'

@@ -1,0 +1,6 @@
+ypkc_salesforce.admin:
+  title: 'Salesforce auth settings'
+  description: 'Configure Salesforce auth settings'
+  parent: openy_system.openy_integrations
+  route_name: ypkc_salesforce.settings
+  weight: 100

@@ -1,0 +1,8 @@
+services:
+  logger.channel.tr_membership_sync:
+    parent: logger.channel_base
+    arguments:
+      - 'tr_membership_sync'
+  ypkc_salesforce.membership_importer:
+    class: Drupal\ypkc_sf_membership_builder\MembershipImporter
+    arguments: [ '@ypkc_salesforce.traction_rec','@entity_type.manager', '@logger.channel.tr_membership_sync' ]

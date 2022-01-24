@@ -1,0 +1,6 @@
+services:
+  ypkc_sf_membership_builder.commands:
+    class: \Drupal\ypkc_sf_membership_builder\Commands\MembershipBuilderCommands
+    arguments: ['@ypkc_salesforce.membership_importer']
+    tags:
+      - { name: drush.command }

@@ -1,0 +1,5 @@
+name: YPKC Salesforce
+type: module
+description: 'Provides YPKC-specific Salesforce(TractionRec) integration.'
+package: YPKC
+core_version_requirement: ^8.8 || ^9
