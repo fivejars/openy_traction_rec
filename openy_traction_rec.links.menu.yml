@@ -1,0 +1,6 @@
+openy_traction_rec.admin:
+  title: 'Salesforce auth settings'
+  description: 'Configure Salesforce auth settings'
+  parent: openy_system.openy_integrations
+  route_name: openy_traction_rec.settings
+  weight: 100
