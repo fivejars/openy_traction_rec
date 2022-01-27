@@ -8,11 +8,11 @@ use Drupal\Core\Queue\QueueFactory;
 use Drupal\migrate_tools\Commands\MigrateToolsCommands;
 use Drupal\openy_traction_rec_import\Cleaner;
 use Drupal\openy_traction_rec_import\Importer;
-use Drupal\openy_traction_rec_import\SalesforceFetcher;
+use Drupal\openy_traction_rec_import\TractionRecFetcher;
 use Drush\Commands\DrushCommands as DrushCommandsBase;
 
 /**
- * OPENY Salesforce import drush commands.
+ * OPENY Traction Rec import drush commands.
  */
 class DrushCommands extends DrushCommandsBase {
 
@@ -52,18 +52,18 @@ class DrushCommands extends DrushCommandsBase {
   protected $fileSystem;
 
   /**
-   * The Salesforce import queue.
+   * The Traction Rec import queue.
    *
    * @var \Drupal\Core\Queue\QueueInterface
    */
   protected $importQueue;
 
   /**
-   * Salesforce fetcher service.
+   * Traction Rec fetcher service.
    *
-   * @var \Drupal\openy_traction_rec_import\SalesforceFetcher
+   * @var \Drupal\openy_traction_rec_import\TractionRecFetcher
    */
-  protected $salesforceFetcher;
+  protected $tractionRecFetcher;
 
   /**
    * The config factory.
@@ -76,7 +76,7 @@ class DrushCommands extends DrushCommandsBase {
    * DrushCommands constructor.
    *
    * @param \Drupal\openy_traction_rec_import\Importer $importer
-   *   The Salesforce importer service.
+   *   The Traction Rec importer service.
    * @param \Drupal\openy_traction_rec_import\Cleaner $cleaner
    *   OPENY sessions cleaner.
    * @param \Drupal\migrate_tools\Commands\MigrateToolsCommands $migrate_tools_drush
@@ -87,7 +87,7 @@ class DrushCommands extends DrushCommandsBase {
    *   The entity type manager.
    * @param \Drupal\Core\Queue\QueueFactory $queue_factory
    *   The queue factory.
-   * @param \Drupal\openy_traction_rec_import\SalesforceFetcher $sf_fetch
+   * @param \Drupal\openy_traction_rec_import\TractionRecFetcher $tr_fetch
    *   The OPENY TractionRec Fetcher.
    */
   public function __construct(
@@ -97,7 +97,7 @@ class DrushCommands extends DrushCommandsBase {
     FileSystemInterface $file_system,
     EntityTypeManagerInterface $entity_type_manager,
     QueueFactory $queue_factory,
-    SalesforceFetcher $sf_fetch
+    TractionRecFetcher $tr_fetch
   ) {
     parent::__construct();
     $this->importer = $importer;
@@ -106,11 +106,11 @@ class DrushCommands extends DrushCommandsBase {
     $this->fileSystem = $file_system;
     $this->entityTypeManager = $entity_type_manager;
     $this->importQueue = $queue_factory->get('openy_trasnsaction_recimport');
-    $this->salesforceFetcher = $sf_fetch;
+    $this->tractionRecFetcher = $tr_fetch;
   }
 
   /**
-   * Executes the Salesforce import.
+   * Executes the Traction Rec import.
    *
    * @param array $options
    *   Additional options for the command.
@@ -129,7 +129,7 @@ class DrushCommands extends DrushCommandsBase {
   public function import(array $options): bool {
     if (!$this->importer->isEnabled()) {
       $this->logger()->notice(
-        dt('Salesforce import is not enabled!')
+        dt('Traction Rec import is not enabled!')
       );
       return FALSE;
     }
@@ -148,7 +148,7 @@ class DrushCommands extends DrushCommandsBase {
       return FALSE;
     }
 
-    $this->output()->writeln('Starting Salesforce migration');
+    $this->output()->writeln('Starting Traction Rec migration');
 
     $dirs = $this->importer->getJsonDirectoriesList();
     if (empty($dirs)) {
@@ -161,20 +161,20 @@ class DrushCommands extends DrushCommandsBase {
     }
 
     $this->importer->releaseLock();
-    $this->output()->writeln('Salesforce migration done!');
+    $this->output()->writeln('Traction Rec migration done!');
 
     return TRUE;
   }
 
   /**
-   * Executes the Salesforce rollback.
+   * Executes the Traction Rec rollback.
    *
    * @command openy-tr-sf:rollback
    * @aliases y-sf:rollback
    */
   public function rollback() {
     try {
-      $this->output()->writeln('Rollbacking Salesforce migrations...');
+      $this->output()->writeln('Rollbacking Traction Rec migrations...');
       $options = ['group' => Importer::MIGRATE_GROUP];
       $this->migrateToolsCommands->rollback('', $options);
       $this->output()->writeln('Rollback done!');
@@ -242,18 +242,18 @@ class DrushCommands extends DrushCommandsBase {
   }
 
   /**
-   * Run Salesforce fetcher.
+   * Run Traction Rec fetcher.
    *
-   * @command openy-tr:sf-fetch-all
-   * @aliases y-sf-fa
+   * @command openy-tr:tr-fetch-all
+   * @aliases y-tr-fa
    */
   public function fetch() {
-    if (!$this->salesforceFetcher->isEnabled()) {
+    if (!$this->tractionRecFetcher->isEnabled()) {
       $this->logger()->notice(dt('Fetcher is disabled!'));
       return FALSE;
     }
 
-    $this->salesforceFetcher->fetch();
+    $this->tractionRecFetcher->fetch();
   }
 
   /**
@@ -283,20 +283,20 @@ class DrushCommands extends DrushCommandsBase {
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function addSyncActionToQueue(array $options) {
-    if (!$this->salesforceFetcher->isEnabled()) {
+    if (!$this->tractionRecFetcher->isEnabled()) {
       $this->logger()->notice(dt('Fetcher is disabled!'));
       return FALSE;
     }
 
     try {
-      $this->salesforceFetcher->fetchProgramAndCategories();
-      $this->salesforceFetcher->fetchClasses();
-      $this->salesforceFetcher->fetchSessions();
+      $this->tractionRecFetcher->fetchProgramAndCategories();
+      $this->tractionRecFetcher->fetchClasses();
+      $this->tractionRecFetcher->fetchSessions();
 
-      $directory = $this->salesforceFetcher->getJsonDirectory();
+      $directory = $this->tractionRecFetcher->getJsonDirectory();
 
       $data = [
-        'type' => 'salesforce_sync',
+        'type' => 'traction_rec_sync',
         'directory' => $directory,
       ];
 

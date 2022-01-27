@@ -4,17 +4,17 @@ dependencies:
   enforced:
     module:
       - openy_traction_rec_import
-id: sf_sessions_import
+id: tr_sessions_import
 migration_tags:
   - openy_import
-migration_group: sf_import
+migration_group: tr_import
 label: 'Import Sessions'
 source:
   plugin: url
   data_fetcher_plugin: file
   data_parser_plugin: json
   item_selector: 0
-  urls: 'private://salesforce_import/sessions.json'
+  urls: 'private://traction_rec_import/sessions.json'
   track_changes: true
   ids:
     id:
@@ -128,7 +128,7 @@ process:
     default_value: 1
   field_session_description: course_description
   field_availability:
-    plugin: sf_availability
+    plugin: tr_availability
     source: spots_available
   waitlist_unlimited_capacity: waitlist_unlimited_capacity
   waitlist_capacity:
@@ -136,24 +136,24 @@ process:
     source: waitlist_capacity
   field_session_class/target_id:
     plugin: migration_lookup
-    migration: sf_classes_import
+    migration: tr_classes_import
     source: class
     no_stub: true
   type:
     plugin: default_value
     default_value: session
   field_session_time:
-    plugin: sf_session_time
+    plugin: tr_session_time
     source: start_date
   field_data_source:
     plugin: default_value
     default_value: traction_rec
   field_session_online: online_registration
   field_session_location:
-    plugin: sf_location_by_title
+    plugin: tr_location_by_title
     source: location
   field_session_reg_link:
-    plugin: sf_registration_link
+    plugin: tr_registration_link
     source: id
   field_price_description: price_description
   field_session_min_age/value:
@@ -165,7 +165,7 @@ process:
       value:
         - null
     -
-      plugin: sf_years_to_month
+      plugin: tr_years_to_month
       source: age_min_year
   field_session_max_age/value:
     -
@@ -176,7 +176,7 @@ process:
       value:
         - null
     -
-      plugin: sf_years_to_month
+      plugin: tr_years_to_month
       source: age_max_year
   field_session_instructor:
     -

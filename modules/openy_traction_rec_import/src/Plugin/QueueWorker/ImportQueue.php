@@ -5,11 +5,11 @@ namespace Drupal\openy_traction_rec_import\Plugin\QueueWorker;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
-use Drupal\openy_traction_rec_import\SalesforceImporterInterface;
+use Drupal\openy_traction_rec_import\TractionRecImporterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Process a queue of salesforce imports.
+ * Process a queue of traction_rec imports.
  *
  * @QueueWorker(
  *   id = "openy_trasnsaction_recimport",
@@ -24,7 +24,7 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    *
    * @var \Drupal\openy_traction_rec_import\Importer
    */
-  protected $salesforceImporter;
+  protected $tractionRecImporter;
 
   /**
    * Logger channel.
@@ -42,8 +42,8 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\openy_traction_rec_import\SalesforceImporterInterface $salesforce_importer
-   *   The Salesforce importer.
+   * @param \Drupal\openy_traction_rec_import\TractionRecImporterInterface $traction_rec_importer
+   *   The Traction Rec importer.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
    *   The logger.
    */
@@ -51,11 +51,11 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    SalesforceImporterInterface $salesforce_importer,
+    TractionRecImporterInterface $traction_rec_importer,
     LoggerChannelInterface $logger
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->salesforceImporter = $salesforce_importer;
+    $this->tractionRecImporter = $traction_rec_importer;
     $this->logger = $logger;
   }
 
@@ -68,7 +68,7 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
       $plugin_id,
       $plugin_definition,
       $container->get('openy_traction_rec_import.importer'),
-      $container->get('logger.channel.sf_import')
+      $container->get('logger.channel.tr_import')
     );
   }
 
@@ -76,12 +76,12 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    * {@inheritdoc}
    */
   public function processItem($data) {
-    $sync = $data['type'] === 'salesforce_sync';
-    $this->processSalesforceImport($data, $sync);
+    $sync = $data['type'] === 'traction_rec_sync';
+    $this->processTractionRecImport($data, $sync);
   }
 
   /**
-   * Processes salesforce import.
+   * Processes traction_rec import.
    *
    * @param mixed $data
    *   The data that was passed to
@@ -92,27 +92,27 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    * @return bool
    *   Action status.
    */
-  protected function processSalesforceImport($data, bool $sync = FALSE): bool {
+  protected function processTractionRecImport($data, bool $sync = FALSE): bool {
     if (!isset($data['directory'])) {
       return FALSE;
     }
 
-    if (!$this->salesforceImporter->isEnabled()) {
-      $this->logger->info('Salesforce import is not enabled!');
+    if (!$this->tractionRecImporter->isEnabled()) {
+      $this->logger->info('Traction Rec import is not enabled!');
       return FALSE;
     }
 
-    if (!$this->salesforceImporter->acquireLock()) {
+    if (!$this->tractionRecImporter->acquireLock()) {
       $this->logger->info('Can\'t run new import, another import process already in progress.');
       return FALSE;
     }
 
-    if (!$this->salesforceImporter->checkMigrationsStatus()) {
+    if (!$this->tractionRecImporter->checkMigrationsStatus()) {
       $this->logger->info('One or more migrations are still running or stuck.');
       return FALSE;
     }
 
-    $this->salesforceImporter->directoryImport($data['directory'], ['sync' => $sync]);
+    $this->tractionRecImporter->directoryImport($data['directory'], ['sync' => $sync]);
     return TRUE;
   }
 

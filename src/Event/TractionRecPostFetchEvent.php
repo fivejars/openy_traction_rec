@@ -2,12 +2,12 @@
 
 namespace Drupal\openy_traction_rec\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Event is invoked after Salesforce fetching and dumping JSON files.
+ * Event is invoked after Traction Rec fetching and dumping JSON files.
  */
-class SalesforcePostFetchEvent extends Event {
+class TractionRecPostFetchEvent extends Event {
 
   /**
    * The event name.

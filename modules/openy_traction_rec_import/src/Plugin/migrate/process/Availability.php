@@ -11,7 +11,7 @@ use Drupal\migrate\Row;
  * Sessions capacity plugin.
  *
  * @MigrateProcessPlugin(
- *   id = "sf_availability"
+ *   id = "tr_availability"
  * )
  */
 class Availability extends ProcessPluginBase {

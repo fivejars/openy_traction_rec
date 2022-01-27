@@ -4,17 +4,17 @@ dependencies:
   enforced:
     module:
       - openy_traction_rec_import
-id: sf_activities_import
+id: tr_sub_programs_import
 migration_tags:
   - openy_import
-migration_group: sf_import
-label: 'Import Activities'
+migration_group: tr_import
+label: 'Import Programs Categories'
 source:
   plugin: url
   data_fetcher_plugin: file
   data_parser_plugin: json
   item_selector: 0
-  urls: 'private://salesforce_import/classes.json'
+  urls: 'private://traction_rec_import/program_categories.json'
   track_changes: true
   ids:
     id:
@@ -29,9 +29,9 @@ source:
       label: 'Title'
       selector: /Name
     -
-      name: program_id
-      label: 'Program ID'
-      selector: /Program/Id
+      name: program
+      label: 'Program'
+      selector: /Program
     -
       name: available
       label: 'Available'
@@ -40,22 +40,22 @@ process:
   title: title
   type:
     plugin: default_value
-    default_value: activity
+    default_value: program_subcategory
   status: available
+  field_data_source:
+    plugin: default_value
+    default_value: traction_rec
+  field_category_program/target_id:
+    plugin: migration_lookup
+    migration: tr_programs_import
+    source: program
+    no_stub: true
   uid:
     plugin: default_value
     default_value: 1
   moderation_state:
     plugin: default_value
     default_value: 'published'
-  field_data_source:
-    plugin: default_value
-    default_value: traction_rec
-  field_activity_category/target_id:
-    plugin: migration_lookup
-    migration: sf_sub_programs_import
-    source: program_id
-    no_stub: true
 destination:
   plugin: 'entity:node'
   default_bundle: activity

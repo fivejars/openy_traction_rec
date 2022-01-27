@@ -224,7 +224,7 @@ class TractionRec implements TractionRecInterface {
    */
   public function loadNextPage(string $nextUrl): array {
     try {
-      $result = $this->tractionRecClient->send('GET', 'https://ymcapkc.my.salesforce.com' . $nextUrl);
+      $result = $this->tractionRecClient->send('GET', 'https://ymcapkc.my.traction_rec.com' . $nextUrl);
       return $this->simplify($result);
     }
     catch (\Exception | GuzzleException | InvalidTokenException $e) {
@@ -238,7 +238,7 @@ class TractionRec implements TractionRecInterface {
    * Cleans up TractionRec extra prefixes and suffixes for easier usage.
    *
    * @param array $array
-   *   Response result from Salesforce.
+   *   Response result from Traction Rec.
    *
    * @return array
    *   Results with cleaned keys.

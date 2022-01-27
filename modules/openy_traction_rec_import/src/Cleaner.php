@@ -28,7 +28,7 @@ class Cleaner {
   protected $entityTypeManager;
 
   /**
-   * Logger for salesforce.
+   * Logger for traction_rec.
    *
    * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
@@ -57,12 +57,12 @@ class Cleaner {
    *   The entity type manager.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_channel_factory
    *   Logger factory.
-   * @param \Drupal\openy_traction_rec_import\SalesforceImporterInterface $importer
+   * @param \Drupal\openy_traction_rec_import\TractionRecImporterInterface $importer
    *   The traction rec Importer.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system service.
    */
-  public function __construct(Connection $database, EntityTypeManagerInterface $entity_type_manager, LoggerChannelFactoryInterface $logger_channel_factory, SalesforceImporterInterface $importer, FileSystemInterface $file_system) {
+  public function __construct(Connection $database, EntityTypeManagerInterface $entity_type_manager, LoggerChannelFactoryInterface $logger_channel_factory, TractionRecImporterInterface $importer, FileSystemInterface $file_system) {
     $this->database = $database;
     $this->entityTypeManager = $entity_type_manager;
     $this->logger = $logger_channel_factory->get('sessions_cleaner');

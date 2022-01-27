@@ -4,21 +4,21 @@ namespace Drupal\openy_traction_rec_import;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\openy_traction_rec\Event\SalesforcePostFetchEvent;
+use Drupal\openy_traction_rec\Event\TractionRecPostFetchEvent;
 use Drupal\openy_traction_rec\TractionRecInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Contains related to fetching from Salesforce functionality.
+ * Contains related to fetching from Traction Rec functionality.
  */
-class SalesforceFetcher {
+class TractionRecFetcher {
 
   /**
    * Result json directory path.
    *
    * @var string
    */
-  protected $storagePath = 'private://salesforce_import/json/';
+  protected $storagePath = 'private://traction_rec_import/json/';
 
   /**
    * Traction Rec wrapper.
@@ -56,7 +56,7 @@ class SalesforceFetcher {
   protected $directory;
 
   /**
-   * Constructors SalesforceFetcher.
+   * Constructors TractionRecFetcher.
    *
    * @param \Drupal\openy_traction_rec\TractionRecInterface $traction_rec
    *   The Traction Rec wrapper.
@@ -83,7 +83,7 @@ class SalesforceFetcher {
   }
 
   /**
-   * Fetch results (sessions and classes) from Salesforce and save into file.
+   * Fetch results (sessions and classes) from Traction Rec and save into file.
    */
   public function fetch(): string {
     $this->fetchProgramAndCategories();
@@ -91,9 +91,9 @@ class SalesforceFetcher {
     $this->fetchSessions();
 
     // Instantiate our event.
-    $event = new SalesforcePostFetchEvent($this->directory);
+    $event = new TractionRecPostFetchEvent($this->directory);
     // Get the event_dispatcher service and dispatch the event.
-    $this->eventDispatcher->dispatch(SalesforcePostFetchEvent::EVENT_NAME, $event);
+    $this->eventDispatcher->dispatch(TractionRecPostFetchEvent::EVENT_NAME, $event);
     return $this->directory;
   }
 
@@ -156,7 +156,7 @@ class SalesforceFetcher {
   }
 
   /**
-   * Pulls location object from Salesforce.
+   * Pulls location object from Traction Rec.
    *
    * @return array
    *   The array of fetched locations.

@@ -11,16 +11,16 @@ use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Salesforce HTTP client.
+ * Traction Rec HTTP client.
  */
 class TractionRecClient {
 
   /**
-   * The Salesforce settings.
+   * The Traction Rec settings.
    *
    * @var \Drupal\Core\Config\ImmutableConfig
    */
-  protected $salesforceSettings;
+  protected $tractionRecSettings;
 
   /**
    * The http client.
@@ -44,16 +44,16 @@ class TractionRecClient {
   protected $accessToken;
 
   /**
-   * Salesforce API credentials for SSO.
+   * Traction Rec API credentials for SSO.
    *
    * ['credentials', 'redirect_uri']
    *
    * @var array
    */
-  protected $salesforceSsoSettings;
+  protected $tractionRecSsoSettings;
 
   /**
-   * Logger for salesforce queries.
+   * Logger for traction_rec queries.
    *
    * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
@@ -67,7 +67,7 @@ class TractionRecClient {
   protected $request;
 
   /**
-   * Salesforce access token for SSO login through web.
+   * Traction Rec access token for SSO login through web.
    *
    * @var string
    */
@@ -88,11 +88,11 @@ class TractionRecClient {
    *   The request stack.
    */
   public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time, LoggerChannelFactoryInterface $logger_channel_factory, RequestStack $request_stack) {
-    $this->salesforceSettings = $config_factory->get('openy_traction_rec.settings');
-    $this->salesforceSsoSettings = $config_factory->get('openy_traction_rec_sso.settings');
+    $this->tractionRecSettings = $config_factory->get('openy_traction_rec.settings');
+    $this->tractionRecSsoSettings = $config_factory->get('openy_traction_rec_sso.settings');
     $this->http = $http;
     $this->time = $time;
-    $this->logger = $logger_channel_factory->get('salesforce');
+    $this->logger = $logger_channel_factory->get('traction_rec');
     $this->request = $request_stack->getCurrentRequest();
     if ($code = $this->request->get('code')) {
       $this->webToken = $this->generateToken($code);
@@ -113,7 +113,7 @@ class TractionRecClient {
     }
 
     $token = $this->generateAssertion();
-    $token_url = $this->salesforceSettings->get('login_url') . '/services/oauth2/token';
+    $token_url = $this->tractionRecSettings->get('login_url') . '/services/oauth2/token';
 
     $post_fields = [
       'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
@@ -144,9 +144,9 @@ class TractionRecClient {
    */
   protected function generateAssertionClaim(): array {
     return [
-      'iss' => $this->salesforceSettings->get('consumer_key'),
-      'sub' => $this->salesforceSettings->get('login_user'),
-      'aud' => $this->salesforceSettings->get('login_url'),
+      'iss' => $this->tractionRecSettings->get('consumer_key'),
+      'sub' => $this->tractionRecSettings->get('login_user'),
+      'aud' => $this->tractionRecSettings->get('login_url'),
       'exp' => $this->time->getCurrentTime() + 60,
     ];
   }
@@ -158,19 +158,19 @@ class TractionRecClient {
    *   JWT Assertion.
    */
   protected function generateAssertion(): string {
-    $key = $this->salesforceSettings->get('private_key');
+    $key = $this->tractionRecSettings->get('private_key');
     $token = $this->generateAssertionClaim();
     return JWT::encode($token, $key, 'RS256');
   }
 
   /**
-   * Make request to Salesforce.
+   * Make request to Traction Rec.
    *
    * @param string $query
    *   SOQL query.
    *
    * @return array
-   *   Retrieved results from Salesforce.
+   *   Retrieved results from Traction Rec.
    *
    * @throws \GuzzleHttp\Exception\GuzzleException
    * @throws \Drupal\openy_traction_rec\InvalidTokenException
@@ -181,7 +181,7 @@ class TractionRecClient {
       throw new InvalidTokenException();
     }
 
-    $query_url = $this->salesforceSettings->get('services_base_url') . 'query/';
+    $query_url = $this->tractionRecSettings->get('services_base_url') . 'query/';
     try {
       $response = $this->http->request('GET', $query_url, [
         'query' => [
@@ -247,21 +247,21 @@ class TractionRecClient {
    * Set access token based on user code after SSO redirect.
    *
    * @param string $code
-   *   Access code from Salesforce.
+   *   Access code from Traction Rec.
    *
    * @return string
    *   Access token.
    */
   private function generateToken(string $code): string {
     try {
-      $response = $this->http->post($this->salesforceSsoSettings->get('app_url') . '/services/oauth2/token',
+      $response = $this->http->post($this->tractionRecSsoSettings->get('app_url') . '/services/oauth2/token',
         [
           'form_params' => [
             'grant_type' => 'authorization_code',
             'code' => $code,
-            'client_id' => $this->salesforceSsoSettings->get('client_id'),
-            'client_secret' => $this->salesforceSsoSettings->get('client_secret'),
-            'redirect_uri' => 'https://' . $this->request->getHost() . $this->salesforceSsoSettings->get('redirect_uri'),
+            'client_id' => $this->tractionRecSsoSettings->get('client_id'),
+            'client_secret' => $this->tractionRecSsoSettings->get('client_secret'),
+            'redirect_uri' => 'https://' . $this->request->getHost() . $this->tractionRecSsoSettings->get('redirect_uri'),
           ],
         ]);
 
@@ -274,10 +274,10 @@ class TractionRecClient {
   }
 
   /**
-   * Get user data from Salesforce.
+   * Get user data from Traction Rec.
    *
    * @return object|null
-   *   User info from Salesforce.
+   *   User info from Traction Rec.
    */
   public function getUserData() {
     try {
@@ -286,7 +286,7 @@ class TractionRecClient {
       }
 
       $headers = ['Authorization' => 'Bearer ' . $this->webToken];
-      $user_data = $this->http->post($this->salesforceSsoSettings->get('app_url') . '/services/oauth2/userinfo',
+      $user_data = $this->http->post($this->tractionRecSsoSettings->get('app_url') . '/services/oauth2/userinfo',
         ['headers' => $headers]
       );
 
@@ -299,15 +299,18 @@ class TractionRecClient {
   }
 
   /**
-   * Construct link for login in Salesforce app.
+   * Construct link for login in Traction Rec app.
    *
    * @return string
    *   Link to login form.
    */
   public function getLoginLink() {
-    return $this->salesforceSsoSettings->get('app_url') . '/services/oauth2/authorize?client_id='
-      . $this->salesforceSsoSettings->get('client_id')
-      . '&redirect_uri=https://' . $this->request->getHost() . $this->salesforceSsoSettings->get('redirect_uri')
+    if (empty($this->tractionRecSsoSettings->get('app_url'))) {
+      return '';
+    }
+    return $this->tractionRecSsoSettings->get('app_url') . '/services/oauth2/authorize?client_id='
+      . $this->tractionRecSsoSettings->get('client_id')
+      . '&redirect_uri=https://' . $this->request->getHost() . $this->tractionRecSsoSettings->get('redirect_uri')
     // @todo Fix problem with scopes here.
     // Should be 'api id' according to https://quip.com/UKZ6ABw4YynH
     // 'Community User Authentication Example with cURL targeting test' section.
@@ -315,13 +318,13 @@ class TractionRecClient {
   }
 
   /**
-   * Returns link for homepage(account) in Salesforce app.
+   * Returns link for homepage(account) in Traction Rec app.
    *
    * @return string
    *   Link to account page.
    */
   public function getAccountLink(): string {
-    return $this->salesforceSsoSettings->get('app_url');
+    return $this->tractionRecSsoSettings->get('app_url') ?? '';
   }
 
   /**

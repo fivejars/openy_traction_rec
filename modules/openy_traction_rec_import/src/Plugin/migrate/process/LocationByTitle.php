@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Location by title migrate plugin.
  *
  * @MigrateProcessPlugin(
- *   id = "sf_location_by_title"
+ *   id = "tr_location_by_title"
  * )
  */
 class LocationByTitle extends ProcessPluginBase implements ContainerFactoryPluginInterface {
