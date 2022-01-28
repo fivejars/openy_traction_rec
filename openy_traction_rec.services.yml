@@ -5,7 +5,7 @@ services:
       - 'traction_rec'
   openy_traction_rec.traction_rec:
     class: Drupal\openy_traction_rec\TractionRec
-    arguments: [ '@openy_traction_rec.tr_client', '@logger.channel.traction_rec' ]
+    arguments: [ '@openy_traction_rec.tr_client', '@logger.channel.traction_rec', '@config.factory' ]
   openy_traction_rec.tr_client:
     class: Drupal\openy_traction_rec\TractionRecClient
     arguments: [ '@config.factory', '@http_client', '@datetime.time', '@logger.factory', '@request_stack']

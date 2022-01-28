@@ -66,7 +66,15 @@ class TractionRecSettings extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Services base URL'),
       '#default_value' => $config->get('services_base_url'),
-      '#description' => $this->t('Enter an URL, ex https://open-y-rec-dev-ed.my.salesforce.com'),
+      '#description' => $this->t('Enter an URL, ex https://mycommunity.MyDomainName.org/services/data/v49.0/'),
+      '#required' => TRUE,
+    ];
+
+    $form['api_base_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Salesforce REST API Base URL'),
+      '#default_value' => $config->get('api_base_url'),
+      '#description' => $this->t('Enter an URL, ex https://MyDomainName.my.salesforce.com'),
       '#required' => TRUE,
     ];
 
@@ -74,7 +82,7 @@ class TractionRecSettings extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Community URL'),
       '#default_value' => $config->get('community_url'),
-      '#description' => $this->t('Enter an URL, ex https://mycommunity.ymcapkc.org'),
+      '#description' => $this->t('Enter an URL, ex https://mycommunity.MyDomainName.org'),
       '#required' => TRUE,
     ];
 
@@ -102,6 +110,7 @@ class TractionRecSettings extends ConfigFormBase {
     $config->set('private_key', $form_state->getValue('private_key'));
     $config->set('services_base_url', $form_state->getValue('services_base_url'));
     $config->set('community_url', $form_state->getValue('community_url'));
+    $config->set('api_base_url', $form_state->getValue('api_base_url'));
     $config->save();
 
     parent::submitForm($form, $form_state);

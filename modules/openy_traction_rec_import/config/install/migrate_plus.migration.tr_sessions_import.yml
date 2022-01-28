@@ -145,9 +145,6 @@ process:
   field_session_time:
     plugin: tr_session_time
     source: start_date
-  field_data_source:
-    plugin: default_value
-    default_value: traction_rec
   field_session_online: online_registration
   field_session_location:
     plugin: tr_location_by_title

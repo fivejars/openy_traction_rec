@@ -48,9 +48,6 @@ process:
   moderation_state:
     plugin: default_value
     default_value: 'published'
-  field_data_source:
-    plugin: default_value
-    default_value: traction_rec
   field_activity_category/target_id:
     plugin: migration_lookup
     migration: tr_sub_programs_import
