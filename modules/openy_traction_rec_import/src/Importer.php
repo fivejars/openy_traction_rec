@@ -148,7 +148,7 @@ class Importer implements TractionRecImporterInterface {
   /**
    * {@inheritdoc}
    */
-  public function directoryImport($dir, array $options = []) {
+  public function directoryImport(string $dir, array $options = []) {
     if (PHP_SAPI !== 'cli') {
       return;
     }
