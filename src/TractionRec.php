@@ -2,6 +2,7 @@
 
 namespace Drupal\openy_traction_rec;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -18,6 +19,13 @@ class TractionRec implements TractionRecInterface {
   protected $tractionRecClient;
 
   /**
+   * The Traction Rec settings.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  protected $tractionRecSettings;
+
+  /**
    * Logger channel.
    *
    * @var \Drupal\Core\Logger\LoggerChannel
@@ -32,9 +40,10 @@ class TractionRec implements TractionRecInterface {
    * @param \Drupal\Core\Logger\LoggerChannelInterface $loggerChannel
    *   Logger channel.
    */
-  public function __construct(TractionRecClient $traction_rec_client, LoggerChannelInterface $loggerChannel) {
+  public function __construct(TractionRecClient $traction_rec_client, LoggerChannelInterface $loggerChannel, ConfigFactoryInterface $config_factory) {
     $this->tractionRecClient = $traction_rec_client;
     $this->logger = $loggerChannel;
+    $this->tractionRecSettings = $config_factory->get('openy_traction_rec.settings');
   }
 
   /**
@@ -224,7 +233,8 @@ class TractionRec implements TractionRecInterface {
    */
   public function loadNextPage(string $nextUrl): array {
     try {
-      $result = $this->tractionRecClient->send('GET', 'https://ymcapkc.my.traction_rec.com' . $nextUrl);
+      $url = $this->tractionRecSettings->get('api_base_url');
+      $result = $this->tractionRecClient->send('GET', $url . $nextUrl);
       return $this->simplify($result);
     }
     catch (\Exception | GuzzleException | InvalidTokenException $e) {
