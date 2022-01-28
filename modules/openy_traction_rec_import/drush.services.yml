@@ -7,7 +7,6 @@ services:
       - '@migrate_tools.commands'
       - '@file_system'
       - '@entity_type.manager'
-      - '@queue'
       - '@openy_traction_rec_import.fetcher'
     tags:
       - { name: drush.command }

@@ -100,38 +100,4 @@ class Cleaner {
     }
   }
 
-  /**
-   * Starts database clean up.
-   */
-  public function cleanDatabase($limit = 5000) {
-    $this->deleteOrphanedParagraphs($limit);
-  }
-
-  /**
-   * Removes session_time paragraphs not associated with nodes.
-   */
-  protected function deleteOrphanedParagraphs($limit = 5000) {
-    try {
-      $query = $this->database->select('paragraphs_item_field_data', 'pifd');
-      $query->addField('pifd', 'id');
-      $query->isNull('pifd.parent_id');
-      $query->isNull('pifd.parent_type');
-      $query->range(0, $limit);
-      $result = $query->execute()->fetchCol();
-
-      if (empty($result)) {
-        return FALSE;
-      }
-
-      $storage = $this->entityTypeManager->getStorage('paragraph');
-      foreach (array_chunk($result, 50) as $chunk) {
-        $entities = $storage->loadMultiple($chunk);
-        $storage->delete($entities);
-      }
-    }
-    catch (\Exception $e) {
-      $this->logger->error('SF paragraphs clean up error: ' . $e->getMessage());
-    }
-  }
-
 }
