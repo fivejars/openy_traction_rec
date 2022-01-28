@@ -4,4 +4,11 @@ description: 'Provides Traction Rec PEF migrations'
 core_version_requirement: ^8.8 || ^9
 package: 'Open Y'
 dependencies:
+  - drupal:migrate
+  - migrate_plus:migrate_plus
+  - openy_node_session:openy_node_session
+  - openy_node_class:openy_node_class
+  - openy_node_program:openy_node_program
+  - openy_node_activity:openy_node_activity
+  - openy_node_category:openy_node_category
   - openy_traction_rec:openy_traction_rec
