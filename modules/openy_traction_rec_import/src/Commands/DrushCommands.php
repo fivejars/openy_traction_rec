@@ -115,8 +115,8 @@ class DrushCommands extends DrushCommandsBase {
    * @param array $options
    *   Additional options for the command.
    *
-   * @command openy-tr-sf:import
-   * @aliases y-sf:import
+   * @command openy-tr:import
+   * @aliases tr:import
    *
    * @option sync Sync source and destination. Delete destination records that
    *   do not exist in the source.
@@ -169,8 +169,8 @@ class DrushCommands extends DrushCommandsBase {
   /**
    * Executes the Traction Rec rollback.
    *
-   * @command openy-tr-sf:rollback
-   * @aliases y-sf:rollback
+   * @command openy-tr:rollback
+   * @aliases tr:rollback
    */
   public function rollback() {
     try {
@@ -185,26 +185,10 @@ class DrushCommands extends DrushCommandsBase {
   }
 
   /**
-   * Remove all sessions from the website.
-   *
-   * @command openy-tr-sf:session-flush
-   * @aliases y-sf:session-flush
-   */
-  public function flushSessions() {
-    $storage = $this->entityTypeManager->getStorage('node');
-
-    $sessions = $storage->loadByProperties(['type' => 'session']);
-
-    if ($sessions) {
-      $storage->delete($sessions);
-    }
-
-  }
-
-  /**
    * Resets the import lock.
    *
-   * @command openy-tr-sf:reset-lock
+   * @command openy-tr:reset-lock
+   * @aliases tr:reset-lock
    */
   public function resetLock() {
     $this->output()->writeln('Reset import status...');
@@ -217,7 +201,8 @@ class DrushCommands extends DrushCommandsBase {
    * @param array $options
    *   The array of command options.
    *
-   * @command openy-tr-sf:clean-up
+   * @command openy-tr:clean-up
+   * @aliases tr:clean-up
    */
   public function cleanUp(array $options) {
     $this->output()->writeln('Starting clean up...');
@@ -233,7 +218,8 @@ class DrushCommands extends DrushCommandsBase {
    *
    * @option limit Max number of entities to remove at one cron run. Default: 10000
    *
-   * @command openy-tr-sf:db-clean-up
+   * @command openy-tr:db-clean-up
+   * @aliases tr:db-clean-up
    */
   public function databaseCleanUp(array $options) {
     $this->output()->writeln('Starting database clean up...');
@@ -244,8 +230,8 @@ class DrushCommands extends DrushCommandsBase {
   /**
    * Run Traction Rec fetcher.
    *
-   * @command openy-tr:tr-fetch-all
-   * @aliases y-tr-fa
+   * @command openy-tr:fetch-all
+   * @aliases tr:fetch
    */
   public function fetch() {
     if (!$this->tractionRecFetcher->isEnabled()) {
@@ -254,57 +240,6 @@ class DrushCommands extends DrushCommandsBase {
     }
 
     $this->tractionRecFetcher->fetch();
-  }
-
-  /**
-   * Clean up actions.
-   *
-   * @param array $options
-   *   The array of command options.
-   *
-   * @command openy-tr-sf:queue-clean-up
-   */
-  public function addCleanUpToQueue(array $options) {
-    $data = [
-      'type' => 'cleanup',
-    ];
-
-    $this->importQueue->createItem($data);
-  }
-
-  /**
-   * Add full-sync action to the queue.
-   *
-   * @param array $options
-   *   The array of command options.
-   *
-   * @command openy-tr-sf:queue-import-sync
-   *
-   * @throws \GuzzleHttp\Exception\GuzzleException
-   */
-  public function addSyncActionToQueue(array $options) {
-    if (!$this->tractionRecFetcher->isEnabled()) {
-      $this->logger()->notice(dt('Fetcher is disabled!'));
-      return FALSE;
-    }
-
-    try {
-      $this->tractionRecFetcher->fetchProgramAndCategories();
-      $this->tractionRecFetcher->fetchClasses();
-      $this->tractionRecFetcher->fetchSessions();
-
-      $directory = $this->tractionRecFetcher->getJsonDirectory();
-
-      $data = [
-        'type' => 'traction_rec_sync',
-        'directory' => $directory,
-      ];
-
-      $this->importQueue->createItem($data);
-    }
-    catch (\Exception $e) {
-      $this->logger()->error($e->getMessage());
-    }
   }
 
 }
