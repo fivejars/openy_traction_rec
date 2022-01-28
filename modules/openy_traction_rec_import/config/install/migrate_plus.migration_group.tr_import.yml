@@ -4,8 +4,8 @@ dependencies:
   enforced:
     module:
       - openy_traction_rec_import
-id: sf_import
-label: Salesforce import
+id: tr_import
+label: Traction Rec import
 description: 'Classes and sessions migration'
 source_type: 'JSON files with classes and sessions'
 module: openy_traction_rec_import

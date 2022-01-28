@@ -15,7 +15,7 @@ function openy_traction_rec_import_help($route_name, RouteMatchInterface $route_
     case 'help.page.openy_traction_rec_import':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Salesforce migration for OPENY') . '</p>';
+      $output .= '<p>' . t('Traction Rec migration for OPENY') . '</p>';
       return $output;
 
     default:

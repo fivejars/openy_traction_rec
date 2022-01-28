@@ -1,14 +1,14 @@
 services:
-  logger.channel.salesforce:
+  logger.channel.traction_rec:
     parent: logger.channel_base
     arguments:
-      - 'salesforce'
+      - 'traction_rec'
   openy_traction_rec.traction_rec:
     class: Drupal\openy_traction_rec\TractionRec
-    arguments: [ '@openy_traction_rec.tr_client', '@logger.channel.salesforce' ]
+    arguments: [ '@openy_traction_rec.tr_client', '@logger.channel.traction_rec' ]
   openy_traction_rec.tr_client:
     class: Drupal\openy_traction_rec\TractionRecClient
     arguments: [ '@config.factory', '@http_client', '@datetime.time', '@logger.factory', '@request_stack']
   openy_traction_rec.user_authorizer:
     class: Drupal\openy_traction_rec\TractionRecUserAuthorizer
-    arguments: ['@entity_type.manager', '@module_handler']
+    arguments: ['@entity_type.manager', '@module_handler', '@password_generator']

@@ -6,7 +6,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Salesforce import settings form.
+ * Traction Rec import settings form.
  */
 class SettingsForm extends ConfigFormBase {
 
@@ -34,14 +34,14 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Enable TractionRec Sync'),
       '#default_value' => $config->get('enabled'),
-      '#description' => $this->t('Enable Salesforce synchronization.'),
+      '#description' => $this->t('Enable Traction Rec synchronization.'),
     ];
 
     $form['fetch_status'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enable JSON fetch'),
       '#default_value' => $config->get('fetch_status'),
-      '#description' => $this->t('Enables fetching of JSON files from Salesforce'),
+      '#description' => $this->t('Enables fetching of JSON files from Traction Rec'),
     ];
 
     $form['backup_json'] = [

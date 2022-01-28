@@ -3,16 +3,16 @@
 namespace Drupal\openy_traction_rec_import\EventSubscriber;
 
 use Drupal\Core\Queue\QueueFactory;
-use Drupal\openy_traction_rec\Event\SalesforcePostFetchEvent;
+use Drupal\openy_traction_rec\Event\TractionRecPostFetchEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Subscribes to Salesforce fetcher events.
+ * Subscribes to Traction Rec fetcher events.
  */
 class FetchEventSubscriber implements EventSubscriberInterface {
 
   /**
-   * The Salesforce import queue.
+   * The Traction Rec import queue.
    *
    * @var \Drupal\Core\Queue\QueueInterface
    */
@@ -33,19 +33,19 @@ class FetchEventSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     return [
-      SalesforcePostFetchEvent::EVENT_NAME => 'addImportToQueue',
+      TractionRecPostFetchEvent::EVENT_NAME => 'addImportToQueue',
     ];
   }
 
   /**
-   * Adds salesforce import to queue.
+   * Adds traction_rec import to queue.
    *
-   * @param \Drupal\openy_traction_rec\Event\SalesforcePostFetchEvent $event
-   *   Salesforce post-fetch event.
+   * @param \Drupal\openy_traction_rec\Event\TractionRecPostFetchEvent $event
+   *   Traction Rec post-fetch event.
    */
-  public function addImportToQueue(SalesforcePostFetchEvent $event) {
+  public function addImportToQueue(TractionRecPostFetchEvent $event) {
     $data = [
-      'type' => 'salesforce',
+      'type' => 'traction_rec',
       'directory' => $event->getJsonDirectory(),
     ];
 

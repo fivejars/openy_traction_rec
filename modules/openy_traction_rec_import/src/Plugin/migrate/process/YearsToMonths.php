@@ -10,7 +10,7 @@ use Drupal\migrate\Row;
  * Modified version of OpenYPefSchedule for iterator plugin.
  *
  * @MigrateProcessPlugin(
- *   id = "sf_years_to_month"
+ *   id = "tr_years_to_month"
  * )
  */
 class YearsToMonths extends ProcessPluginBase {

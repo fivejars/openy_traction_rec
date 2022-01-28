@@ -4,6 +4,7 @@ namespace Drupal\openy_traction_rec;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Password\PasswordGeneratorInterface;
 
 /**
  * User Authorizer class.
@@ -25,16 +26,26 @@ class TractionRecUserAuthorizer {
   protected $moduleHandler;
 
   /**
+   * Password Generator.
+   *
+   * @var \Drupal\Core\Password\PasswordGeneratorInterface
+   */
+  protected $passGen;
+
+  /**
    * TractionRecUserAuthorizer constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   Entity Type Manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Password\PasswordGeneratorInterface $passGen
+   *   Password Generator.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager, ModuleHandlerInterface $module_handler) {
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, ModuleHandlerInterface $module_handler, PasswordGeneratorInterface $passGen) {
     $this->moduleHandler = $module_handler;
     $this->userStorage = $entityTypeManager->getStorage('user');
+    $this->passGen = $passGen;
   }
 
   /**
@@ -50,7 +61,7 @@ class TractionRecUserAuthorizer {
     $account = user_load_by_mail($email);
     if (!$account) {
       $user = $this->userStorage->create();
-      $user->setPassword(user_password());
+      $user->setPassword($this->passGen->generate());
       $user->enforceIsNew();
       $user->setEmail($email);
       $user->setUsername($email);
@@ -70,7 +81,7 @@ class TractionRecUserAuthorizer {
       // Activate user if it's not.
       if (!$account->isActive()) {
         $account->activate();
-        $account->setPassword(user_password());
+        $account->setPassword($this->passGen->generate());
         $account->save();
       }
     }

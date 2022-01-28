@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Traction Rec registration link plugin.
  *
  * @MigrateProcessPlugin(
- *   id = "sf_registration_link"
+ *   id = "tr_registration_link"
  * )
  */
 class RegistrationLink extends ProcessPluginBase implements ContainerFactoryPluginInterface {

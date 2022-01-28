@@ -1,0 +1,69 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - openy_traction_rec_import
+id: tr_classes_import
+migration_tags:
+  - openy_import
+migration_group: tr_import
+label: 'Import Classes'
+source:
+  plugin: url
+  data_fetcher_plugin: file
+  data_parser_plugin: json
+  item_selector: 0
+  urls: 'private://traction_rec_import/classes.json'
+  track_changes: true
+  ids:
+    id:
+      type: string
+  fields:
+    -
+      name: id
+      label: 'Id'
+      selector: /Id
+    -
+      name: title
+      label: 'Title'
+      selector: /Name
+    -
+      name: activity
+      label: 'Activity'
+      selector: /Program/Id
+    -
+      name: description
+      label: 'Description'
+      selector: /Description
+    -
+      name: available
+      label: 'Available'
+      selector: /Available
+process:
+  title: title
+  field_class_description/value: description
+  field_class_description/format:
+    plugin: default_value
+    default_value: full_html
+  type:
+    plugin: default_value
+    default_value: class
+  status: available
+  uid:
+    plugin: default_value
+    default_value: 1
+  moderation_state:
+     plugin: default_value
+     default_value: 'published'
+  field_data_source:
+    plugin: default_value
+    default_value: traction_rec
+  field_class_activity/target_id:
+    plugin: migration_lookup
+    migration: tr_activities_import
+    source: id
+    no_stub: true
+destination:
+  plugin: 'entity:node'
+  default_bundle: class

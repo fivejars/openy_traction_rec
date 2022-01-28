@@ -3,9 +3,9 @@
 namespace Drupal\openy_traction_rec_import;
 
 /**
- * Salesforce importer Interface.
+ * Traction Rec importer Interface.
  */
-interface SalesforceImporterInterface {
+interface TractionRecImporterInterface {
 
   /**
    * Imports all fetched JSON files in the directory.
@@ -18,7 +18,7 @@ interface SalesforceImporterInterface {
   public function directoryImport(string $dir, array $options = []);
 
   /**
-   * Check salesforce migrations statuses.
+   * Check traction_rec migrations statuses.
    */
   public function checkMigrationsStatus(): bool;
 
@@ -26,12 +26,12 @@ interface SalesforceImporterInterface {
    * Checks import status.
    *
    * @return bool
-   *   TRUE if the salesforce import is enabled.
+   *   TRUE if the traction_rec import is enabled.
    */
   public function isEnabled(): bool;
 
   /**
-   * Checks Salesforce JSON files backup status.
+   * Checks Traction Rec JSON files backup status.
    *
    * @return bool
    *   TRUE if JSON files backup is enabled.
@@ -39,7 +39,7 @@ interface SalesforceImporterInterface {
   public function isBackupEnabled(): bool;
 
   /**
-   * Acquires Salesforce import lock.
+   * Acquires Traction Rec import lock.
    *
    * @return bool
    *   Lock status.
@@ -47,7 +47,7 @@ interface SalesforceImporterInterface {
   public function acquireLock(): bool;
 
   /**
-   * Releases Salesforce lock.
+   * Releases Traction Rec lock.
    */
   public function releaseLock();
 

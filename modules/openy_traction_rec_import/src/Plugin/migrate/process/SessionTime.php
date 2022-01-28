@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Modified version of OpenYPefSchedule for iterator plugin.
  *
  * @MigrateProcessPlugin(
- *   id = "sf_session_time"
+ *   id = "tr_session_time"
  * )
  */
 class SessionTime extends ProcessPluginBase implements ContainerFactoryPluginInterface {

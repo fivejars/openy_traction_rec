@@ -12,31 +12,31 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManager;
 
 /**
- * Wrapper for Salesforce import operations.
+ * Wrapper for Traction Rec import operations.
  */
-class Importer implements SalesforceImporterInterface {
+class Importer implements TractionRecImporterInterface {
 
   use StringTranslationTrait;
 
   /**
    * The name used to identify the lock.
    */
-  const LOCK_NAME = 'sf_import';
+  const LOCK_NAME = 'tr_import';
 
   /**
    * The name of the migrate group.
    */
-  const MIGRATE_GROUP = 'sf_import';
+  const MIGRATE_GROUP = 'tr_import';
 
   /**
    * The path to a directory with JSON files for import.
    */
-  const SOURCE_DIRECTORY = 'private://salesforce_import/json/';
+  const SOURCE_DIRECTORY = 'private://traction_rec_import/json/';
 
   /**
    * The path to a directory for processed JSON files.
    */
-  const BACKUP_DIRECTORY = 'private://salesforce_import/backup/';
+  const BACKUP_DIRECTORY = 'private://traction_rec_import/backup/';
 
   /**
    * The lock backend.
@@ -167,7 +167,7 @@ class Importer implements SalesforceImporterInterface {
       // Usually we have several files for import:
       // sessions.json, classes.json, programs.json, program_categories.json.
       foreach ($json_files as $file) {
-        $this->fileSystem->copy($file->uri, 'private://salesforce_import/', FileSystemInterface::EXISTS_REPLACE);
+        $this->fileSystem->copy($file->uri, 'private://traction_rec_import/', FileSystemInterface::EXISTS_REPLACE);
       }
 
       $sync = $options['sync'] ?? FALSE;
