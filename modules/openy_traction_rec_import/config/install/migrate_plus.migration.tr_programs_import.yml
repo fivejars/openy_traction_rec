@@ -38,9 +38,6 @@ process:
     plugin: default_value
     default_value: program
   status: available
-  field_data_source:
-    plugin: default_value
-    default_value: traction_rec
   uid:
     plugin: default_value
     default_value: 1
