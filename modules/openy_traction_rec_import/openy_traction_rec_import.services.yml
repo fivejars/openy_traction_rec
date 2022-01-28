@@ -26,12 +26,6 @@ services:
       - '@event_dispatcher'
       - '@config.factory'
 
-  openy_traction_rec_import.fetcher_subscriber:
-    class: '\Drupal\openy_traction_rec_import\EventSubscriber\FetchEventSubscriber'
-    arguments: ['@queue']
-    tags:
-      - { name: 'event_subscriber' }
-
   openy_traction_rec_import.migrate_subscriber:
     class: '\Drupal\openy_traction_rec_import\EventSubscriber\MigrateEventSubscriber'
     tags:

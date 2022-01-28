@@ -4,7 +4,6 @@ namespace Drupal\openy_traction_rec_import\Commands;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Queue\QueueFactory;
 use Drupal\migrate_tools\Commands\MigrateToolsCommands;
 use Drupal\openy_traction_rec_import\Cleaner;
 use Drupal\openy_traction_rec_import\Importer;
@@ -52,25 +51,11 @@ class DrushCommands extends DrushCommandsBase {
   protected $fileSystem;
 
   /**
-   * The Traction Rec import queue.
-   *
-   * @var \Drupal\Core\Queue\QueueInterface
-   */
-  protected $importQueue;
-
-  /**
    * Traction Rec fetcher service.
    *
    * @var \Drupal\openy_traction_rec_import\TractionRecFetcher
    */
   protected $tractionRecFetcher;
-
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
 
   /**
    * DrushCommands constructor.
@@ -85,8 +70,6 @@ class DrushCommands extends DrushCommandsBase {
    *   The file handler.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\Core\Queue\QueueFactory $queue_factory
-   *   The queue factory.
    * @param \Drupal\openy_traction_rec_import\TractionRecFetcher $tr_fetch
    *   The OPENY TractionRec Fetcher.
    */
@@ -96,7 +79,6 @@ class DrushCommands extends DrushCommandsBase {
     MigrateToolsCommands $migrate_tools_drush,
     FileSystemInterface $file_system,
     EntityTypeManagerInterface $entity_type_manager,
-    QueueFactory $queue_factory,
     TractionRecFetcher $tr_fetch
   ) {
     parent::__construct();
@@ -105,7 +87,6 @@ class DrushCommands extends DrushCommandsBase {
     $this->migrateToolsCommands = $migrate_tools_drush;
     $this->fileSystem = $file_system;
     $this->entityTypeManager = $entity_type_manager;
-    $this->importQueue = $queue_factory->get('openy_trasnsaction_recimport');
     $this->tractionRecFetcher = $tr_fetch;
   }
 
@@ -208,23 +189,6 @@ class DrushCommands extends DrushCommandsBase {
     $this->output()->writeln('Starting clean up...');
     $this->cleaner->cleanBackupFiles();
     $this->output()->writeln('Clean up finished!');
-  }
-
-  /**
-   * Clean up actions.
-   *
-   * @param array $options
-   *   The array of command options.
-   *
-   * @option limit Max number of entities to remove at one cron run. Default: 10000
-   *
-   * @command openy-tr:db-clean-up
-   * @aliases tr:db-clean-up
-   */
-  public function databaseCleanUp(array $options) {
-    $this->output()->writeln('Starting database clean up...');
-    $this->cleaner->cleanDatabase($options['limit']);
-    $this->output()->writeln('Database clean up finished!');
   }
 
   /**

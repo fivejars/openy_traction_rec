@@ -7,6 +7,9 @@
     "prefer-stable": true,
     "require": {
         "ymcatwincities/openy": "9.* || dev-9.x-2.x",
-        "open-y-subprojects/openy_features": "1.5.*"
+        "open-y-subprojects/openy_features": "^1.5",
+        "drush/drush": "^10",
+        "drupal/migrate_plus": "^5.2",
+        "drupal/migrate_tools": "^5.1"
     }
 }
