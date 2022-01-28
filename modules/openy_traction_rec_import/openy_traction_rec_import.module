@@ -13,9 +13,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
 function openy_traction_rec_import_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.openy_traction_rec_import':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Traction Rec migration for OPENY') . '</p>';
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Traction Rec migration for Open Y') . '</p>';
       return $output;
 
     default:

@@ -32,23 +32,23 @@ class TractionRecSettings extends ConfigFormBase {
 
     $form['consumer_key'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Traction Rec consumer key'),
-      '#description' => $this->t('Consumer key of the Traction Rec remote application you want to grant access to'),
+      '#title' => $this->t('Salesforce Consumer key'),
+      '#description' => $this->t('Consumer key of the Salesforce remote application you want to grant access to'),
       '#required' => TRUE,
       '#default_value' => $config->get('consumer_key'),
     ];
 
     $form['consumer_secret'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Traction Rec Consumer Secret'),
-      '#description' => $this->t('Consumer secret of the Traction Rec remote application you want to grant access to'),
+      '#title' => $this->t('Salesforce Consumer Secret'),
+      '#description' => $this->t('Consumer secret of the Salesforce remote application you want to grant access to'),
       '#required' => TRUE,
       '#default_value' => $config->get('consumer_secret'),
     ];
 
     $form['login_user'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Traction Rec login user'),
+      '#title' => $this->t('Salesforce login user'),
       '#description' => $this->t('User account to issue token to'),
       '#required' => TRUE,
       '#default_value' => $config->get('login_user'),
@@ -58,7 +58,7 @@ class TractionRecSettings extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Login URL'),
       '#default_value' => $config->get('login_url'),
-      '#description' => $this->t('Enter a login URL, either https://login.traction_rec.com or https://test.traction_rec.com.'),
+      '#description' => $this->t('Enter a login URL, either https://login.salesforce.com or https://test.salesforce.com.'),
       '#required' => TRUE,
     ];
 
@@ -66,7 +66,7 @@ class TractionRecSettings extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Services base URL'),
       '#default_value' => $config->get('services_base_url'),
-      '#description' => $this->t('Enter an URL, ex https://open-y-rec-dev-ed.my.traction_rec.com'),
+      '#description' => $this->t('Enter an URL, ex https://open-y-rec-dev-ed.my.salesforce.com'),
       '#required' => TRUE,
     ];
 

@@ -1,0 +1,12 @@
+{
+    "name": "fivejars/openy_traction_rec",
+    "description": "Provides integration with Traction Rec CRM for Open Y",
+    "type": "drupal-module",
+    "license": "LGPL-3.0-or-later",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "ymcatwincities/openy": "9.* || dev-9.x-2.x",
+        "open-y-subprojects/openy_features": "1.5.*"
+    }
+}

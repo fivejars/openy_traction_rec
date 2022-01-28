@@ -1,5 +1,5 @@
 name: Open Y Traction Rec
 type: module
 description: 'Provides Traction Rec integration.'
-package: OPENY
+package: Open Y
 core_version_requirement: ^8.8 || ^9
