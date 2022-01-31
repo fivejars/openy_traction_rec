@@ -11,6 +11,7 @@
         "open-y-subprojects/openy_features": "^1.5",
         "drush/drush": "^10",
         "drupal/migrate_plus": "^5.2",
-        "drupal/migrate_tools": "^5.1"
+        "drupal/migrate_tools": "^5.1",
+        "firebase/php-jwt": "^5.2"
     }
 }
