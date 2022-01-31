@@ -4,6 +4,9 @@ dependencies:
   config:
     - field.storage.node.waitlist_unlimited_capacity
     - node.type.session
+  enforced:
+    module:
+      - openy_traction_rec_import
 id: node.session.waitlist_unlimited_capacity
 field_name: waitlist_unlimited_capacity
 entity_type: node

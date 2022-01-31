@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - node
+  enforced:
+    module:
+      - openy_traction_rec_import
 id: node.waitlist_unlimited_capacity
 field_name: waitlist_unlimited_capacity
 entity_type: node

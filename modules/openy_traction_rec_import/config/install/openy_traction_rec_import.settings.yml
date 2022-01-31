@@ -2,3 +2,7 @@ enabled: false
 fetch_status: true
 backup_json: 1
 backup_limit: '10'
+dependencies:
+  enforced:
+    module:
+      - openy_traction_rec_import
