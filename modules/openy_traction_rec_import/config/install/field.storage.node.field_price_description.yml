@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - node
+  enforced:
+    module:
+      - openy_traction_rec_import
 id: node.field_price_description
 field_name: field_price_description
 entity_type: node
