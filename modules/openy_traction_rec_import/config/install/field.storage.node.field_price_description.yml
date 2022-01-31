@@ -1,14 +1,16 @@
-uuid: 613a05f3-e22b-4758-b431-f083763b982c
 langcode: en
 status: true
 dependencies:
   module:
     - node
-id: node.waitlist_unlimited_capacity
-field_name: waitlist_unlimited_capacity
+id: node.field_price_description
+field_name: field_price_description
 entity_type: node
-type: boolean
-settings: {  }
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
 module: core
 locked: false
 cardinality: 1
