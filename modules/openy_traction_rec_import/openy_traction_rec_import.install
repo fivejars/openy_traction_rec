@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ *
+ * Install and update hooks.
+ */
+
+use Drupal\Core\StreamWrapper\PrivateStream;
+
+/**
+ * Implements hook_requirements().
+ */
+function openy_traction_rec_import_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'install' && !PrivateStream::basePath()) {
+    $requirements['openy_tr_private_filesystem'] = [
+      'title' => t('Traction Rec: Private filesystem'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('Private filesystem is required for correct work of the Traction Rec import module'),
+    ];
+  }
+  return $requirements;
+}
