@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.waitlist_unlimited_capacity
+    - node.type.session
+id: node.session.waitlist_unlimited_capacity
+field_name: waitlist_unlimited_capacity
+entity_type: node
+bundle: session
+label: 'Wait list Unlimited Capacity'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

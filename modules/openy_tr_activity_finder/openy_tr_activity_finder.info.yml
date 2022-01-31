@@ -1,0 +1,7 @@
+name: 'Open Y Traction Rec: Activity Finder'
+type: module
+description: 'Provides Traction Rec-related Activity Finder tweaks'
+core_version_requirement: ^8.8 || ^9
+package: 'Open Y'
+dependencies:
+  - openy_activity_finder:openy_activity_finder

@@ -3,3 +3,4 @@ type: module
 description: 'Provides Traction Rec integration.'
 package: Open Y
 core_version_requirement: ^8.8 || ^9
+configure: openy_traction_rec.settings
