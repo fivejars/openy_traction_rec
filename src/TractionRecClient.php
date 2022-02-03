@@ -5,6 +5,7 @@ namespace Drupal\openy_traction_rec;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\key\KeyRepositoryInterface;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -74,6 +75,13 @@ class TractionRecClient {
   protected $webToken = '';
 
   /**
+   * Key repository service.
+   *
+   * @var \Drupal\key\KeyRepositoryInterface
+   */
+  protected $keyRepository;
+
+  /**
    * Client constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -87,12 +95,13 @@ class TractionRecClient {
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time, LoggerChannelFactoryInterface $logger_channel_factory, RequestStack $request_stack) {
+  public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time, LoggerChannelFactoryInterface $logger_channel_factory, RequestStack $request_stack, KeyRepositoryInterface $KeyRepository) {
     $this->tractionRecSettings = $config_factory->get('openy_traction_rec.settings');
     $this->tractionRecSsoSettings = $config_factory->get('openy_traction_rec_sso.settings');
     $this->http = $http;
     $this->time = $time;
     $this->logger = $logger_channel_factory->get('traction_rec');
+    $this->keyRepository = $KeyRepository;
     $this->request = $request_stack->getCurrentRequest();
     if ($code = $this->request->get('code')) {
       $this->webToken = $this->generateToken($code);
@@ -158,7 +167,8 @@ class TractionRecClient {
    *   JWT Assertion.
    */
   protected function generateAssertion(): string {
-    $key = $this->tractionRecSettings->get('private_key');
+    $key_id = $this->tractionRecSettings->get('private_key');
+    $key = $this->keyRepository->getKey($key_id)->getKeyValue();
     $token = $this->generateAssertionClaim();
     return JWT::encode($token, $key, 'RS256');
   }
@@ -304,7 +314,7 @@ class TractionRecClient {
    * @return string
    *   Link to login form.
    */
-  public function getLoginLink() {
+  public function getLoginLink(): string {
     if (empty($this->tractionRecSsoSettings->get('app_url'))) {
       return '';
     }

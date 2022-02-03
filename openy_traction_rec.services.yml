@@ -8,7 +8,13 @@ services:
     arguments: [ '@openy_traction_rec.tr_client', '@logger.channel.traction_rec', '@config.factory' ]
   openy_traction_rec.tr_client:
     class: Drupal\openy_traction_rec\TractionRecClient
-    arguments: [ '@config.factory', '@http_client', '@datetime.time', '@logger.factory', '@request_stack']
+    arguments:
+      - '@config.factory'
+      - '@http_client'
+      - '@datetime.time'
+      - '@logger.factory'
+      - '@request_stack'
+      - '@key.repository'
   openy_traction_rec.user_authorizer:
     class: Drupal\openy_traction_rec\TractionRecUserAuthorizer
     arguments: ['@entity_type.manager', '@module_handler', '@password_generator']
