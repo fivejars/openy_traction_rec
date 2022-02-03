@@ -92,7 +92,7 @@ class TractionRecSettings extends ConfigFormBase {
       '#rows' => 30,
       '#title' => $this->t('RSA Private key'),
       '#default_value' => $config->get('private_key'),
-      '#description' => $this->t('Private key, generated on 3 step in https://developer.traction_rec.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_key_and_cert.htm'),
+      '#description' => $this->t('Private key, generated on 3 step in https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_key_and_cert.htm'),
       '#required' => TRUE,
     ];
 
