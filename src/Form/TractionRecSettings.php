@@ -87,7 +87,8 @@ class TractionRecSettings extends ConfigFormBase {
     ];
 
     $form['private_key'] = [
-      '#type' => 'textarea',
+      '#type' => 'key_select',
+      '#key_filters' => ['type' => 'openy_tr_private_key'],
       '#rows' => 30,
       '#title' => $this->t('RSA Private key'),
       '#default_value' => $config->get('private_key'),
