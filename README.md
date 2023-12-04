@@ -7,7 +7,7 @@ JWT OAuth flow is used for the integration: [OAuth 2.0 JWT Bearer Flow for Serve
 ## Installation
 
 ```shell
-composer require fivejars/openy_traction_rec
+composer require ycloudyusa/openy_traction_rec
 ```
 
 ## Usage
