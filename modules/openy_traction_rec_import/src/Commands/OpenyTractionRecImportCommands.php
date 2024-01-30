@@ -4,16 +4,15 @@ namespace Drupal\openy_traction_rec_import\Commands;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\migrate_tools\Commands\MigrateToolsCommands;
 use Drupal\openy_traction_rec_import\Cleaner;
 use Drupal\openy_traction_rec_import\Importer;
 use Drupal\openy_traction_rec_import\TractionRecFetcher;
-use Drush\Commands\DrushCommands as DrushCommandsBase;
+use Drush\Commands\DrushCommands;
 
 /**
  * OPENY Traction Rec import drush commands.
  */
-class DrushCommands extends DrushCommandsBase {
+class OpenyTractionRecImportCommands extends DrushCommands {
 
   /**
    * The entity type manager.
@@ -37,13 +36,6 @@ class DrushCommands extends DrushCommandsBase {
   protected $cleaner;
 
   /**
-   * Migrate tool drush commands.
-   *
-   * @var \Drupal\migrate_tools\Commands\MigrateToolsCommands
-   */
-  protected $migrateToolsCommands;
-
-  /**
    * The file system service.
    *
    * @var \Drupal\Core\File\FileSystemInterface
@@ -64,8 +56,6 @@ class DrushCommands extends DrushCommandsBase {
    *   The Traction Rec importer service.
    * @param \Drupal\openy_traction_rec_import\Cleaner $cleaner
    *   OPENY sessions cleaner.
-   * @param \Drupal\migrate_tools\Commands\MigrateToolsCommands $migrate_tools_drush
-   *   Migrate Tools drush commands service.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file handler.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -76,7 +66,6 @@ class DrushCommands extends DrushCommandsBase {
   public function __construct(
     Importer $importer,
     Cleaner $cleaner,
-    MigrateToolsCommands $migrate_tools_drush,
     FileSystemInterface $file_system,
     EntityTypeManagerInterface $entity_type_manager,
     TractionRecFetcher $tr_fetch
@@ -84,7 +73,6 @@ class DrushCommands extends DrushCommandsBase {
     parent::__construct();
     $this->importer = $importer;
     $this->cleaner = $cleaner;
-    $this->migrateToolsCommands = $migrate_tools_drush;
     $this->fileSystem = $file_system;
     $this->entityTypeManager = $entity_type_manager;
     $this->tractionRecFetcher = $tr_fetch;
@@ -109,23 +97,17 @@ class DrushCommands extends DrushCommandsBase {
    */
   public function import(array $options): bool {
     if (!$this->importer->isEnabled()) {
-      $this->logger()->notice(
-        dt('Traction Rec import is not enabled!')
-      );
+      $this->logger()->notice('Traction Rec import is not enabled!');
       return FALSE;
     }
 
     if (!$this->importer->acquireLock()) {
-      $this->logger()->notice(
-        dt('Can\'t run new import, another import process already in progress.')
-      );
+      $this->logger()->notice('Can\'t run new import, another import process already in progress.');
       return FALSE;
     }
 
     if (!$this->importer->checkMigrationsStatus()) {
-      $this->logger()->notice(
-        dt('One or more migrations are still running or stuck.')
-      );
+      $this->logger()->notice('One or more migrations are still running or stuck.');
       return FALSE;
     }
 
@@ -133,7 +115,7 @@ class DrushCommands extends DrushCommandsBase {
 
     $dirs = $this->importer->getJsonDirectoriesList();
     if (empty($dirs)) {
-      $this->logger()->info(dt('Nothing to import.'));
+      $this->logger()->info('Nothing to import.');
       return FALSE;
     }
 
@@ -199,11 +181,17 @@ class DrushCommands extends DrushCommandsBase {
    */
   public function fetch() {
     if (!$this->tractionRecFetcher->isEnabled()) {
-      $this->logger()->notice(dt('Fetcher is disabled!'));
+      $this->logger()->notice('Fetcher is disabled!');
       return FALSE;
     }
 
-    $this->tractionRecFetcher->fetch();
+    $this->logger()->notice("Fetching data from Traction Rec.");
+    $fetch = $this->tractionRecFetcher->fetch();
+
+    if (!is_dir($fetch)) {
+      $this->logger()->warning('Data fetch failed. Debug TractionRecClient::executeQuery for more info.');
+    }
+    else $this->logger()->notice("Data fetched to " . $fetch);
   }
 
 }
