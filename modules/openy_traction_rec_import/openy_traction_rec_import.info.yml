@@ -2,7 +2,7 @@ name: 'Open Y: Traction Rec PEF import'
 type: module
 description: 'Provides Traction Rec PEF migrations'
 core_version_requirement: ^8.7.7 || ^9 || ^10
-package: 'Open Y'
+package: 'YMCA Website Services'
 dependencies:
   - drupal:migrate
   - migrate_plus:migrate_plus
