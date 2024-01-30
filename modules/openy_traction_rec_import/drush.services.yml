@@ -4,7 +4,6 @@ services:
     arguments:
       - '@openy_traction_rec_import.importer'
       - '@openy_traction_rec_import.cleaner'
-      - '@migrate_tools.commands'
       - '@file_system'
       - '@entity_type.manager'
       - '@openy_traction_rec_import.fetcher'
