@@ -93,7 +93,7 @@ class TractionRecFetcher {
     // Instantiate our event.
     $event = new TractionRecPostFetchEvent($this->directory);
     // Get the event_dispatcher service and dispatch the event.
-    $this->eventDispatcher->dispatch(TractionRecPostFetchEvent::EVENT_NAME, $event);
+    $this->eventDispatcher->dispatch( $event, TractionRecPostFetchEvent::EVENT_NAME);
     return $this->directory;
   }
 
