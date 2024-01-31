@@ -2,6 +2,8 @@
 
 namespace Drupal\openy_traction_rec_import;
 
+use Consolidation\SiteAlias\SiteAliasManagerAwareTrait;
+use Consolidation\SiteProcess\ProcessManagerAwareTrait;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
@@ -10,13 +12,16 @@ use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManager;
+use Drush\Drush;
 
 /**
  * Wrapper for Traction Rec import operations.
  */
 class Importer implements TractionRecImporterInterface {
 
+  use ProcessManagerAwareTrait;
   use StringTranslationTrait;
+  use SiteAliasManagerAwareTrait;
 
   /**
    * The name used to identify the lock.
@@ -102,13 +107,6 @@ class Importer implements TractionRecImporterInterface {
   protected $fileSystem;
 
   /**
-   * Migrate tool drush commands.
-   *
-   * @var \Drupal\migrate_tools\Commands\MigrateToolsCommands
-   */
-  protected $migrateToolsCommands;
-
-  /**
    * Importer constructor.
    *
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
@@ -122,7 +120,7 @@ class Importer implements TractionRecImporterInterface {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
-   *   The filesystem serrvice.
+   *   The filesystem service.
    */
   public function __construct(
     LockBackendInterface $lock,
@@ -143,6 +141,9 @@ class Importer implements TractionRecImporterInterface {
     $this->isEnabled = (bool) $settings->get('enabled');
     $this->isBackupEnabled = (bool) $settings->get('backup_json');
     $this->backupLimit = (int) $settings->get('backup_limit');
+
+    $this->siteAliasManager = Drush::service('site.alias.manager');
+    $this->processManager = Drush::processManager();
   }
 
   /**
@@ -152,10 +153,6 @@ class Importer implements TractionRecImporterInterface {
     if (PHP_SAPI !== 'cli') {
       return;
     }
-
-    // 'migrate_tools.commands' service is available only in Drush context.
-    // That's why we can't add the service using normal DI.
-    $this->migrateToolsCommands = \Drupal::service('migrate_tools.commands');
 
     try {
       // Results of each fetch are saved to a separated directory.
@@ -171,10 +168,12 @@ class Importer implements TractionRecImporterInterface {
       }
 
       $sync = $options['sync'] ?? FALSE;
-      $this->migrateToolsCommands->import(
-        '',
-        ['group' => Importer::MIGRATE_GROUP, 'sync' => $sync]
-      );
+      $this->processManager->drush(
+        $this->siteAliasManager->getSelf(),
+        'migrate:import',
+        [],
+        ['group' => Importer::MIGRATE_GROUP, 'sync' => $sync])
+        ->run();
 
       // Save JSON files only if backup of JSON files is enabled.
       if ($this->isBackupEnabled()) {
