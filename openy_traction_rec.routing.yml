@@ -1,5 +1,13 @@
+openy_traction_rec.openy_integrations_traction_rec:
+  path: /admin/openy/integrations/traction-rec
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Traction Rec'
+  requirements:
+    _permission: 'administer traction rec configuration'
+
 openy_traction_rec.settings:
-  path: /admin/openy/integrations/traction_rec/settings
+  path: /admin/openy/integrations/traction-rec/auth
   defaults:
     _form: '\Drupal\openy_traction_rec\Form\TractionRecSettings'
     _title: 'Traction Rec auth settings'
