@@ -202,6 +202,9 @@ class TractionRecFetcher {
 
     $programs = [];
     $categories = [];
+    // @todo TREC allows a many to one relationship between programs and subs
+    // "It's possible for a Program to exist under multiple Program Categoies"
+    // How can we deal with that here so we don't have duplicate IDs?
     foreach ($result['records'] as $key => $category_tag) {
       // It's confusing, but in Open Y terms we we have vice verse structure:
       // Traction Rec Program -> Open Y Program Sub Category.

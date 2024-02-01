@@ -99,6 +99,7 @@ class TractionRec implements TractionRecInterface {
    */
   public function loadProgramCategoryTags(): array {
     try {
+      // @todo remove the DO NOT USE statements from here
       $result = $this->tractionRecClient->executeQuery(
         'SELECT
         TREX1__Program_Category_Tag__c.id,
@@ -109,7 +110,11 @@ class TractionRec implements TractionRecInterface {
         TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.id,
         TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.name,
         TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.TREX1__Available__c
-        FROM TREX1__Program_Category_Tag__c WHERE TREX1__Program__r.TREX1__Available_Online__c = true AND TREX1__Program_Category__r.TREX1__Available_Online__c = true'
+        FROM TREX1__Program_Category_Tag__c
+        WHERE TREX1__Program__r.TREX1__Available_Online__c = true
+          AND TREX1__Program_Category__r.TREX1__Available_Online__c = true
+          AND (NOT TREX1__Program_Category__r.name LIKE \'[DO NOT USE]%\')
+          AND (NOT TREX1__Program__r.name LIKE \'[DO NOT USE]%\')'
       );
       return $this->simplify($result);
     }
