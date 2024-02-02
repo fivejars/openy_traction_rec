@@ -2,17 +2,23 @@
 
 namespace Drupal\openy_traction_rec_import\Commands;
 
+use Consolidation\SiteAlias\SiteAliasManagerAwareTrait;
+use Consolidation\SiteProcess\ProcessManagerAwareTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\openy_traction_rec_import\Cleaner;
 use Drupal\openy_traction_rec_import\Importer;
 use Drupal\openy_traction_rec_import\TractionRecFetcher;
 use Drush\Commands\DrushCommands;
+use Drush\Drush;
 
 /**
  * OPENY Traction Rec import drush commands.
  */
 class OpenyTractionRecImportCommands extends DrushCommands {
+
+  use ProcessManagerAwareTrait;
+  use SiteAliasManagerAwareTrait;
 
   /**
    * The entity type manager.
@@ -76,6 +82,9 @@ class OpenyTractionRecImportCommands extends DrushCommands {
     $this->fileSystem = $file_system;
     $this->entityTypeManager = $entity_type_manager;
     $this->tractionRecFetcher = $tr_fetch;
+
+    $this->siteAliasManager = Drush::service('site.alias.manager');
+    $this->processManager = Drush::processManager();
   }
 
   /**
@@ -138,8 +147,12 @@ class OpenyTractionRecImportCommands extends DrushCommands {
   public function rollback() {
     try {
       $this->output()->writeln('Rollbacking Traction Rec migrations...');
-      $options = ['group' => Importer::MIGRATE_GROUP];
-      $this->migrateToolsCommands->rollback('', $options);
+      $this->processManager->drush(
+        $this->siteAliasManager->getSelf(),
+        'migrate:rollback',
+        [],
+        ['group' => Importer::MIGRATE_GROUP])
+        ->run();
       $this->output()->writeln('Rollback done!');
     }
     catch (\Exception $e) {
@@ -189,7 +202,7 @@ class OpenyTractionRecImportCommands extends DrushCommands {
     $fetch = $this->tractionRecFetcher->fetch();
 
     if (!is_dir($fetch)) {
-      $this->logger()->warning('Data fetch failed. Debug TractionRecClient::executeQuery for more info.');
+      $this->logger()->warning('Data fetch failed. Check the logs for more info.');
     }
     else $this->logger()->notice("Data fetched to " . $fetch);
   }

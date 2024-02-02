@@ -205,6 +205,7 @@ class TractionRecClient {
     }
     catch (RequestException $e) {
       $response = $e->getResponse();
+      $this->logger->error($e->getMessage());
     }
 
     $query_request_body = $response->getBody()->getContents();
