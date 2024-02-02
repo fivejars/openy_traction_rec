@@ -93,7 +93,7 @@ class TractionRecFetcher {
     // Instantiate our event.
     $event = new TractionRecPostFetchEvent($this->directory);
     // Get the event_dispatcher service and dispatch the event.
-    $this->eventDispatcher->dispatch( $event, TractionRecPostFetchEvent::EVENT_NAME);
+    $this->eventDispatcher->dispatch($event, TractionRecPostFetchEvent::EVENT_NAME);
     return $this->directory;
   }
 
@@ -214,7 +214,7 @@ class TractionRecFetcher {
       // Only set the new category if its Id is unique. In TREC it is possible
       // for a Program to exist under multiple Categories, but we do not allow
       // that relationship. This may result in some data loss.
-      // @TODO: we should figure out how to deal with this better.
+      // @todo we should figure out how to deal with this better.
       if (!in_array($category['Id'], array_column($categories, 'Id'))) {
         $categories[] = $category;
       }

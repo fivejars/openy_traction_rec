@@ -204,7 +204,9 @@ class OpenyTractionRecImportCommands extends DrushCommands {
     if (!is_dir($fetch)) {
       $this->logger()->warning('Data fetch failed. Check the logs for more info.');
     }
-    else $this->logger()->notice("Data fetched to " . $fetch);
+    else {
+      $this->logger()->notice("Data fetched to " . $fetch);
+    }
   }
 
 }

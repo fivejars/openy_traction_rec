@@ -39,6 +39,8 @@ class TractionRec implements TractionRecInterface {
    *   The TractionRec API client.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $loggerChannel
    *   Logger channel.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    */
   public function __construct(TractionRecClient $traction_rec_client, LoggerChannelInterface $loggerChannel, ConfigFactoryInterface $config_factory) {
     $this->tractionRecClient = $traction_rec_client;
