@@ -8,8 +8,10 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManager;
+use Drupal\migrate_tools\MigrateExecutable;
 
 /**
  * Wrapper for Traction Rec import operations.
@@ -102,13 +104,6 @@ class Importer implements TractionRecImporterInterface {
   protected $fileSystem;
 
   /**
-   * Migrate tool drush commands.
-   *
-   * @var \Drupal\migrate_tools\Commands\MigrateToolsCommands
-   */
-  protected $migrateToolsCommands;
-
-  /**
    * Importer constructor.
    *
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
@@ -122,7 +117,7 @@ class Importer implements TractionRecImporterInterface {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
-   *   The filesystem serrvice.
+   *   The filesystem service.
    */
   public function __construct(
     LockBackendInterface $lock,
@@ -153,10 +148,6 @@ class Importer implements TractionRecImporterInterface {
       return;
     }
 
-    // 'migrate_tools.commands' service is available only in Drush context.
-    // That's why we can't add the service using normal DI.
-    $this->migrateToolsCommands = \Drupal::service('migrate_tools.commands');
-
     try {
       // Results of each fetch are saved to a separated directory.
       $json_files = $this->fileSystem->scanDirectory($dir, '/\.json$/');
@@ -170,11 +161,16 @@ class Importer implements TractionRecImporterInterface {
         $this->fileSystem->copy($file->uri, 'private://traction_rec_import/', FileSystemInterface::EXISTS_REPLACE);
       }
 
-      $sync = $options['sync'] ?? FALSE;
-      $this->migrateToolsCommands->import(
-        '',
-        ['group' => Importer::MIGRATE_GROUP, 'sync' => $sync]
-      );
+      $migrations = $this->getMigrations();
+      foreach ($migrations as $migration_id => $migration) {
+        if ($migration->getStatus() == MigrationInterface::STATUS_IDLE) {
+          // Get an instance of MigrateExecutable.
+          $migrate_executable = new MigrateExecutable($migration, new MigrateMessage(), $options);
+
+          // Call the method to execute the migration.
+          $migrate_executable->import();
+        }
+      }
 
       // Save JSON files only if backup of JSON files is enabled.
       if ($this->isBackupEnabled()) {
@@ -196,13 +192,7 @@ class Importer implements TractionRecImporterInterface {
    */
   public function checkMigrationsStatus(): bool {
     try {
-      $migrations = $this->entityTypeManager
-        ->getStorage('migration')
-        ->getQuery('AND')
-        ->condition('migration_group', static::MIGRATE_GROUP)
-        ->execute();
-
-      $migrations = $this->migrationPluginManager->createInstances($migrations);
+      $migrations = $this->getMigrations();
       foreach ($migrations as $migration_id => $migration) {
         if ($migration->getStatus() !== MigrationInterface::STATUS_IDLE) {
           $this->logger->error($this->t('Migration @migration has status @status.', [
@@ -274,6 +264,26 @@ class Importer implements TractionRecImporterInterface {
     }
 
     return $dirs;
+  }
+
+  /**
+   * Get the migrations.
+   *
+   * @return array|MigrationInterface[]
+   *   The built migration instances.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getMigrations(): array {
+    $migrations = $this->entityTypeManager
+      ->getStorage('migration')
+      ->getQuery('AND')
+      ->condition('migration_group', static::MIGRATE_GROUP)
+      ->execute();
+
+    return $this->migrationPluginManager->createInstances($migrations);
   }
 
 }

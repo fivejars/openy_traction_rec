@@ -1,10 +1,9 @@
 services:
   openy_traction_rec_import.commands:
-    class: \Drupal\openy_traction_rec_import\Commands\DrushCommands
+    class: \Drupal\openy_traction_rec_import\Commands\OpenyTractionRecImportCommands
     arguments:
       - '@openy_traction_rec_import.importer'
       - '@openy_traction_rec_import.cleaner'
-      - '@migrate_tools.commands'
       - '@file_system'
       - '@entity_type.manager'
       - '@openy_traction_rec_import.fetcher'

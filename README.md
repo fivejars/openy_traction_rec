@@ -12,7 +12,7 @@ composer require ycloudyusa/openy_traction_rec
 
 ## Usage
 
-The main module itself provides only API that helps fetch data from the TractionRec. More specific functionality is provided in sub-modules:
+The main module itself provides only API that helps fetch data from TractionRec. More specific functionality is provided in sub-modules:
 
 * `Open Y: Traction Rec PEF import` provides PEF migrations.
 * `Open Y Traction Rec: Activity Finder` extends Open Y Activity Finder with the new fields and logic.
@@ -21,4 +21,3 @@ The main module itself provides only API that helps fetch data from the Traction
 
 * Go to `/admin/config/system/keys` and create a new [https://www.drupal.org/project/key](https://www.drupal.org/project/key) to store private key used for JWT flow.
 * Go to `/admin/openy/integrations/traction_rec/settings` connection settings form and use the keys & secrets provided by Traction Rec.
-
