@@ -6,6 +6,8 @@ use Consolidation\SiteAlias\SiteAliasManagerAwareTrait;
 use Consolidation\SiteProcess\ProcessManagerAwareTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\openy_traction_rec_import\Cleaner;
 use Drupal\openy_traction_rec_import\Importer;
 use Drupal\openy_traction_rec_import\TractionRecFetcher;
@@ -19,6 +21,7 @@ class OpenyTractionRecImportCommands extends DrushCommands {
 
   use ProcessManagerAwareTrait;
   use SiteAliasManagerAwareTrait;
+  use StringTranslationTrait;
 
   /**
    * The entity type manager.
@@ -106,25 +109,41 @@ class OpenyTractionRecImportCommands extends DrushCommands {
    */
   public function import(array $options): bool {
     if (!$this->importer->isEnabled()) {
-      $this->logger()->notice('Traction Rec import is not enabled!');
+      $this->logger()->notice($this->t(
+        'The Traction Rec import is not enabled! Enable the
+        "openy_traction_rec_import" module, then enable the syncer at @settings.',
+        [
+          '@settings' =>
+          Url::fromRoute(
+              'openy_traction_rec_import.settings',
+              [],
+              ['absolute' => TRUE])->toString(),
+        ]
+      ));
       return FALSE;
     }
 
     if (!$this->importer->acquireLock()) {
-      $this->logger()->notice('Can\'t run new import, another import process already in progress.');
+      $this->logger()->notice(
+        'Can\'t run a new import, another import process is in progress.
+        Try "openy-tr:reset-lock" if the process seems stuck.'
+      );
       return FALSE;
     }
 
     if (!$this->importer->checkMigrationsStatus()) {
-      $this->logger()->notice('One or more migrations are still running or stuck.');
+      $this->logger()->notice(
+        'One or more migrations are still running or stuck. Run
+        "drush migrate:status" to see the status of migrations and
+        "drush migrate:reset migrationId" to reset the stuck migration.');
       return FALSE;
     }
 
-    $this->output()->writeln('Starting Traction Rec migration');
+    $this->output()->writeln('Starting Traction Rec migration.');
 
     $dirs = $this->importer->getJsonDirectoriesList();
     if (empty($dirs)) {
-      $this->logger()->info('Nothing to import.');
+      $this->logger()->info('No Traction Rec data to import.');
       return FALSE;
     }
 
@@ -146,7 +165,7 @@ class OpenyTractionRecImportCommands extends DrushCommands {
    */
   public function rollback() {
     try {
-      $this->output()->writeln('Rollbacking Traction Rec migrations...');
+      $this->output()->writeln('Rolling back Traction Rec migrations...');
       $this->processManager->drush(
         $this->siteAliasManager->getSelf(),
         'migrate:rollback',
@@ -194,7 +213,15 @@ class OpenyTractionRecImportCommands extends DrushCommands {
    */
   public function fetch() {
     if (!$this->tractionRecFetcher->isEnabled()) {
-      $this->logger()->notice('Fetcher is disabled!');
+      $this->logger()->notice($this->t(
+        'The Traction Rec fetcher is not enabled! Enable the fetcher at @settings',
+        [
+          '@settings' =>
+          Url::fromRoute(
+              'openy_traction_rec_import.settings',
+              [],
+              ['absolute' => TRUE])->toString(),
+        ]));
       return FALSE;
     }
 
@@ -202,10 +229,10 @@ class OpenyTractionRecImportCommands extends DrushCommands {
     $fetch = $this->tractionRecFetcher->fetch();
 
     if (!is_dir($fetch)) {
-      $this->logger()->warning('Data fetch failed. Check the logs for more info.');
+      $this->logger()->warning('Traction Rec data fetch failed. Check the logs for more info.');
     }
     else {
-      $this->logger()->notice("Data fetched to " . $fetch);
+      $this->logger()->notice("Traction Rec data fetched to " . $fetch);
     }
   }
 
