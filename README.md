@@ -68,3 +68,83 @@ The main module itself provides only API that helps fetch data from TractionRec.
 ## Usage
 
 See [modules/openy_traction_rec_import/README.md](modules/openy_traction_rec_import/README.md)
+
+## Data Model
+
+This module assumes a Traction Rec "standard" data model in its queries. Any deviations from this model will require overriding the queries in `src/TractionRec.php`.
+
+```mermaid
+erDiagram
+  Program_Category__c {
+    type Id
+    type Name
+  }
+  Program__c {
+    type Id
+    type Name
+    type Available__c
+    type Description__c
+  }
+  Program_Category_Tag__c {
+    type Id
+    type Name
+    type Program__c
+    type Program_Category_c
+  }
+  Course__c {
+    type Id
+    type Name
+    type Available__c
+    type Code__c
+    type Description__c
+    type Program__c
+  }
+  Course_Session__c {
+    type Id
+    type Name
+    type Available__C
+    type Code__c
+    type Course__c
+    type Description__c
+    type Num_Option_Entitlements__c
+    type Product__C
+    type Total_Option_Capacity__c
+    type Total_Option_Capacity_Remaining__C
+    type Total_Option_Registrants__c
+    type Total_Options_Available__c
+  }
+  Course_Option__c {
+    type Id
+    type Name
+    type Age_Max__c
+    type Age_Min__c
+    type Available__c
+    type Capacity__c
+    type Day_of_Week__c
+    type End_Date__c
+    type End_Time__c
+    type Instructor__c
+    type Product__c
+    type Registration_Total_c
+    type Setup_Notes__c
+    type Setup_Time_Required___c
+    type Start_Date__c
+    type Start_Time__c
+    type Tear_Down_Notes__c
+    type Tear_Down_Time_Required__C
+  }
+  Course_Session_Option__c {
+    type id
+    type Name
+    type Course_Option_-Course_Session__c
+    type Option_Available__c
+    type Option_Capacity__c
+    type Option_Registration_Total__c
+  }
+  Program_Category__c ||--|{ Program_Category_Tag__c : ""
+  Program__c ||--|{ Program_Category_Tag__c : ""
+  Program__c ||--|{ Course__c : ""
+  Course__c ||--|{ Course_Session__c : ""
+  Course_Session__c ||--|{ Course_Session_Option__c : ""
+  Course_Option__c ||--|{ Course_Session_Option__c : ""
+```
