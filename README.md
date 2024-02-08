@@ -73,73 +73,80 @@ See [modules/openy_traction_rec_import/README.md](modules/openy_traction_rec_imp
 
 This module assumes a Traction Rec "standard" data model in its queries. Any deviations from this model will require overriding the queries in `src/TractionRec.php`.
 
+This model contains a subset of the fields in Traction Rec that are relevant to our usage. All entities have more fields than listed.
+
+Field types are taken from Salesforce's **Setup** > **Object Manager** > **{Entity}** > **Fields & Relationships**.
+
+- Number field options are: `number(length_decimal places)`
+
 ```mermaid
 erDiagram
   Program_Category__c {
-    type Id
-    type Name
+    id Id
+    text(80) Name
   }
   Program__c {
-    type Id
-    type Name
-    type Available__c
-    type Description__c
+    id Id
+    text(80) Name
+    checkbox Available__c
+    textArea(255) Description__c
   }
   Program_Category_Tag__c {
-    type Id
-    type Name
-    type Program__c
-    type Program_Category_c
+    id Id
+    autoNumber Name
+    lookup(Program) Program__c
+    lookup(Program_Category) Program_Category_c
   }
   Course__c {
-    type Id
-    type Name
-    type Available__c
-    type Code__c
-    type Description__c
-    type Program__c
+    id Id
+    text(80) Name
+    checkbox Available__c
+    text(128) Code__c
+    longTextArea(640) Description__c
+    lookup(Program) Program__c
   }
   Course_Session__c {
-    type Id
-    type Name
-    type Available__C
-    type Code__c
-    type Course__c
-    type Description__c
-    type Num_Option_Entitlements__c
-    type Product__C
-    type Total_Option_Capacity__c
-    type Total_Option_Capacity_Remaining__C
-    type Total_Option_Registrants__c
-    type Total_Options_Available__c
+    id Id
+    text(80) Name
+    checkbox Available__C
+    text(128) Code__c
+    lookup(Course) Course__c
+    longTextArea(640) Description__c
+    number(18_0) Num_Option_Entitlements__c
+    lookup(ProductAndDiscount) Product__C
+    sum Total_Option_Capacity__c
+    formula(number) Total_Option_Capacity_Remaining__C
+    sum Total_Option_Registrants__c
+    count Total_Options_Available__c
   }
   Course_Option__c {
-    type Id
-    type Name
-    type Age_Max__c
-    type Age_Min__c
-    type Available__c
-    type Capacity__c
-    type Day_of_Week__c
-    type End_Date__c
-    type End_Time__c
-    type Instructor__c
-    type Product__c
-    type Registration_Total_c
-    type Setup_Notes__c
-    type Setup_Time_Required___c
-    type Start_Date__c
-    type Start_Time__c
-    type Tear_Down_Notes__c
-    type Tear_Down_Time_Required__C
+    id Id
+    text(80) Name
+    number(3_1) Age_Max__c
+    number(3_1) Age_Min__c
+    checkbox Available__c
+    number(18_0) Capacity__c
+    picklist(multiSelect) Day_of_Week__c
+    date End_Date__c
+    text(8) End_Time__c
+    text(128) Instructor__c
+    lookup(ProductAndDiscount) Product__c
+    number(18_0) Registration_Total_c
+    longTextArea(3500) Setup_Notes__c
+    number(3_0) Setup_Time_Required___c
+    date Start_Date__c
+    text(8) Start_Time__c
+    longTextArea(3500) Tear_Down_Notes__c
+    number(3_0) Tear_Down_Time_Required__C
   }
   Course_Session_Option__c {
-    type id
-    type Name
-    type Course_Option_-Course_Session__c
-    type Option_Available__c
-    type Option_Capacity__c
-    type Option_Registration_Total__c
+    id Id
+    autoNumber Name
+    lookup(CourseOption) Course_Option__c
+    masterDetail(CourseSession) Course_Session__c
+    checkbox Option_Available__c
+    number(18_0) Option_Capacity__c
+    number(18_0) Option_Registration_Total__c
   }
   Program_Category__c ||--|{ Program_Category_Tag__c : ""
   Program__c ||--|{ Program_Category_Tag__c : ""
