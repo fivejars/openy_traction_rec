@@ -138,11 +138,18 @@ class TractionRecClient {
     }
     catch (RequestException $e) {
       $response = $e->getResponse();
+      $this->logger->error($e->getMessage());
     }
 
     $token_request_body = $response->getBody()->getContents();
 
     $access_token = json_decode($token_request_body);
+    // Return empty string if no token can be retrieved.
+    // Error will be logged elsewhere.
+    if (isset($access_token->error)) {
+      return '';
+    }
+
     $this->accessToken = $access_token->access_token;
     return $this->accessToken;
   }

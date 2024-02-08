@@ -1,5 +1,5 @@
 openy_traction_rec_import.settings:
-  path: '/admin/openy/integrations/traction_rec/importer'
+  path: '/admin/openy/integrations/traction-rec/importer'
   defaults:
     _form: '\Drupal\openy_traction_rec_import\Form\SettingsForm'
     _title: 'Traction Rec importer settings'
