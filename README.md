@@ -29,41 +29,58 @@ The main module itself provides only API that helps fetch data from TractionRec.
 ### Create a Connected App
 
 1. Create a new private key and X509 certificate, customizing the `subj` options in the command to suit your organization. (See [the manual for openssl-req](https://www.openssl.org/docs/manmaster/man1/openssl-req.html) to understand the options here.)
-  ```shell
-  openssl req -x509 -noenc -sha256 -days 365 -keyout traction_rec.key -out traction_rec.crt -subj "/C=US/ST=Illinois/L=Chicago/O=My YMCA/OU=Org/emailAddress=youremail@example.com"
-  ```
+    ```shell
+    openssl req -x509 -noenc -sha256 -days 365 \
+     -keyout traction_rec.key \
+     -out traction_rec.crt \
+     -subj "/C=US/ST=Illinois/L=Chicago/O=My YMCA/OU=Org/emailAddress=youremail@example.com"
+    ```
+   - The email address in the certificate does not need to match the email on the Connected App.
+   - The certificate **must be renewed yearly** (or after the set number of `--days`). We recommend you set a reminder in order to prevent unwanted failures.
 2. In **Salesforce** > **Setup** > **App Manager**, create a **New Connected App**.
-  - Check **Enable OAuth Settings**
-  - Set the callback url as the base URL of your site
-  - Check **Use digital signatures** and upload the X509 certificate (`.crt`) created above.
-  - Ensure the app has the following **Selected OAuth Scopes**
-    - Full access (full)
-    - Manage user data via APIs (api)
-    - Manage user data via Web browsers (web)
-    - Perform requests at any time (refresh_token, offline_access)
-  - Choose other configuration options as directed.
-  - Save the Connected App
+   - Set a **Name** and **Email**.
+     - The **Contact Email** is not used for authentication.
+   - Check **Enable OAuth Settings**
+     - Set the callback url as the base URL of your site
+     - Check **Use digital signatures** and upload the X509 certificate (`.crt`) created above.
+     - Ensure the app has the following **Selected OAuth Scopes**
+       - Full access (full)
+       - Manage user data via APIs (api)
+       - Manage user data via Web browsers (web)
+       - Perform requests at any time (refresh_token, offline_access)
+     - Check these options:
+       - **Require Proof Key for Code Exchange (PKCE) Extension for Supported Authorization Flows**
+       - **Issue JSON Web Token (JWT)-based access tokens for named users**
+     - Uncheck all other options in the **OAuth** section.
+   - **Save** the Connected App
 3. Once the app is saved, you will need to get the **Consumer Details**:
-  - In the "My Connected App" screen that appears once you save (or via **App Manager**), click **Manage Consumer Details**.
-  - Save the **Consumer Key** and **Consumer Secret** for the next step.
-4. Give your app the correct profiles and/or permission sets in **Setup** > **Connected Apps** > **Manage Connected Apps**.
+   - In the "My Connected App" screen that appears once you save (or via **Setup** > **App Manager**), click **Manage Consumer Details**.
+   - Save the **Consumer Key** and **Consumer Secret** for the next step.
+4. Connect your new Connected App to a User. The attached User's email will be the one used to authenticate the app.
+   - If necessary, create a user via **Setup** > **Users** > **New User**
+   - Assign the User to a **Profile** or **Permission Set** based on your existing Salesforce configuration.
+   - Go to **Setup** > **Connected Apps** > **Manage Connected Apps** and choose your new app. Assign the profile or permission set that contains your new user.
 
 ### Configure the connection in Drupal
 
-* Go to **Admin** > **Configuration** > **System** > **Keys** (`/admin/config/system/keys`) and create a new key to store the private key created above.
-  * **Add key**
-  * Add a **Key name** and **Description**
-  * Choose **Key Type**: "TractionRec JWT Private Key"
-  * Choose the **Key provider** depending on your configuration. See [Managing Keys](https://www.drupal.org/project/key#:~:text=the%20encrypt%20module-,Managing%20keys,-Key%20provides%20an) for details.
-  * Configure the chosen provider then **Save** the key.
-* Go to **Admin** > **YMCA Website Services** > **Integrations** > **Traction Rec** > **Traction Rec auth settings** (`/admin/openy/integrations/traction-rec/auth`) to configure the keys & secrets provided by Traction Rec.
-  * Add the **Consumer key** and **Consumer Secret** from **Manage Consumer Details** in Salesforce.
-  * Add the **User** registered in the Connected App.
-  * Enter a **Login URL**.
-  * Set the **Services base URL** and **REST API Base URL** as per their descriptions.
-    * **Ensure the REST API Base URL responds to `curl -I` with a `200` response**. If you use a URL like `*.lightning.force.com` instead of `*.my.salesforce.com` it may result in a redirect, which will cause fetches to fail.
-  * Set the **Community URL** based on the publicly accessible registration links
-  * Choose the key as configured above.
+1. Go to **Admin** > **Configuration** > **System** > **Keys** (`/admin/config/system/keys`) and create a new key to store the private key created above.
+   - **Add key**
+   - Add a **Key name** and **Description**
+   - Choose **Key Type**: "TractionRec JWT Private Key"
+   - Choose the **Key provider** depending on your configuration. See [Managing Keys](https://www.drupal.org/project/key#:~:text=the%20encrypt%20module-,Managing%20keys,-Key%20provides%20an) for details.
+   - Configure the chosen provider then **Save** the key.
+2. Go to **Admin** > **YMCA Website Services** > **Integrations** > **Traction Rec** > **Traction Rec auth settings** (`/admin/openy/integrations/traction-rec/auth`) to configure the keys & secrets provided by Traction Rec.
+   - Add the **Consumer key** and **Consumer Secret** from **Manage Consumer Details** in Salesforce.
+   - Add the **User** connected to the Connected App.
+     - This is the email of the **User**, not the **Contact email**.
+   - Enter a **Login URL**.
+     - This will most likely be `https://login.salesforce.com`
+   - Set the **Services base URL** and **REST API Base URL** as per their descriptions.
+     - **Ensure the REST API Base URL responds to `curl -I` with a `200` response**. If you use a URL like `*.lightning.force.com` instead of `*.my.salesforce.com` it may result in a redirect, which will cause fetches to fail.
+   - Set the **Community URL** based on the publicly accessible registration links.
+     - This may be something like `https://my-ymca.my.site.com`
+     - The URL can be found in Salesforce under **Setup** > **Digital Experiences** > **All Sites**.
+   - Choose the key as configured above.
 
 ## Usage
 
