@@ -121,6 +121,7 @@ erDiagram
     text(128) Code__c
     longTextArea(640) Description__c
     lookup(Program) Program__c
+    richTextArea Rich_Description__c
   }
   Course_Session__c {
     id Id
@@ -131,6 +132,7 @@ erDiagram
     longTextArea(640) Description__c
     number(18_0) Num_Option_Entitlements__c
     lookup(ProductAndDiscount) Product__C
+    richTextArea Rich_Description__c
     sum Total_Option_Capacity__c
     formula(number) Total_Option_Capacity_Remaining__C
     sum Total_Option_Registrants__c

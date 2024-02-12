@@ -37,12 +37,20 @@ source:
       label: 'Description'
       selector: /Description
     -
+      name: rich_description
+      label: 'Rich Description'
+      selector: /Rich_Description
+    -
       name: available
       label: 'Available'
       selector: /Available
 process:
   title: title
-  field_class_description/value: description
+  field_class_description/value:
+    plugin: null_coalesce
+    source:
+      - rich_description
+      - description
   field_class_description/format:
     plugin: default_value
     default_value: full_html
