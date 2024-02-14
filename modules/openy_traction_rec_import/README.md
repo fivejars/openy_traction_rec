@@ -24,16 +24,3 @@ Other available `drush` commands:
 
 * `openy-tr:clean-up` - Removes imported JSON files from the filesystem.
   * Alias: `tr:clean-up`
-
-## Salesforce permissions
-
-For correct work of the integration your Salesforce integration user should have access to the following data:
-
-* Program
-* Program Category
-* Course
-* Course Option
-* Course Session
-* Session
-* Product and Discount
-* Price Level

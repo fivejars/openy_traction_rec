@@ -26,7 +26,7 @@ The main module itself provides only API that helps fetch data from TractionRec.
 
 ## Configuration
 
-### Create a Connected App
+### Create a Connected App in Salesforce
 
 1. Create a new private key and X509 certificate, customizing the `subj` options in the command to suit your organization. (See [the manual for openssl-req](https://www.openssl.org/docs/manmaster/man1/openssl-req.html) to understand the options here.)
     ```shell
@@ -58,8 +58,31 @@ The main module itself provides only API that helps fetch data from TractionRec.
    - Save the **Consumer Key** and **Consumer Secret** for the next step.
 4. Connect your new Connected App to a User. The attached User's email will be the one used to authenticate the app.
    - If necessary, create a user via **Setup** > **Users** > **New User**
-   - Assign the User to a **Profile** or **Permission Set** based on your existing Salesforce configuration.
+   - Assign the User to a **Profile** or **Permission Set** that has the [necessary permissions](#salesforce-permissions).
    - Go to **Setup** > **Connected Apps** > **Manage Connected Apps** and choose your new app. Assign the profile or permission set that contains your new user.
+   - In the Connect App Detail, click **Edit Policies**, then under **OAuth Policies** > **Permitted Users** choose **Admin approved users are pre-authorized**, then Save.
+
+Review all of these steps carefully. Missing any of them can result in an inability to query the API.
+
+#### Salesforce permissions
+
+The Salesforce integration role/permission set should have read access to all fields in the following objects:
+
+* Course
+* Course Option
+* Course Session
+* Course Session Option
+* Location
+* Product and Discount
+* Program
+* Program Category
+* Program Category Tag
+
+It should also have the following Systems Permissions:
+
+* Apex REST Services
+* View Restriction and Scoping Rules
+* Update Consent Preferences Using REST API
 
 ### Configure the connection in Drupal
 
