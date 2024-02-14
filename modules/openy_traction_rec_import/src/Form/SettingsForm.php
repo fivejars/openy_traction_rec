@@ -74,6 +74,20 @@ class SettingsForm extends ConfigFormBase {
       ],
     ];
 
+    $form['locations'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Location mapping'),
+      '#default_value' => implode(PHP_EOL, $config->get('locations') ?? []),
+      '#description' => $this->t('
+        A mapping of Salesforce Location IDs to Drupal Location IDs in the form <code>salesforce_id:drupal_node_id:comment</code>. One entry per line.
+        <ul>
+            <li>Salesforce IDs and names can be found in <code>private://traction_rec_import/json/{datestring}/locations.json</code> after running <code>drush tr:fetch</code>.</li>
+            <li>Drupal IDs and names can be taken from the Content list or a temporary view.</li>
+            <li>The comment can be anything to help identify the entry. It will be saved but only used for debugging purposes.</li>
+        </ul>'),
+      '#placeholder' => 'a2QDp000000irzcMAA:1234:Downtown YMCA',
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -87,6 +101,7 @@ class SettingsForm extends ConfigFormBase {
     $config->set('backup_json', $values['backup_json']);
     $config->set('backup_limit', $values['backup_limit']);
     $config->set('fetch_status', $values['fetch_status']);
+    $config->set('locations', array_filter(preg_split('/\R/', $values['locations'])));
     $config->save();
 
     parent::submitForm($form, $form_state);

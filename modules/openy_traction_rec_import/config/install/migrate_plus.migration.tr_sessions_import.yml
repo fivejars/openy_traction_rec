@@ -73,9 +73,13 @@ source:
       label: 'Max Age'
       selector: /Course_Option/Age_Max
     -
-      name: location
-      label: Location
+      name: location_name
+      label: 'Location Name'
       selector: /Course_Option/Location/Name
+    -
+      name: location_id
+      label: 'Location Id'
+      selector: /Course_Option/Location/Id
     -
       name: instructor
       label: Instructor
@@ -156,7 +160,9 @@ process:
   field_session_online: online_registration
   field_session_location:
     plugin: tr_location_by_title
-    source: location
+    source:
+      - location_name
+      - location_id
   field_session_reg_link:
     plugin: tr_registration_link
     source: id

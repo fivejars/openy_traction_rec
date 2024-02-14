@@ -89,6 +89,7 @@ class TractionRecFetcher {
     $this->fetchProgramAndCategories();
     $this->fetchClasses();
     $this->fetchSessions();
+    $this->fetchLocations();
 
     // Instantiate our event.
     $event = new TractionRecPostFetchEvent($this->directory);
