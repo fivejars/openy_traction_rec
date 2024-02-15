@@ -158,6 +158,7 @@ class TractionRec implements TractionRecInterface {
         TREX1__Course_Session__r.TREX1__Course__r.name,
         TREX1__Course_Session__r.TREX1__Course__r.id,
         TREX1__Course_Session__r.TREX1__Course__r.TREX1__Description__c,
+        TREX1__Course_Session__r.TREX1__Course__r.TREX1__Rich_Description__c,
         TREX1__Course_Option__r.TREX1__Product__c,
         TREX1__Course_Option__r.TREX1__Product__r.id,
         TREX1__Course_Option__r.TREX1__Product__r.name,
