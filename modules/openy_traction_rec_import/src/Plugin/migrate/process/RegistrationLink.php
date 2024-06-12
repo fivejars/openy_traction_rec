@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec_import\Plugin\migrate\process;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -20,10 +22,8 @@ class RegistrationLink extends ProcessPluginBase implements ContainerFactoryPlug
 
   /**
    * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $configFactory;
+  protected ConfigFactoryInterface $configFactory;
 
   /**
    * {@inheritdoc}
@@ -56,8 +56,8 @@ class RegistrationLink extends ProcessPluginBase implements ContainerFactoryPlug
    */
   public function __construct(
     array $configuration,
-    $plugin_id,
-    $plugin_definition,
+    string $plugin_id,
+    mixed $plugin_definition,
     ConfigFactoryInterface $config_factory
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);

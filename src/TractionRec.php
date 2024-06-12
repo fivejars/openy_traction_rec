@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -13,24 +17,18 @@ class TractionRec implements TractionRecInterface {
 
   /**
    * Traction Rec Client service.
-   *
-   * @var \Drupal\openy_traction_rec\TractionRecClient
    */
-  protected $tractionRecClient;
+  protected TractionRecClient $tractionRecClient;
 
   /**
    * The Traction Rec settings.
-   *
-   * @var \Drupal\Core\Config\ImmutableConfig
    */
-  protected $tractionRecSettings;
+  protected ImmutableConfig $tractionRecSettings;
 
   /**
    * Logger channel.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannel
    */
-  protected $logger;
+  protected LoggerChannel $logger;
 
   /**
    * TractionRec constructor.
@@ -261,7 +259,7 @@ class TractionRec implements TractionRecInterface {
   private function simplify(array $array): array {
     $new_array = [];
     foreach ($array as $key => $value) {
-      $new_key = str_replace(['TREX1__', '__c', '__r'], '', $key);
+      $new_key = str_replace(['TREX1__', '__c', '__r'], '', (string) $key);
       if ($new_key === 'attributes') {
         continue;
       }

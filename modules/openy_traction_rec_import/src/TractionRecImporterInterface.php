@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec_import;
 
 /**
@@ -15,7 +17,7 @@ interface TractionRecImporterInterface {
    * @param array $options
    *   The array of import options.
    */
-  public function directoryImport(string $dir, array $options = []);
+  public function directoryImport(string $dir, array $options = []): void;
 
   /**
    * Check traction_rec migrations statuses.
@@ -49,7 +51,7 @@ interface TractionRecImporterInterface {
   /**
    * Releases Traction Rec lock.
    */
-  public function releaseLock();
+  public function releaseLock(): void;
 
   /**
    * Provides a list of directories with the fetched JSON files.

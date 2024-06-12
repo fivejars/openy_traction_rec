@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec_import\Plugin\QueueWorker;
 
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
+use Drupal\openy_traction_rec_import\Importer;
 use Drupal\openy_traction_rec_import\TractionRecImporterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,17 +24,13 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
 
   /**
    * The importer service.
-   *
-   * @var \Drupal\openy_traction_rec_import\Importer
    */
-  protected $tractionRecImporter;
+  protected Importer $tractionRecImporter;
 
   /**
    * Logger channel.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
-  protected $logger;
+  protected LoggerChannelInterface $logger;
 
   /**
    * ImportQueue constructor.
@@ -49,8 +48,8 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    */
   public function __construct(
     array $configuration,
-    $plugin_id,
-    $plugin_definition,
+    string $plugin_id,
+    mixed $plugin_definition,
     TractionRecImporterInterface $traction_rec_importer,
     LoggerChannelInterface $logger
   ) {
@@ -92,7 +91,7 @@ class ImportQueue extends QueueWorkerBase implements ContainerFactoryPluginInter
    * @return bool
    *   Action status.
    */
-  protected function processTractionRecImport($data, bool $sync = FALSE): bool {
+  protected function processTractionRecImport(mixed $data, bool $sync = FALSE): bool {
     if (!isset($data['directory'])) {
       return FALSE;
     }

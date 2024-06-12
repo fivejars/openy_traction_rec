@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec_import;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drush\Drush;
 
 /**
@@ -15,38 +18,28 @@ class Cleaner {
 
   /**
    * Active database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
    */
-  protected $database;
+  protected Connection $database;
 
   /**
    * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Logger for traction_rec.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
-  protected $logger;
+  protected LoggerChannelInterface $logger;
 
   /**
    * The importer service.
-   *
-   * @var \Drupal\openy_traction_rec_import\Importer
    */
-  protected $importer;
+  protected Importer $importer;
 
   /**
    * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
    */
-  protected $fileSystem;
+  protected FileSystemInterface $fileSystem;
 
   /**
    * Cleaner constructor.
@@ -73,7 +66,7 @@ class Cleaner {
   /**
    * Cleans JSON files from backup folder.
    */
-  public function cleanBackupFiles() {
+  public function cleanBackupFiles(): void {
     if (PHP_SAPI !== 'cli') {
       return;
     }

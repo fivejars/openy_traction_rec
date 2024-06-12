@@ -1,85 +1,70 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\key\KeyRepositoryInterface;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Traction Rec HTTP client.
  */
-class TractionRecClient {
+class TractionRecClient implements TractionRecClientInterface {
 
   /**
    * The Traction Rec settings.
-   *
-   * @var \Drupal\Core\Config\ImmutableConfig
    */
-  protected $tractionRecSettings;
+  protected ImmutableConfig $tractionRecSettings;
 
   /**
    * The http client.
-   *
-   * @var \GuzzleHttp\Client
    */
-  protected $http;
+  protected Client $http;
 
   /**
    * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
    */
-  protected $time;
+  protected TimeInterface $time;
 
   /**
    * Access token.
-   *
-   * @var string
    */
-  protected $accessToken;
+  protected string $accessToken;
 
   /**
    * Traction Rec API credentials for SSO.
-   *
-   * ['credentials', 'redirect_uri']
-   *
-   * @var array
    */
-  protected $tractionRecSsoSettings;
+  protected ImmutableConfig $tractionRecSsoSettings;
 
   /**
-   * Logger for traction_rec queries.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   * Logger for salesforce queries.
    */
-  protected $logger;
+  protected LoggerChannelInterface $logger;
 
   /**
    * Request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request|null
    */
-  protected $request;
+  protected ?Request $request;
 
   /**
    * Traction Rec access token for SSO login through web.
-   *
-   * @var string
    */
-  protected $webToken = '';
+  protected string $webToken = '';
 
   /**
    * Key repository service.
-   *
-   * @var \Drupal\key\KeyRepositoryInterface
    */
-  protected $keyRepository;
+  protected KeyRepositoryInterface $keyRepository;
 
   /**
    * Client constructor.
@@ -111,12 +96,7 @@ class TractionRecClient {
   }
 
   /**
-   * Retrieves the access token.
-   *
-   * @return string
-   *   Loaded access token.
-   *
-   * @throws \GuzzleHttp\Exception\GuzzleException
+   * {@inheritdoc}
    */
   public function getAccessToken(): string {
     if (!empty($this->accessToken)) {
@@ -174,6 +154,8 @@ class TractionRecClient {
    *
    * @return string
    *   JWT Assertion.
+   *
+   * @SuppressWarnings(PHPMD.StaticAccess)
    */
   protected function generateAssertion(): string {
     $key_id = $this->tractionRecSettings->get('private_key');
@@ -183,16 +165,7 @@ class TractionRecClient {
   }
 
   /**
-   * Make request to Traction Rec.
-   *
-   * @param string $query
-   *   SOQL query.
-   *
-   * @return array
-   *   Retrieved results from Traction Rec.
-   *
-   * @throws \GuzzleHttp\Exception\GuzzleException
-   * @throws \Drupal\openy_traction_rec\InvalidTokenException
+   * {@inheritdoc}
    */
   public function executeQuery(string $query): array {
     $access_token = $this->getAccessToken();
@@ -223,22 +196,9 @@ class TractionRecClient {
   }
 
   /**
-   * Sends Traction Rec request.
-   *
-   * @param string $method
-   *   Request method.
-   * @param string $url
-   *   The URL.
-   * @param array $options
-   *   The array of request options.
-   *
-   * @return array|mixed
-   *   The array with a response data.
-   *
-   * @throws \Drupal\openy_traction_rec\InvalidTokenException
-   * @throws \GuzzleHttp\Exception\GuzzleException
+   * {@inheritdoc}
    */
-  public function send(string $method, string $url, array $options = []) {
+  public function send(string $method, string $url, array $options = []): mixed {
     $access_token = $this->getAccessToken();
     if (!$access_token) {
       throw new InvalidTokenException();
@@ -285,7 +245,7 @@ class TractionRecClient {
           ],
         ]);
 
-      return json_decode($response->getBody())->access_token;
+      return json_decode((string) $response->getBody())->access_token;
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
@@ -294,12 +254,9 @@ class TractionRecClient {
   }
 
   /**
-   * Get user data from Traction Rec.
-   *
-   * @return object|null
-   *   User info from Traction Rec.
+   * {@inheritdoc}
    */
-  public function getUserData() {
+  public function getUserData(): ?object {
     try {
       if (!$this->webToken) {
         return NULL;
@@ -310,7 +267,7 @@ class TractionRecClient {
         ['headers' => $headers]
       );
 
-      return json_decode($user_data->getBody());
+      return json_decode((string) $user_data->getBody());
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
@@ -319,15 +276,9 @@ class TractionRecClient {
   }
 
   /**
-   * Construct link for login in Traction Rec app.
-   *
-   * @return string
-   *   Link to login form.
+   * {@inheritdoc}
    */
   public function getLoginLink(): string {
-    if (empty($this->tractionRecSsoSettings->get('app_url'))) {
-      return '';
-    }
     return $this->tractionRecSsoSettings->get('app_url') . '/services/oauth2/authorize?client_id='
       . $this->tractionRecSsoSettings->get('client_id')
       . '&redirect_uri=https://' . $this->request->getHost() . $this->tractionRecSsoSettings->get('redirect_uri')
@@ -338,20 +289,14 @@ class TractionRecClient {
   }
 
   /**
-   * Returns link for homepage(account) in Traction Rec app.
-   *
-   * @return string
-   *   Link to account page.
+   * {@inheritdoc}
    */
   public function getAccountLink(): string {
     return $this->tractionRecSsoSettings->get('app_url') ?? '';
   }
 
   /**
-   * Check if token is generated.
-   *
-   * @return bool
-   *   Does token is generated.
+   * {@inheritdoc}
    */
   public function isWebTokenNotEmpty(): bool {
     return !empty($this->webToken);

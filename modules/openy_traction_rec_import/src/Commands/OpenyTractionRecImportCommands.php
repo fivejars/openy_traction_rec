@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec_import\Commands;
 
 use Consolidation\SiteAlias\SiteAliasManagerAwareTrait;
@@ -25,38 +27,28 @@ class OpenyTractionRecImportCommands extends DrushCommands {
 
   /**
    * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The importer service.
-   *
-   * @var \Drupal\openy_traction_rec_import\Importer
    */
-  protected $importer;
+  protected Importer $importer;
 
   /**
    * The OPENY sessions cleaner service.
-   *
-   * @var \Drupal\openy_traction_rec_import\Cleaner
    */
-  protected $cleaner;
+  protected Cleaner $cleaner;
 
   /**
    * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
    */
-  protected $fileSystem;
+  protected FileSystemInterface $fileSystem;
 
   /**
    * Traction Rec fetcher service.
-   *
-   * @var \Drupal\openy_traction_rec_import\TractionRecFetcher
    */
-  protected $tractionRecFetcher;
+  protected TractionRecFetcher $tractionRecFetcher;
 
   /**
    * DrushCommands constructor.
@@ -163,7 +155,7 @@ class OpenyTractionRecImportCommands extends DrushCommands {
    * @command openy-tr:rollback
    * @aliases tr:rollback
    */
-  public function rollback() {
+  public function rollback(): void {
     try {
       $this->output()->writeln('Rolling back Traction Rec migrations...');
       $this->processManager->drush(
@@ -185,7 +177,7 @@ class OpenyTractionRecImportCommands extends DrushCommands {
    * @command openy-tr:reset-lock
    * @aliases tr:reset-lock
    */
-  public function resetLock() {
+  public function resetLock(): void {
     $this->output()->writeln('Reset import status...');
     $this->importer->releaseLock();
   }
@@ -199,7 +191,7 @@ class OpenyTractionRecImportCommands extends DrushCommands {
    * @command openy-tr:clean-up
    * @aliases tr:clean-up
    */
-  public function cleanUp(array $options) {
+  public function cleanUp(array $options): void {
     $this->output()->writeln('Starting clean up...');
     $this->cleaner->cleanBackupFiles();
     $this->output()->writeln('Clean up finished!');
@@ -211,7 +203,7 @@ class OpenyTractionRecImportCommands extends DrushCommands {
    * @command openy-tr:fetch-all
    * @aliases tr:fetch
    */
-  public function fetch() {
+  public function fetch(): void {
     if (!$this->tractionRecFetcher->isEnabled()) {
       $this->logger()->notice($this->t(
         'The Traction Rec fetcher is not enabled! Enable the fetcher at @settings',
@@ -222,7 +214,7 @@ class OpenyTractionRecImportCommands extends DrushCommands {
               [],
               ['absolute' => TRUE])->toString(),
         ]));
-      return FALSE;
+      return;
     }
 
     $this->logger()->notice("Fetching data from Traction Rec.");

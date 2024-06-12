@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec_import\EventSubscriber;
 
 use Drupal\migrate\Event\MigrateEvents;
@@ -29,7 +31,7 @@ class MigrateEventSubscriber implements EventSubscriberInterface {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function onPreRowSave(MigratePreRowSaveEvent $event) {
+  public function onPreRowSave(MigratePreRowSaveEvent $event): void {
     // We don't create paragraph in process plugin,
     // because it won't be attached to any parent if row is skipped.
     // So we creating it here when the row is ready for saving.

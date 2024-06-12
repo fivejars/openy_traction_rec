@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec_import\Plugin\migrate\process;
 
 use Drupal\Component\Datetime\DateTimePlus;
@@ -22,10 +24,8 @@ class SessionTime extends ProcessPluginBase implements ContainerFactoryPluginInt
 
   /**
    * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $configFactory;
+  protected ConfigFactoryInterface $configFactory;
 
   /**
    * {@inheritdoc}
@@ -58,8 +58,8 @@ class SessionTime extends ProcessPluginBase implements ContainerFactoryPluginInt
    */
   public function __construct(
     array $configuration,
-    $plugin_id,
-    $plugin_definition,
+    string $plugin_id,
+    mixed $plugin_definition,
     ConfigFactoryInterface $config_factory
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -126,7 +126,7 @@ class SessionTime extends ProcessPluginBase implements ContainerFactoryPluginInt
    * @return mixed
    *   Formatted date string.
    */
-  protected function convertDate(string $datetime) {
+  protected function convertDate(string $datetime): mixed {
     $site_timezone = $this->configFactory->get('system.date')->get(
       'timezone.default'
     );

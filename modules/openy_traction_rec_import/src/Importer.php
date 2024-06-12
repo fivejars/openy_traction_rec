@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec_import;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -42,66 +44,48 @@ class Importer implements TractionRecImporterInterface {
 
   /**
    * The lock backend.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
    */
-  protected $lock;
+  protected LockBackendInterface $lock;
 
   /**
    * Logger channel.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
-  protected $logger;
+  protected LoggerChannelInterface $logger;
 
   /**
    * Import status.
-   *
-   * @var bool
    */
-  protected $isEnabled = FALSE;
+  protected bool $isEnabled = FALSE;
 
   /**
    * JSON backup status.
-   *
-   * @var bool
    */
-  protected $isBackupEnabled = FALSE;
+  protected bool $isBackupEnabled = FALSE;
 
   /**
    * JSON backup limit.
-   *
-   * @var int
    */
-  protected $backupLimit = 15;
+  protected int $backupLimit = 15;
 
   /**
    * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $configFactory;
+  protected ConfigFactoryInterface $configFactory;
 
   /**
    * Migration plugin manager service.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationPluginManager
    */
-  protected $migrationPluginManager;
+  protected MigrationPluginManager $migrationPluginManager;
 
   /**
    * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
    */
-  protected $fileSystem;
+  protected FileSystemInterface $fileSystem;
 
   /**
    * Importer constructor.
@@ -143,7 +127,7 @@ class Importer implements TractionRecImporterInterface {
   /**
    * {@inheritdoc}
    */
-  public function directoryImport(string $dir, array $options = []) {
+  public function directoryImport(string $dir, array $options = []): void {
     if (PHP_SAPI !== 'cli') {
       return;
     }
@@ -162,7 +146,7 @@ class Importer implements TractionRecImporterInterface {
       }
 
       $migrations = $this->getMigrations();
-      foreach ($migrations as $migration_id => $migration) {
+      foreach ($migrations as $migration) {
         if ($migration->getStatus() == MigrationInterface::STATUS_IDLE) {
           // Get an instance of MigrateExecutable.
           $migrate_executable = new MigrateExecutable($migration, new MigrateMessage(), $options);
@@ -245,7 +229,7 @@ class Importer implements TractionRecImporterInterface {
   /**
    * {@inheritdoc}
    */
-  public function releaseLock() {
+  public function releaseLock(): void {
     $this->lock->release(static::LOCK_NAME);
   }
 

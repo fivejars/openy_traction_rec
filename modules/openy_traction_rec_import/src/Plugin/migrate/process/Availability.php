@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec_import\Plugin\migrate\process;
 
 use Drupal\migrate\MigrateExecutableInterface;

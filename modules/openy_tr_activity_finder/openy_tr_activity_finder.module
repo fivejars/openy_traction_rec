@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @file
  * Activity Finder altering.
@@ -13,7 +15,7 @@ use Drupal\search_api\Query\QueryInterface;
  *
  * Adds wait-list capacity data to results.
  */
-function openy_tr_activity_finder_activity_finder_program_process_results_alter(array &$data, NodeInterface $entity) {
+function openy_tr_activity_finder_activity_finder_program_process_results_alter(array &$data, NodeInterface $entity): void {
   $data['price'] = $entity->get('field_price_description')->value;
 
   $wait_list_availability = !$entity->get('waitlist_capacity')->isEmpty() ? $entity->get('waitlist_capacity')->value : 0;
@@ -25,7 +27,7 @@ function openy_tr_activity_finder_activity_finder_program_process_results_alter(
  *
  * Hide past sessions in AF.
  */
-function ypkc_master_search_api_query_alter(QueryInterface $query) {
+function openy_tr_activity_finder_search_api_query_alter(QueryInterface $query): void {
   // 'default' index is weird, but such naming is used in the Activity Finder.
   if ($query->getIndex()->id() == 'default') {
     // Show session in AF only if end date is greater than current.

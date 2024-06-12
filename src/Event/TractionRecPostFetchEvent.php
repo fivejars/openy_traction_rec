@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
@@ -16,10 +18,8 @@ class TractionRecPostFetchEvent extends Event {
 
   /**
    * The directory with fetched files.
-   *
-   * @var string
    */
-  protected $directory;
+  protected string $directory;
 
   /**
    * Constructors the event class.

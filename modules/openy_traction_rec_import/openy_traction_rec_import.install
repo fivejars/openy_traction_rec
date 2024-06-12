@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @file
  * Install and update hooks.
@@ -10,7 +12,7 @@ use Drupal\Core\StreamWrapper\PrivateStream;
 /**
  * Implements hook_requirements().
  */
-function openy_traction_rec_import_requirements($phase) {
+function openy_traction_rec_import_requirements(string $phase): array {
   $requirements = [];
   if ($phase == 'install' && !PrivateStream::basePath()) {
     $requirements['openy_tr_private_filesystem'] = [

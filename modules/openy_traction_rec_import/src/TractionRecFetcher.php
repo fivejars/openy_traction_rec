@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec_import;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -15,45 +17,33 @@ class TractionRecFetcher {
 
   /**
    * Result json directory path.
-   *
-   * @var string
    */
-  protected $storagePath = 'private://traction_rec_import/json/';
+  protected string $storagePath = 'private://traction_rec_import/json/';
 
   /**
    * Traction Rec wrapper.
-   *
-   * @var \Drupal\openy_traction_rec\TractionRecInterface
    */
-  protected $tractionRec;
+  protected TractionRecInterface $tractionRec;
 
   /**
    * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
    */
-  protected $fileSystem;
+  protected FileSystemInterface $fileSystem;
 
   /**
    * The event dispatcher used to notify subscribers.
-   *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
-  protected $eventDispatcher;
+  protected EventDispatcherInterface $eventDispatcher;
 
   /**
    * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $configFactory;
+  protected ConfigFactoryInterface $configFactory;
 
   /**
    * JSON Directory name.
-   *
-   * @var string
    */
-  protected $directory;
+  protected string $directory;
 
   /**
    * Constructors TractionRecFetcher.
@@ -79,7 +69,7 @@ class TractionRecFetcher {
     $this->configFactory = $config_factory;
 
     $this->fileSystem->prepareDirectory($this->storagePath, FileSystemInterface::CREATE_DIRECTORY);
-    $this->directory = $this->storagePath . '/' . date('YmdHi') . '/';
+    $this->directory = $this->storagePath . date('YmdHi') . '/';
   }
 
   /**
@@ -107,7 +97,7 @@ class TractionRecFetcher {
    * @throws \Drupal\openy_traction_rec\InvalidTokenException
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function fetchSessions() {
+  public function fetchSessions(): array {
     $result = $this->tractionRec->loadCourseOptions();
 
     if (empty($result['records'])) {
@@ -123,6 +113,7 @@ class TractionRecFetcher {
     }
 
     $dumper->close();
+    return $result;
   }
 
   /**
@@ -181,7 +172,7 @@ class TractionRecFetcher {
   /**
    * Fetches classes.
    */
-  public function fetchClasses():void {
+  public function fetchClasses(): void {
     $result = $this->tractionRec->loadCourses();
 
     if (empty($result['records'])) {
@@ -194,7 +185,7 @@ class TractionRecFetcher {
   /**
    * Fetches the program data.
    */
-  public function fetchProgramAndCategories():void {
+  public function fetchProgramAndCategories(): void {
     $result = $this->tractionRec->loadProgramCategoryTags();
 
     if (empty($result['records'])) {

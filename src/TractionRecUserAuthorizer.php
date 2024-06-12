@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Password\PasswordGeneratorInterface;
+use Drupal\User\UserStorageInterface;
 
 /**
  * User Authorizer class.
@@ -13,24 +16,18 @@ class TractionRecUserAuthorizer {
 
   /**
    * User entity storage.
-   *
-   * @var \Drupal\User\UserStorageInterface
    */
-  protected $userStorage;
+  protected UserStorageInterface $userStorage;
 
   /**
    * The module handler to invoke the alter hook.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
-  protected $moduleHandler;
+  protected ModuleHandlerInterface $moduleHandler;
 
   /**
    * Password Generator.
-   *
-   * @var \Drupal\Core\Password\PasswordGeneratorInterface
    */
-  protected $passGen;
+  protected PasswordGeneratorInterface $passGen;
 
   /**
    * TractionRecUserAuthorizer constructor.

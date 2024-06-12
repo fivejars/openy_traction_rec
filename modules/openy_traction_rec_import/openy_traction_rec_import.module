@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @file
  * Contains openy_traction_rec_import.module.
@@ -10,7 +12,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Implements hook_help().
  */
-function openy_traction_rec_import_help($route_name, RouteMatchInterface $route_match) {
+function openy_traction_rec_import_help(string $route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.openy_traction_rec_import':
       $output = '<h3>' . t('About') . '</h3>';
@@ -18,5 +20,6 @@ function openy_traction_rec_import_help($route_name, RouteMatchInterface $route_
       return $output;
 
     default:
+      return '';
   }
 }

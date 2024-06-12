@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\openy_traction_rec_import;
 
 /**
@@ -16,10 +18,8 @@ class JsonStreamDumper {
 
   /**
    * Keep track of collection item we're inserting.
-   *
-   * @var int
    */
-  private $key = 0;
+  private int $key = 0;
 
   /**
    * JsonStreamDumper constructor.
@@ -57,7 +57,7 @@ class JsonStreamDumper {
    * @param array|object $item
    *   The item to push.
    */
-  public function push($item): void {
+  public function push(array|object $item): void {
     // We don't need to separate from the previous item if there are none.
     if ($this->key !== 0) {
       fwrite($this->resource, ',');
