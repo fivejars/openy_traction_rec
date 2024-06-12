@@ -94,14 +94,16 @@ class TractionRecClient {
    *   Logger factory.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
+   * @param \Drupal\key\KeyRepositoryInterface $keyRepository
+   *   The key repository.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time, LoggerChannelFactoryInterface $logger_channel_factory, RequestStack $request_stack, KeyRepositoryInterface $KeyRepository) {
+  public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time, LoggerChannelFactoryInterface $logger_channel_factory, RequestStack $request_stack, KeyRepositoryInterface $keyRepository) {
     $this->tractionRecSettings = $config_factory->get('openy_traction_rec.settings');
     $this->tractionRecSsoSettings = $config_factory->get('openy_traction_rec_sso.settings');
     $this->http = $http;
     $this->time = $time;
     $this->logger = $logger_channel_factory->get('traction_rec');
-    $this->keyRepository = $KeyRepository;
+    $this->keyRepository = $keyRepository;
     $this->request = $request_stack->getCurrentRequest();
     if ($code = $this->request->get('code')) {
       $this->webToken = $this->generateToken($code);
@@ -136,11 +138,18 @@ class TractionRecClient {
     }
     catch (RequestException $e) {
       $response = $e->getResponse();
+      $this->logger->error($e->getMessage());
     }
 
     $token_request_body = $response->getBody()->getContents();
 
     $access_token = json_decode($token_request_body);
+    // Return empty string if no token can be retrieved.
+    // Error will be logged elsewhere.
+    if (isset($access_token->error)) {
+      return '';
+    }
+
     $this->accessToken = $access_token->access_token;
     return $this->accessToken;
   }
@@ -205,6 +214,7 @@ class TractionRecClient {
     }
     catch (RequestException $e) {
       $response = $e->getResponse();
+      $this->logger->error($e->getMessage());
     }
 
     $query_request_body = $response->getBody()->getContents();

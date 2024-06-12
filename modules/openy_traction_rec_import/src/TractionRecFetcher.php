@@ -89,11 +89,12 @@ class TractionRecFetcher {
     $this->fetchProgramAndCategories();
     $this->fetchClasses();
     $this->fetchSessions();
+    $this->fetchLocations();
 
     // Instantiate our event.
     $event = new TractionRecPostFetchEvent($this->directory);
     // Get the event_dispatcher service and dispatch the event.
-    $this->eventDispatcher->dispatch(TractionRecPostFetchEvent::EVENT_NAME, $event);
+    $this->eventDispatcher->dispatch($event, TractionRecPostFetchEvent::EVENT_NAME);
     return $this->directory;
   }
 
@@ -203,14 +204,21 @@ class TractionRecFetcher {
     $programs = [];
     $categories = [];
     foreach ($result['records'] as $key => $category_tag) {
-      // It's confusing, but in Open Y terms we we have vice verse structure:
+      // It's confusing, but in Open Y terms we have a reverse structure:
       // Traction Rec Program -> Open Y Program Sub Category.
       // Traction Rec Program Category -> Open Y Program.
       $programs[$category_tag['Program_Category']['Id']] = $category_tag['Program_Category'];
 
       $category = $category_tag['Program'];
       $category['Program'] = $category_tag['Program_Category']['Id'];
-      $categories[] = $category;
+
+      // Only set the new category if its Id is unique. In TREC it is possible
+      // for a Program to exist under multiple Categories, but we do not allow
+      // that relationship. This may result in some data loss.
+      // @todo we should figure out how to deal with this better.
+      if (!in_array($category['Id'], array_column($categories, 'Id'))) {
+        $categories[] = $category;
+      }
 
       unset($result['records'][$key]);
     }

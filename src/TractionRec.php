@@ -39,6 +39,8 @@ class TractionRec implements TractionRecInterface {
    *   The TractionRec API client.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $loggerChannel
    *   Logger channel.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    */
   public function __construct(TractionRecClient $traction_rec_client, LoggerChannelInterface $loggerChannel, ConfigFactoryInterface $config_factory) {
     $this->tractionRecClient = $traction_rec_client;
@@ -109,7 +111,9 @@ class TractionRec implements TractionRecInterface {
         TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.id,
         TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.name,
         TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.TREX1__Available__c
-        FROM TREX1__Program_Category_Tag__c WHERE TREX1__Program__r.TREX1__Available_Online__c = true AND TREX1__Program_Category__r.TREX1__Available_Online__c = true'
+        FROM TREX1__Program_Category_Tag__c
+        WHERE TREX1__Program__r.TREX1__Available_Online__c = true
+          AND TREX1__Program_Category__r.TREX1__Available_Online__c = true'
       );
       return $this->simplify($result);
     }
@@ -154,6 +158,7 @@ class TractionRec implements TractionRecInterface {
         TREX1__Course_Session__r.TREX1__Course__r.name,
         TREX1__Course_Session__r.TREX1__Course__r.id,
         TREX1__Course_Session__r.TREX1__Course__r.TREX1__Description__c,
+        TREX1__Course_Session__r.TREX1__Course__r.TREX1__Rich_Description__c,
         TREX1__Course_Option__r.TREX1__Product__c,
         TREX1__Course_Option__r.TREX1__Product__r.id,
         TREX1__Course_Option__r.TREX1__Product__r.name,

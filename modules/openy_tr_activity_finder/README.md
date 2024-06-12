@@ -1,3 +1,4 @@
 # Traction Rec: Activity Finder
 
-Module provides tweaks for the Activity Finder for deeper integration wit the Traction Rec.
+This module provides tweaks to Activity Finder for deeper integration with
+Traction Rec.

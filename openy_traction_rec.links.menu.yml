@@ -1,6 +1,13 @@
-openy_traction_rec.admin:
+openy_traction_rec.openy_integrations_traction_rec:
+  title: 'Traction Rec'
+  route_name: openy_traction_rec.openy_integrations_traction_rec
+  parent: openy_system.openy_integrations
+  description: 'Configure Open Y integration with Traction Rec.'
+  weight: 0
+
+openy_traction_rec.settings:
   title: 'Traction Rec auth settings'
   description: 'Configure Traction Rec auth settings'
-  parent: openy_system.openy_integrations
+  parent: openy_traction_rec.openy_integrations_traction_rec
   route_name: openy_traction_rec.settings
   weight: 100
