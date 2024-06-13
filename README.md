@@ -21,8 +21,11 @@ drush en openy_traction_rec openy_traction_rec_import openy_tr_activity_finder
 
 The main module itself provides only API that helps fetch data from TractionRec. More specific functionality is provided in submodules:
 
-* `YMCA Website Services Traction Rec: PEF import` provides PEF migrations.
 * `YMCA Website Services Traction Rec: Activity Finder` extends YMCA Website Services Activity Finder with the new fields and logic.
+* `YMCA Website Services Traction Rec: PEF import` provides PEF migrations.
+  See [modules/openy_traction_rec_import/README.md](modules/openy_traction_rec_import/README.md)
+* `YMCA Website Services Traction Rec: SSO` provides the possibility to login user using SSO and manipulate menu items according to Traction Rec login status.
+  See [modules/openy_traction_rec_sso/README.md](modules/openy_traction_rec_sso/README.md)
 
 ## Configuration
 
@@ -92,7 +95,7 @@ It should also have the following Systems Permissions:
    - Choose **Key Type**: "TractionRec JWT Private Key"
    - Choose the **Key provider** depending on your configuration. See [Managing Keys](https://www.drupal.org/project/key#:~:text=the%20encrypt%20module-,Managing%20keys,-Key%20provides%20an) for details.
    - Configure the chosen provider then **Save** the key.
-2. Go to **Admin** > **YMCA Website Services** > **Integrations** > **Traction Rec** > **Traction Rec auth settings** (`/admin/openy/integrations/traction-rec/auth`) to configure the keys & secrets provided by Traction Rec.
+2. Go to **Admin** > **YMCA Website Services** > **Integrations** > **Traction Rec** > **Auth settings** (`/admin/openy/integrations/traction-rec/auth`) to configure the keys & secrets provided by Traction Rec.
    - Add the **Consumer key** and **Consumer Secret** from **Manage Consumer Details** in Salesforce.
    - Add the **User** connected to the Connected App.
      - This is the email of the **User**, not the **Contact email**.
@@ -104,10 +107,6 @@ It should also have the following Systems Permissions:
      - This may be something like `https://my-ymca.my.site.com`
      - The URL can be found in Salesforce under **Setup** > **Digital Experiences** > **All Sites**.
    - Choose the key as configured above.
-
-## Usage
-
-See [modules/openy_traction_rec_import/README.md](modules/openy_traction_rec_import/README.md)
 
 ## Data Model
 

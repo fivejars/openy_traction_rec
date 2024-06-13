@@ -1,0 +1,6 @@
+openy_traction_rec_sso.settings:
+  title: 'SSO settings'
+  description: 'Configure Traction Rec SSO settings'
+  parent: openy_traction_rec.openy_integrations_traction_rec
+  route_name: openy_traction_rec_sso.settings
+  weight: 101

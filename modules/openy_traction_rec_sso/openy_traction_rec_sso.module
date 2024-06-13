@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * The openy_traction_rec_sso module customization.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\menu_link_content\MenuLinkContentInterface;
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function openy_traction_rec_sso_entity_base_field_info(EntityTypeInterface $entity): array {
+  if ($entity->id() !== 'menu_link_content') {
+    return [];
+  }
+
+  return [
+    'openy_traction_rec_sso_visibility' => BaseFieldDefinition::create('list_string')
+      ->setLabel(t('Traction Rec SSO: Visibility restrictions'))
+      ->setDescription(t('Control menu link visibility based on Traction Rec SSO login status.'))
+      ->setSetting('allowed_values', [
+        'logged_in' => t('Visible for users logged in with SSO only'),
+        'not_logged_in' => t('Visible for users not logged in with SSO only'),
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'options_select',
+        'weight' => 100,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE),
+  ];
+}
+
+/**
+ * Implements hook_preprocess_menu_link().
+ */
+function openy_traction_rec_sso_preprocess_menu(array &$variables): void {
+  $menu_has_sso_links = FALSE;
+  foreach ($variables['items'] as &$item) {
+    $entity = $item['entity'] ?? NULL;
+
+    if (!($entity instanceof MenuLinkContentInterface)) {
+      continue;
+    }
+
+    $visibility = $entity->get('openy_traction_rec_sso_visibility')->value;
+
+    if (empty($visibility)) {
+      continue;
+    }
+
+    $menu_has_sso_links = TRUE;
+    $item['attributes']->addClass('hidden');
+    $item['attributes']->addClass('tr-sso--' . str_replace('_', '-', $visibility));
+  }
+
+  if ($menu_has_sso_links) {
+    $variables['#attached']['library'][] = 'openy_traction_rec_sso/menu';
+  }
+}

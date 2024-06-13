@@ -1,0 +1,49 @@
+openy_traction_rec_sso.settings:
+  path: /admin/openy/integrations/traction-rec/sso
+  defaults:
+    _form: '\Drupal\openy_traction_rec_sso\Form\TractionRecSsoSettings'
+    _title: 'Traction Rec SSO settings'
+  requirements:
+    _permission: 'administer traction rec configuration'
+
+openy_traction_rec_sso.oauth_callback:
+  path: '/openy-gc-auth-traction-rec-sso/oauth_callback'
+  defaults:
+    _controller: '\Drupal\openy_traction_rec_sso\Controller\TractionRecSsoController::oauthCallback'
+    _title: 'Traction Rec SSO Callback URL'
+  requirements:
+    # No reasons to restrict this route.
+    _access: 'TRUE'
+
+openy_traction_rec_sso.login:
+  path: '/openy-gc-auth-traction-rec-sso/login'
+  defaults:
+    _controller: '\Drupal\openy_traction_rec_sso\Controller\TractionRecSsoController::login'
+    _title: 'Redirect to Traction Rec SSO Login'
+  options:
+    no_cache: TRUE
+  requirements:
+    # No reasons to restrict this route.
+    _access: 'TRUE'
+
+openy_traction_rec_sso.account:
+  path: '/openy-gc-auth-traction-rec-sso/account'
+  defaults:
+    _controller: '\Drupal\openy_traction_rec_sso\Controller\TractionRecSsoController::account'
+    _title: 'Redirect to Traction Rec SSO account'
+  options:
+    no_cache: TRUE
+  requirements:
+    # No reasons to restrict this route.
+    _access: 'TRUE'
+
+openy_traction_rec_sso.logout:
+  path: '/openy-gc-auth-traction-rec-sso/logout'
+  defaults:
+    _controller: '\Drupal\openy_traction_rec_sso\Controller\TractionRecSsoController::logout'
+    _title: 'Redirect to Traction Rec SSO Logout'
+  options:
+    no_cache: TRUE
+  requirements:
+    # No reasons to restrict this route.
+    _access: 'TRUE'

@@ -1,0 +1,6 @@
+menu:
+  version: 1.0
+  js:
+    js/menu.js: {}
+  dependencies:
+    - core/jquery.cookie
