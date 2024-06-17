@@ -1,0 +1,72 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Install and update hooks.
+ */
+
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_install().
+ */
+function openy_traction_rec_sso_install(): void {
+  $storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+
+  $sso_login_link = $storage->create([
+    'title' => t('Log in'),
+    'link' => ['uri' => 'internal:' . Url::fromRoute('openy_traction_rec_sso.login')->toString()],
+    'weight' => 100,
+    'menu_name' => 'account',
+    'expanded' => FALSE,
+    'openy_traction_rec_sso_visibility' => 'not_logged_in',
+  ]);
+  $sso_login_link->save();
+
+  $sso_account_link = $storage->create([
+    'title' => t('My account'),
+    'link' => ['uri' => 'internal:' . Url::fromRoute('openy_traction_rec_sso.account')->toString()],
+    'weight' => 101,
+    'menu_name' => 'account',
+    'expanded' => TRUE,
+    'openy_traction_rec_sso_visibility' => 'logged_in',
+  ]);
+  $sso_account_link->save();
+
+  $sso_logout_link = $storage->create([
+    'title' => t('Log out'),
+    'link' => ['uri' => 'internal:' . Url::fromRoute('openy_traction_rec_sso.logout')->toString()],
+    'weight' => 101,
+    'menu_name' => 'account',
+    'parent' => 'menu_link_content:' . $sso_account_link->uuid(),
+    'expanded' => FALSE,
+    'openy_traction_rec_sso_visibility' => 'logged_in',
+  ]);
+  $sso_logout_link->save();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function openy_traction_rec_sso_uninstall(): void {
+  $storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+  $links = [
+    'internal:' . Url::fromRoute('openy_traction_rec_sso.login')->toString(),
+    'internal:' . Url::fromRoute('openy_traction_rec_sso.account')->toString(),
+    'internal:' . Url::fromRoute('openy_traction_rec_sso.logout')->toString(),
+  ];
+
+  $result = $storage->getQuery()
+    ->condition('link', $links, 'IN')
+    ->accessCheck(FALSE)
+    ->execute();
+
+  if (!$result) {
+    return;
+  }
+
+  $links = $storage->loadMultiple($result);
+  $storage->delete($links);
+}

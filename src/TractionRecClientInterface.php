@@ -51,36 +51,4 @@ interface TractionRecClientInterface {
    */
   public function send(string $method, string $url, array $options = []): mixed;
 
-  /**
-   * Get user data from Traction Rec.
-   *
-   * @return object|null
-   *   User info from Traction Rec.
-   */
-  public function getUserData(): ?object;
-
-  /**
-   * Construct link for login in Traction Rec app.
-   *
-   * @return string
-   *   Link to login form.
-   */
-  public function getLoginLink(): string;
-
-  /**
-   * Returns link for homepage(account) in Traction Rec app.
-   *
-   * @return string
-   *   Link to account page.
-   */
-  public function getAccountLink(): string;
-
-  /**
-   * Check if token is generated.
-   *
-   * @return bool
-   *   Does token is generated.
-   */
-  public function isWebTokenNotEmpty(): bool;
-
 }

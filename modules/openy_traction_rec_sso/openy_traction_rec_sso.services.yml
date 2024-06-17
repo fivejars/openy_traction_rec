@@ -1,0 +1,15 @@
+services:
+  openy_traction_rec.sso_client:
+    class: Drupal\openy_traction_rec_sso\TractionRecSsoClient
+    arguments:
+      - '@config.factory'
+      - '@http_client'
+      - '@logger.factory'
+      - '@request_stack'
+
+  openy_traction_rec.user_authorizer:
+    class: Drupal\openy_traction_rec_sso\TractionRecUserAuthorizer
+    arguments:
+      - '@entity_type.manager'
+      - '@password_generator'
+      - '@module_handler'

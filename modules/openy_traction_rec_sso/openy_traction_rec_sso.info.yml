@@ -1,0 +1,7 @@
+name: 'YMCA Website Services Traction Rec: SSO'
+type: module
+description: 'Contains SSO integrations with Traction Rec.'
+core_version_requirement: ^9.5 || ^10
+configure: openy_traction_rec_sso.settings
+dependencies:
+  - openy_traction_rec:openy_traction_rec

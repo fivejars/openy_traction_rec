@@ -6,7 +6,7 @@ openy_traction_rec.openy_integrations_traction_rec:
   weight: 0
 
 openy_traction_rec.settings:
-  title: 'Traction Rec auth settings'
+  title: 'Auth settings'
   description: 'Configure Traction Rec auth settings'
   parent: openy_traction_rec.openy_integrations_traction_rec
   route_name: openy_traction_rec.settings
