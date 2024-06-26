@@ -100,7 +100,6 @@ It should also have the following Systems Permissions:
      - This will most likely be `https://login.salesforce.com`
    - Set the **Services base URL** and **REST API Base URL** as per their descriptions.
      - **Ensure the REST API Base URL responds to `curl -I` with a `200` response**. Replace URLs like `*.lightning.force.com` with `*.my.salesforce.com` because the `lightning` url may result in a redirect, which will cause an authentication error, like (`[@"message":"Session expired or invalid","errorCode":"INVALID_SESSION_ID"]`).
-
    - Set the **Community URL** based on the publicly accessible registration links.
      - This may be something like `https://my-ymca.my.site.com`
      - The URL can be found in Salesforce under **Setup** > **Digital Experiences** > **All Sites**.
