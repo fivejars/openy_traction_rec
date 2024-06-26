@@ -59,7 +59,7 @@ The main module itself provides only API that helps fetch data from TractionRec.
 4. Create a **Profile** to assign permissions to your app:
    - You **must** do this **before** creating a user. Alternatively, existing users can be assigned a **Permision Set**. Instructions TBD.
    - **Setup** > **Users** > **Profiles** > **New**
-   - When asked what **Existing Profile** to clone from, select **Standard Platform User**.
+   - When asked what **Existing Profile** to clone from, select **Standard User** or **Standard Platform User**. Be sure to note the **User License** connected to the target profile.
    - In the _very large_ configuration screen, click **Edit**, then:
      - Under **Connected App Access**, add access to the Connected App you created above.
      - Search for and enable the [System permissions listed below](#salesforce-permissions).
@@ -67,14 +67,14 @@ The main module itself provides only API that helps fetch data from TractionRec.
    - Save those changes.
 4. Create a new **User** with the new Profile:
    - **Setup** > **Users** > **New User**
-     - **User License** - Salesforce Platform
+     - **User License** - The option under which you created the Profile in the previous step.
      - **Email** - A working email that you will use to receive login verifications.
      - **Username** - This is _not_ your email and _must_ be unique across _all Salesforce Organizations_. **This is the name that will be used in the Drupal connection below.** If you enter a preexisting username, you will receive this error:
         > Error: Duplicate Username.
         > The username already exists in this or another Salesforce organization. Usernames must be unique across all Salesforce organizations. To resolve, use a different username (it doesn't need to match the user's email address).
      - Assign the User to the **Profile** you created above, or a **Permission Set** that has the [necessary permissions](#salesforce-permissions).
 5. Confirm your **Connected App**, **Profile**, and **User** are connected:
-   - Go to **Setup** > **Connected Apps** > **Manage Connected Apps** and choose your new app. Assign the **Profile** or **Permission Set** that contains your new user if it does not already show under the relevant section.
+   - Go to **Setup** > **Apps** > **Connected Apps** > **Manage Connected Apps** and choose your new app. Assign the **Profile** or **Permission Set** that contains your new user if it does not already show under the relevant section.
    - In the Connect App Detail, click **Edit Policies**:
      - Under **OAuth Policies** > **Permitted Users** choose **Admin approved users are pre-authorized**.
      - Check **Issue JSON Web Token (JWT)-based access tokens**.
