@@ -56,11 +56,29 @@ The main module itself provides only API that helps fetch data from TractionRec.
 3. Once the app is saved, you will need to get the **Consumer Details**:
    - In the "My Connected App" screen that appears once you save (or via **Setup** > **App Manager**), click **Manage Consumer Details**.
    - Save the **Consumer Key** and **Consumer Secret** for the next step.
-4. Connect your new Connected App to a User. The attached User's email will be the one used to authenticate the app.
-   - If necessary, create a user via **Setup** > **Users** > **New User**
-   - Assign the User to a **Profile** or **Permission Set** that has the [necessary permissions](#salesforce-permissions).
-   - Go to **Setup** > **Connected Apps** > **Manage Connected Apps** and choose your new app. Assign the profile or permission set that contains your new user.
-   - In the Connect App Detail, click **Edit Policies**, then under **OAuth Policies** > **Permitted Users** choose **Admin approved users are pre-authorized**, then Save.
+4. Create a **Profile** to assign permissions to your app:
+   - You **must** do this **before** creating a user. Alternatively, existing users can be assigned a **Permision Set**. Instructions TBD.
+   - **Setup** > **Users** > **Profiles** > **New**
+   - When asked what **Existing Profile** to clone from, select **Standard User** or **Standard Platform User**. Be sure to note the **User License** connected to the target profile.
+   - In the _very large_ configuration screen, click **Edit**, then:
+     - Under **Connected App Access**, add access to the Connected App you created above.
+     - Search for and enable the [System permissions listed below](#salesforce-permissions).
+     - Under **Custom Object Permissions**, add **Read** access to the [Objects listed below](#salesforce-permissions).
+   - Save those changes.
+4. Create a new **User** with the new Profile:
+   - **Setup** > **Users** > **New User**
+     - **User License** - The option under which you created the Profile in the previous step.
+     - **Email** - A working email that you will use to receive login verifications.
+     - **Username** - This is _not_ your email and _must_ be unique across _all Salesforce Organizations_. **This is the name that will be used in the Drupal connection below.** If you enter a preexisting username, you will receive this error:
+        > Error: Duplicate Username.
+        > The username already exists in this or another Salesforce organization. Usernames must be unique across all Salesforce organizations. To resolve, use a different username (it doesn't need to match the user's email address).
+     - Assign the User to the **Profile** you created above, or a **Permission Set** that has the [necessary permissions](#salesforce-permissions).
+5. Confirm your **Connected App**, **Profile**, and **User** are connected:
+   - Go to **Setup** > **Apps** > **Connected Apps** > **Manage Connected Apps** and choose your new app. Assign the **Profile** or **Permission Set** that contains your new user if it does not already show under the relevant section.
+   - In the Connect App Detail, click **Edit Policies**:
+     - Under **OAuth Policies** > **Permitted Users** choose **Admin approved users are pre-authorized**.
+     - Check **Issue JSON Web Token (JWT)-based access tokens**.
+     - **Save** the Connected App details.
 
 Review all of these steps carefully. Missing any of them can result in an inability to query the API.
 
@@ -95,7 +113,7 @@ It should also have the following Systems Permissions:
 2. Go to **Admin** > **YMCA Website Services** > **Integrations** > **Traction Rec** > **Traction Rec auth settings** (`/admin/openy/integrations/traction-rec/auth`) to configure the keys & secrets provided by Traction Rec.
    - Add the **Consumer key** and **Consumer Secret** from **Manage Consumer Details** in Salesforce.
    - Add the **User** connected to the Connected App.
-     - This is the email of the **User**, not the **Contact email**.
+     - This is the **Username** of the **User**, not the **Contact email**.
    - Enter a **Login URL**.
      - This will most likely be `https://login.salesforce.com`
    - Set the **Services base URL** and **REST API Base URL** as per their descriptions.
