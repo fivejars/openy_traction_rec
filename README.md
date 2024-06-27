@@ -24,6 +24,8 @@ The main module itself provides only API that helps fetch data from TractionRec.
 * `YMCA Website Services Traction Rec: PEF import` provides PEF migrations.
 * `YMCA Website Services Traction Rec: Activity Finder` extends YMCA Website Services Activity Finder with the new fields and logic.
 
+See [modules/openy_traction_rec_import/README.md](modules/openy_traction_rec_import/README.md) for details on how to import content once configuration is complete.
+
 ## Configuration
 
 ### Create a Connected App in Salesforce
@@ -143,9 +145,90 @@ If using a **Profile**, it should also have the following Systems Permissions:
      - The URL can be found in Salesforce under **Setup** > **Digital Experiences** > **All Sites**.
    - Choose the key as configured above.
 
-## Usage
+## Mapping
 
-See [modules/openy_traction_rec_import/README.md](modules/openy_traction_rec_import/README.md)
+The TractionRec importer pulls data from [many Traction Rec Objects](#salesforce-permissions) (see [TractionRec.php for the full queries](https://github.com/YCloudYUSA/openy_traction_rec/blob/main/src/TractionRec.php)):
+
+### Object Mapping
+
+The fetcher outputs these files:
+
+- `classes.json` - from Courses
+  - Maps to both Activities and Classes. Since TREC does not have this distinction, information in the resulting Activities and Classes in Drupal is duplicated.
+- `locations.json` - from Locations
+  - This file is unused, but Locations map to Location via the Session import.
+- `program_categories.json` - from Program Category Tags
+  - Maps to Program.
+- `programs.json` - from Programs
+  - Maps to Program Subcategory.
+- `sessions.json` - from Course Options
+  - Maps to Session.
+
+**Note:** Traction Rec's labels for "Programs" and their child groupings are different:
+
+- Traction Rec: "Program Category" is the parent of "Program".
+- Drupal: "Program" is the parent of "Program Subcategory".
+
+### Mapping to Drupal fields
+
+Those files are then imported into Drupal content via [importers](https://github.com/YCloudYUSA/openy_traction_rec/tree/main/modules/openy_traction_rec_import/config/install) (in config items that start with `migrate_plus.`). The import goes as follows:
+
+> - Drupal Content Type (bundle)
+>    - `Salesforce/TractionRec source field` → `Drupal destination field`
+
+- **Program** - from `programs.json` / TREC Program Categories
+  - Id → id
+  - Name → Title
+  - Available → Published (`status`)
+- **Program Subcategory** - from `program_categories.json`/ TREC Programs
+  - Id → id
+  - Name → Title
+  - Program → Program (`field_category_program`) via a lookup to the Programs import
+  - Available → Published (`status`)
+- **Activity** - from `classes.json` / TREC Courses
+  - Id → id
+  - Name → Title
+  - Program/Id → Program Subcategory (`field_activity_category`) via a lookup to the Program Subcategory import
+  - Available → Published (`status`)
+- **Class** - from `classes.json` / TREC Courses
+  - Id → id
+    - The Class Id will also be used to set the Activity (`field_class_activity`)
+  - Name → Title
+  - Program/Id → _ignored_
+  - Description/Rich Description → Description (`field_class_description`)
+    - If a Rich Description is set, it will be used, otherwise the Description field will be used.
+  - Available → Published (`status`)
+- **Session** - from `sessions.json` / TREC Sessions
+  - Course_Option/Name → Title
+  - Course_Option/ID → id
+    - Also used to generate the Registration link URL using the Community URL set in Traction Rec auth settings (`/admin/openy/integrations/traction-rec/auth`).
+  - Course_Session/Course/Id → Class
+  - Course_Session/Course/Name → Course
+  - Course_Session/Course/Description & Rich_Description → Description (`field_class_description`)
+      - If a Rich Description is set, it will be used, otherwise the Description field will be used.
+  - Course_Option/Start_Date → Session Time > Start date
+  - Course_Option/Start_Time → Session Time > Start time
+  - Course_Option/End_Date → Session Time > End date
+  - Course_Option/End_Time → Session Time > End time
+  - Course_Option/Day_of_Week → Session Time > Days
+  - Course_Option/Age_Min → Min Age (`field_session_min_age`) converted to months
+  - Course_Option/Age_Max → Max Age (`field_session_max_age`) converted to months
+  - Course_Option/Location/Name → Location (`field_session_location`)
+    - Location Name is used as a backup in case the Location Mapping does not match.
+  - Course_Option/Location/Id → Location (`field_session_location`)
+    - Location ID is used to attempt to match a location in the Location mapping in the Traction Rec importer settings (`/admin/openy/integrations/traction-rec/importer`)
+  - Course_Option/Instructor → Instructor (`field_session_instructor`) trimmed to 255 characters
+  - Course_Option/Available_Online → Online registration (`field_session_online`)
+  - Course_Option/Available → Published (`status`)
+  - Course_Option/Register_Online_From_Date → not used
+  - Course_Option/Register_Online_To_Date → not used
+  - Course_Option/Capacity → Initial Availability (`field_availability`)
+  - Course_Option/Total_Capacity_Available → Initial Availability (`field_availability`)
+  - Course_Option/Unlimited_Capacity → if set, overrides Capacity and sets Initial Availability (`field_availability`) to 100
+  - Course_Option/Unlimited_Waitlist_Capacity → Wait list Unlimited Capacity (`waitlist_unlimited_capacity`)
+  - Course_Option/Waitlist_Total → Wait list capacity (`waitlist_capacity`)
+  - Course_Option/Product/Price_Description → Price description (`field_price_description`)
+  - Course_Session/Id → Class (`field_session_class`) via a lookup to the Class import
 
 ## Data Model
 
