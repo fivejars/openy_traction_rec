@@ -56,47 +56,67 @@ The main module itself provides only API that helps fetch data from TractionRec.
 3. Once the app is saved, you will need to get the **Consumer Details**:
    - In the "My Connected App" screen that appears once you save (or via **Setup** > **App Manager**), click **Manage Consumer Details**.
    - Save the **Consumer Key** and **Consumer Secret** for the next step.
-4. Create a **Profile** to assign permissions to your app:
-   - You **must** do this **before** creating a user. Alternatively, existing users can be assigned a **Permision Set**. Instructions TBD.
-   - **Setup** > **Users** > **Profiles** > **New**
-   - When asked what **Existing Profile** to clone from, select **Standard User** or **Standard Platform User**. Be sure to note the **User License** connected to the target profile.
-   - In the _very large_ configuration screen, click **Edit**, then:
-     - Under **Connected App Access**, add access to the Connected App you created above.
-     - Search for and enable the [System permissions listed below](#salesforce-permissions).
-     - Under **Custom Object Permissions**, add **Read** access to the [Objects listed below](#salesforce-permissions).
-   - Save those changes.
-4. Create a new **User** with the new Profile:
-   - **Setup** > **Users** > **New User**
-     - **User License** - The option under which you created the Profile in the previous step.
-     - **Email** - A working email that you will use to receive login verifications.
-     - **Username** - This is _not_ your email and _must_ be unique across _all Salesforce Organizations_. **This is the name that will be used in the Drupal connection below.** If you enter a preexisting username, you will receive this error:
-        > Error: Duplicate Username.
-        > The username already exists in this or another Salesforce organization. Usernames must be unique across all Salesforce organizations. To resolve, use a different username (it doesn't need to match the user's email address).
-     - Assign the User to the **Profile** you created above, or a **Permission Set** that has the [necessary permissions](#salesforce-permissions).
+4. Create a **Profile** OR **Permission Set** to assign permissions to your app. We recommend using a **Permission Set** as those are the option recommended by Salesforce.
+   1. Your Traction Rec support team should be able to deploy the `Traction Rec Activity Finder Permission Set` from their `dev1` instance. If this Permission Set is deployed, proceed straight to the **User** creation step. To create a **Permission Set** from scratch:
+     - **Setup** > **Users** > **Permission Sets** > **New**
+     - Fill in the **Label** as you wish, and leave **License** as `--None--`
+     - In the new **Permission Set**, open **Object Settings**.
+     - In the very long list of **Object Settings**, do the following for each of the 10 [Objects listed below](#salesforce-permissions):
+       - Find the object and click to open it. In the configuration screen for each Object:
+         - Under **Object Permissions**, mark **Read** as **Enabled**.
+         - Under **Field Permissions**, mark **Read Access** on the header field to provide access to all fields.
+       - Save the **Object Settings** and search for the next one.
+     - Finally, review the summary of access permissions and ensure **Read** access is provided for each of the necessary objects.
+   2. Create a **Profile**:
+      - You **must** do this **before** creating a user.
+      - **Setup** > **Users** > **Profiles** > **New**
+      - When asked what **Existing Profile** to clone from, select **Standard User** or **Standard Platform User**. Be sure to note the **User License** connected to the target profile.
+      - In the _very large_ configuration screen, click **Edit**, then:
+        - Under **Connected App Access**, add access to the Connected App you created above.
+        - Search for and enable the [System permissions listed below](#salesforce-permissions).
+        - Under **Custom Object Permissions**, add **Read** access to the [Objects listed below](#salesforce-permissions).
+      - Save those changes.
+4. Create a new **User** with the new Profile or Permission Set:
+  - **Setup** > **Users** > **New User**
+    - **User License** - The option under which you created the Profile in the previous step, or **Salesforce**.
+    - **Email** - A working email that you will use to receive login verifications.
+    - **Username** - This is _not_ your email and _must_ be unique across _all Salesforce Organizations_. **This is the name that will be used in the Drupal connection below.** If you enter a preexisting username, you will receive this error:
+      > Error: Duplicate Username.
+      > The username already exists in this or another Salesforce organization. Usernames must be unique across all Salesforce organizations. To resolve, use a different username (it doesn't need to match the user's email address).
+    - Assign the User to the **Profile** you created above, or a **Permission Set** that has the [necessary permissions](#salesforce-permissions).
+      - Under **Permission Set Assignments**, click **Edit Assignments**
+      - Find the **Permission Set** you created in the prior step, select it, click **Add**, then **Save**.
 5. Confirm your **Connected App**, **Profile**, and **User** are connected:
    - Go to **Setup** > **Apps** > **Connected Apps** > **Manage Connected Apps** and choose your new app. Assign the **Profile** or **Permission Set** that contains your new user if it does not already show under the relevant section.
+     - Click **Manage Profiles** or **Manage Permission Sets**
+     - Search for your Profile or Permission Set and Save.
    - In the Connect App Detail, click **Edit Policies**:
      - Under **OAuth Policies** > **Permitted Users** choose **Admin approved users are pre-authorized**.
      - Check **Issue JSON Web Token (JWT)-based access tokens**.
      - **Save** the Connected App details.
 
+> When the process is complete, you should have the following relationships between the **User**, **Permission Set** OR **Profile**, and **Connected App**:
+> - the API **User** should be assigned the **Permission Set** OR **Profile**.
+> - the **Connected App** should be assigned the same **Permission Set** OR **Profile**.
+
 Review all of these steps carefully. Missing any of them can result in an inability to query the API.
 
 #### Salesforce permissions
 
-The Salesforce integration role/permission set should have read access to all fields in the following objects:
+The Salesforce integration **Permission Set** OR **Profile** should have read access to all fields in the following objects:
 
-* Course
-* Course Option
-* Course Session
-* Course Session Option
-* Location
-* Product and Discount
-* Program
-* Program Category
-* Program Category Tag
+* Course Options
+* Courses
+* Course Session Options
+* Course Sessions
+* Locations
+* Products and Discounts
+* Program Categories
+* Program Category Tags
+* Programs
+* Sessions
 
-It should also have the following Systems Permissions:
+If using a **Profile**, it should also have the following Systems Permissions:
 
 * Apex REST Services
 * View Restriction and Scoping Rules
