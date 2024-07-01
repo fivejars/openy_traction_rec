@@ -27,7 +27,9 @@ class Availability extends ProcessPluginBase {
         return 100;
       }
 
-      return (int) $value;
+      // Traction Rec can allow classes to be overbooked, resulting in a value
+      // for Total_Capacity_Available that's < 0. We don't want that.
+      return max((int) $value, 0);
     }
     catch (\Exception $e) {
       throw new MigrateSkipRowException($e->getMessage());
