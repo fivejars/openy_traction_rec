@@ -25,6 +25,13 @@ services:
       - '@file_system'
       - '@event_dispatcher'
       - '@config.factory'
+      - '@openy_traction_rec_import.locations_mapping'
+
+  openy_traction_rec_import.locations_mapping:
+    class: Drupal\openy_traction_rec_import\LocationsMappingHelper
+    arguments:
+      - '@config.factory'
+      - '@entity_type.manager'
 
   openy_traction_rec_import.migrate_subscriber:
     class: '\Drupal\openy_traction_rec_import\EventSubscriber\MigrateEventSubscriber'

@@ -36,10 +36,13 @@ interface TractionRecInterface {
   /**
    * Loads the list of TractionRec course options.
    *
+   * @param arraystring $locations
+   *   (Optional) Filters course options by TractionRec locations ID's.
+   *
    * @return array
    *   The list of options.
    */
-  public function loadCourseOptions(): array;
+  public function loadCourseOptions(array $locations = []): array;
 
   /**
    * Loads membership types.
