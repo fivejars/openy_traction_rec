@@ -103,11 +103,19 @@ class LocationByTitle extends ProcessPluginBase implements ContainerFactoryPlugi
       }
       // If we can't find a location mapping, try matching by Title.
       else {
-        $locations = $node_storage->loadByProperties(['title' => $location_name]);
-        if (!$locations) {
+        $locations = $node_storage->getQuery()
+          ->condition('title', $location_name)
+          ->condition('type', ['branch', 'camp'], 'IN')
+          ->range(0, 1)
+          ->accessCheck(FALSE)
+          ->execute();
+
+        if (empty($locations)) {
           throw new MigrateSkipRowException("Location node not found: $location_name");
         }
+
         // LoadByProperties can return more than one, so just take the first.
+        $locations = $node_storage->loadMultiple($locations);
         $node = reset($locations);
       }
 
