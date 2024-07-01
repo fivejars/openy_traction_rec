@@ -125,9 +125,9 @@ class TractionRec implements TractionRecInterface {
   /**
    * {@inheritdoc}
    */
-  public function loadCourseOptions(): array {
+  public function loadCourseOptions(array $locations = []): array {
     try {
-      $result = $this->tractionRecClient->executeQuery('SELECT
+      $query = 'SELECT
         TREX1__Course_Option__r.id,
         TREX1__Course_Option__r.name,
         TREX1__Course_Option__r.TREX1__Available_Online__c,
@@ -169,8 +169,17 @@ class TractionRec implements TractionRecInterface {
         AND TREX1__Course_Option__r.TREX1__Register_Online_To_Date__c > YESTERDAY
         AND TREX1__Course_Option__r.TREX1__End_Date__c >= TODAY
         AND TREX1__Course_Option__r.TREX1__Start_Date__c != null
-        AND TREX1__Course_Session__r.TREX1__Num_Option_Entitlements__c <= 1');
+        AND TREX1__Course_Session__r.TREX1__Num_Option_Entitlements__c <= 1';
 
+      if (!empty($locations)) {
+        $locations = array_map(function ($location_id) {
+          $location_id = '\'' . $location_id . '\'';
+          return $location_id;
+        }, $locations);
+        $query .= ' AND TREX1__Course_Option__r.TREX1__Location__c IN (' . implode(',', $locations) . ')';
+      }
+
+      $result = $this->tractionRecClient->executeQuery($query);
       return $this->simplify($result);
     }
     catch (\Exception | GuzzleException $e) {
