@@ -6,6 +6,7 @@ namespace Drupal\openy_traction_rec_import;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
@@ -88,6 +89,11 @@ class Importer implements TractionRecImporterInterface {
   protected FileSystemInterface $fileSystem;
 
   /**
+   * The module handler.
+   */
+  protected ModuleHandlerInterface $moduleHandler;
+
+  /**
    * Importer constructor.
    *
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
@@ -102,6 +108,8 @@ class Importer implements TractionRecImporterInterface {
    *   The entity type manager.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The filesystem service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
   public function __construct(
     LockBackendInterface $lock,
@@ -109,7 +117,8 @@ class Importer implements TractionRecImporterInterface {
     ConfigFactoryInterface $config_factory,
     MigrationPluginManager $migrationPluginManager,
     EntityTypeManagerInterface $entity_type_manager,
-    FileSystemInterface $file_system
+    FileSystemInterface $file_system,
+    ModuleHandlerInterface $module_handler
   ) {
     $this->lock = $lock;
     $this->logger = $logger;
@@ -117,6 +126,7 @@ class Importer implements TractionRecImporterInterface {
     $this->migrationPluginManager = $migrationPluginManager;
     $this->entityTypeManager = $entity_type_manager;
     $this->fileSystem = $file_system;
+    $this->moduleHandler = $module_handler;
 
     $settings = $this->configFactory->get('openy_traction_rec_import.settings');
     $this->isEnabled = (bool) $settings->get('enabled');
@@ -146,6 +156,8 @@ class Importer implements TractionRecImporterInterface {
       }
 
       $migrations = $this->getMigrations();
+      $this->moduleHandler->alter('openy_traction_rec_import_migrations_list', $migrations, $options);
+
       foreach ($migrations as $migration) {
         if ($migration->getStatus() == MigrationInterface::STATUS_IDLE) {
           // Get an instance of MigrateExecutable.
