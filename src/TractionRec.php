@@ -168,7 +168,8 @@ class TractionRec implements TractionRecInterface {
         AND TREX1__Course_Option__r.TREX1__Day_of_Week__c  != null
         AND TREX1__Course_Option__r.TREX1__Register_Online_To_Date__c > YESTERDAY
         AND TREX1__Course_Option__r.TREX1__End_Date__c >= TODAY
-        AND TREX1__Course_Option__r.TREX1__Start_Date__c != null');
+        AND TREX1__Course_Option__r.TREX1__Start_Date__c != null
+        AND TREX1__Course_Session__r.TREX1__Num_Option_Entitlements__c <= 1');
 
       return $this->simplify($result);
     }
