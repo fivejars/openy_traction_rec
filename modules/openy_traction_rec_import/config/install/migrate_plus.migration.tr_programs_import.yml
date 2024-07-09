@@ -46,4 +46,4 @@ process:
     default_value: 'published'
 destination:
   plugin: 'entity:node'
-  default_bundle: activity
+  default_bundle: program

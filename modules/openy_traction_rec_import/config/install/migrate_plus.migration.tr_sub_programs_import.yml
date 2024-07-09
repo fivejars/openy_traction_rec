@@ -29,9 +29,9 @@ source:
       label: 'Title'
       selector: /Name
     -
-      name: program
-      label: 'Program'
-      selector: /Program
+      name: program_id
+      label: 'Program ID'
+      selector: /Program/Id
     -
       name: available
       label: 'Available'
@@ -45,7 +45,7 @@ process:
   field_category_program/target_id:
     plugin: migration_lookup
     migration: tr_programs_import
-    source: program
+    source: program_id
     no_stub: true
   uid:
     plugin: default_value
@@ -55,4 +55,4 @@ process:
     default_value: 'published'
 destination:
   plugin: 'entity:node'
-  default_bundle: activity
+  default_bundle: program_subcategory

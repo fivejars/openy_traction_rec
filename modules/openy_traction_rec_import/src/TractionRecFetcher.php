@@ -210,7 +210,7 @@ class TractionRecFetcher {
       $programs[$category_tag['Program_Category']['Id']] = $category_tag['Program_Category'];
 
       $category = $category_tag['Program'];
-      $category['Program'] = $category_tag['Program_Category']['Id'];
+      $category['Program'] = $category_tag['Program_Category'];
 
       // Only set the new category if its Id is unique. In TREC it is possible
       // for a Program to exist under multiple Categories, but we do not allow
