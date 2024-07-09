@@ -41,6 +41,11 @@ class TractionRecFetcher {
   protected ConfigFactoryInterface $configFactory;
 
   /**
+   * The locations mapping helper.
+   */
+  protected LocationsMappingHelper $locationsMapping;
+
+  /**
    * JSON Directory name.
    */
   protected string $directory;
@@ -56,17 +61,21 @@ class TractionRecFetcher {
    *   The event dispatcher.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\openy_traction_rec_import\LocationsMappingHelper $locations_mapping
+   *   The locations mapping helper.
    */
   public function __construct(
     TractionRecInterface $traction_rec,
     FileSystemInterface $file_system,
     EventDispatcherInterface $event_dispatcher,
-    ConfigFactoryInterface $config_factory
+    ConfigFactoryInterface $config_factory,
+    LocationsMappingHelper $locations_mapping
   ) {
     $this->tractionRec = $traction_rec;
     $this->fileSystem = $file_system;
     $this->eventDispatcher = $event_dispatcher;
     $this->configFactory = $config_factory;
+    $this->locationsMapping = $locations_mapping;
 
     $this->fileSystem->prepareDirectory($this->storagePath, FileSystemInterface::CREATE_DIRECTORY);
     $this->directory = $this->storagePath . date('YmdHi') . '/';
@@ -98,7 +107,7 @@ class TractionRecFetcher {
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function fetchSessions(): array {
-    $result = $this->tractionRec->loadCourseOptions();
+    $result = $this->tractionRec->loadCourseOptions($this->locationsMapping->getMappedIds());
 
     if (empty($result['records'])) {
       return [];
