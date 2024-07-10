@@ -38,6 +38,11 @@ class Importer implements TractionRecImporterInterface {
   const SOURCE_DIRECTORY = 'private://traction_rec_import/json/';
 
   /**
+   * The path to a directory where JSON files must be placed for import.
+   */
+  const TARGET_DIRECTORY = 'private://traction_rec_import/';
+
+  /**
    * The path to a directory for processed JSON files.
    */
   const BACKUP_DIRECTORY = 'private://traction_rec_import/backup/';
@@ -142,7 +147,7 @@ class Importer implements TractionRecImporterInterface {
       // Usually we have several files for import:
       // sessions.json, classes.json, programs.json, program_categories.json.
       foreach ($json_files as $file) {
-        $this->fileSystem->copy($file->uri, 'private://traction_rec_import/', FileSystemInterface::EXISTS_REPLACE);
+        $this->fileSystem->copy($file->uri, static::TARGET_DIRECTORY, FileSystemInterface::EXISTS_REPLACE);
       }
 
       $migrations = $this->getMigrations();

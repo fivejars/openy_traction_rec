@@ -73,7 +73,7 @@ class Cleaner {
 
     // We want to store only latest backups of JSON files.
     if ($this->importer->isBackupEnabled()) {
-      $backup_dir = $this->fileSystem->realpath(Importer::BACKUP_DIRECTORY);
+      $backup_dir = $this->fileSystem->realpath($this->importer::BACKUP_DIRECTORY);
       $backup_limit = $this->importer->getJsonBackupLimit();
       $backup_limit++;
 

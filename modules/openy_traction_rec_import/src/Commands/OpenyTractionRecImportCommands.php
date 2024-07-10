@@ -162,7 +162,7 @@ class OpenyTractionRecImportCommands extends DrushCommands {
         $this->siteAliasManager->getSelf(),
         'migrate:rollback',
         [],
-        ['group' => Importer::MIGRATE_GROUP])
+        ['group' => $this->importer::MIGRATE_GROUP])
         ->run();
       $this->output()->writeln('Rollback done!');
     }
