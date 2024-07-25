@@ -1,0 +1,127 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - openy_traction_rec_import
+      - openy_traction_rec_membership
+id: tr_memberships_import
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - openy_import
+migration_group: tr_import
+label: 'Import Memberships'
+source:
+  plugin: url
+  data_fetcher_plugin: file
+  data_parser_plugin: json
+  item_selector: 0
+  urls: 'private://traction_rec_membership_import/memberships.json'
+  track_changes: true
+  ids:
+    id:
+      type: string
+  fields:
+    -
+      name: id
+      label: Id
+      selector: /Id
+    -
+      name: title
+      label: Title
+      selector: /Name
+    -
+      name: price_description
+      label: 'Price description'
+      selector: /Price_Description
+    -
+      name: memberships
+      label: Memberships
+      selector: /memberships
+process:
+  title: title
+  field_mbrshp_description/value: price_description
+  field_mbrshp_description/format:
+    plugin: default_value
+    default_value: full_html
+  field_mbrshp_types/target_id:
+    plugin: tr_membership_type
+  field_membership_join_fee/value:
+    -
+      plugin: tr_membership_extract_rates
+      source: price_description
+    -
+      plugin: extract
+      index:
+        - join
+  field_membership_monthly_rate/value:
+    -
+      plugin: tr_membership_extract_rates
+      source: price_description
+    -
+      plugin: extract
+      index:
+        - monthly
+  field_mbrshp_info:
+    -
+      plugin: sub_process
+      source: memberships
+      process:
+        _remote_id: Id
+        _location_id:
+          -
+            plugin: skip_on_empty
+            method: process
+            source: Location/Id
+          -
+            plugin: tr_location_by_title
+            source:
+              - Location/Name
+              - Location/Id
+        _link_uri:
+          -
+            plugin: skip_on_empty
+            method: process
+            source: Location/Id
+          -
+            plugin: tr_membership_link
+            source:
+              - Id
+              - Location/Id
+        _link_title:
+          plugin: default_value
+          default_value: Select
+        target_id:
+          -
+            plugin: skip_on_empty
+            method: process
+            source: '@_location_id'
+          -
+            plugin: entity_generate
+            source: '@_link_uri'
+            entity_type: paragraph
+            bundle: membership_info
+            value_key: field_mbrshp_link
+            bundle_key: type
+            values:
+              field_mbrshp_location: '@_location_id'
+              field_mbrshp_link/title: '@_link_title'
+              field_mbrshp_link/uri: '@_link_uri'
+        _revision_id_value:
+          plugin: entity_value
+          source: '@target_id'
+          entity_type: paragraph
+          field_name: revision_id
+        target_revision_id: '@_revision_id_value/0/value'
+  uid:
+    plugin: default_value
+    default_value: 1
+  moderation_state:
+    plugin: default_value
+    default_value: published
+destination:
+  plugin: 'entity:node'
+  default_bundle: membership
+migration_dependencies: null

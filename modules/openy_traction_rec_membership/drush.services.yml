@@ -1,0 +1,11 @@
+services:
+  openy_traction_rec_membership.commands:
+    class: \Drupal\openy_traction_rec_membership\Commands\MembershipImportCommands
+    arguments:
+      - '@openy_traction_rec_membership.importer'
+      - '@openy_traction_rec_membership.cleaner'
+      - '@file_system'
+      - '@entity_type.manager'
+      - '@openy_traction_rec_membership.fetcher'
+    tags:
+      - { name: drush.command }
