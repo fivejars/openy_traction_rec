@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Install and update hooks.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function openy_traction_rec_membership_install(): void {
+  $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $properties = [
+    'vid' => 'membership_type',
+    'name' => 'Traction Rec Membership Packages',
+    'status' => TRUE,
+  ];
+  $result = $storage->loadByProperties($properties);
+  if (!empty($result)) {
+    $default_membership_type = reset($result);
+  }
+  else {
+    $default_membership_type = $storage->create($properties);
+    $default_membership_type->save();
+  }
+
+  $config = \Drupal::configFactory()->getEditable('openy_traction_rec_import.settings');
+  $config->set('memberships.default_type', $default_membership_type->id());
+  $config->save();
+}

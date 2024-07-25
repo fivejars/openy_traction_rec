@@ -270,6 +270,8 @@ class Importer implements TractionRecImporterInterface {
       ->getStorage('migration')
       ->getQuery('AND')
       ->condition('migration_group', static::MIGRATE_GROUP)
+      ->addTag('openy_tr_import_migrations')
+      ->accessCheck(FALSE)
       ->execute();
 
     return $this->migrationPluginManager->createInstances($migrations);
