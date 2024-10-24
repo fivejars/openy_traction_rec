@@ -41,7 +41,7 @@ class MembershipFetcher extends TractionRecFetcher {
     }
 
     $this->stripExcludedMemberships($result);
-    $this->dumpToJson($this->groupByProduct($result['records']), $this->buildFilename('memberships'));
+    $this->dumpToJson($this->groupByCategory($result['records']), $this->buildFilename('memberships'));
   }
 
   /**
@@ -70,22 +70,23 @@ class MembershipFetcher extends TractionRecFetcher {
   }
 
   /**
-   * Group memberships by product.
+   * Group memberships by category.
    */
-  private function groupByProduct(array $records): array {
+  private function groupByCategory(array $records): array {
     $result = [];
     foreach ($records as $record) {
-      $product_id = $record['Product']['Id'] ?? NULL;
-      if (empty($product_id)) {
+      $category_id = $record['Category']['Id'] ?? NULL;
+
+      if (empty($category_id)) {
         continue;
       }
 
-      if (empty($result[$product_id])) {
-        $result[$product_id] = $record['Product'] + ['memberships' => []];
+      if (empty($result[$category_id])) {
+        $result[$category_id] = $record['Category'] + ['memberships' => []];
       }
 
-      unset($record['Product']);
-      $result[$product_id]['memberships'][] = $record;
+      unset($record['Category']);
+      $result[$category_id]['memberships'][] = $record;
     }
     return array_values($result);
   }
