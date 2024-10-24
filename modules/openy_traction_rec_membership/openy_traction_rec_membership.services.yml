@@ -1,0 +1,28 @@
+services:
+  openy_traction_rec_membership.importer:
+    class: 'Drupal\openy_traction_rec_membership\MembershipImporter'
+    arguments:
+      - '@lock'
+      - '@logger.channel.tr_import'
+      - '@config.factory'
+      - '@plugin.manager.migration'
+      - '@entity_type.manager'
+      - '@file_system'
+
+  openy_traction_rec_membership.fetcher:
+    class: Drupal\openy_traction_rec_membership\MembershipFetcher
+    arguments:
+      - '@openy_traction_rec.traction_rec'
+      - '@file_system'
+      - '@event_dispatcher'
+      - '@config.factory'
+      - '@openy_traction_rec_import.locations_mapping'
+
+  openy_traction_rec_membership.cleaner:
+    class: 'Drupal\openy_traction_rec_membership\MembershipCleaner'
+    arguments:
+      - '@database'
+      - '@entity_type.manager'
+      - '@logger.factory'
+      - '@openy_traction_rec_membership.importer'
+      - '@file_system'
