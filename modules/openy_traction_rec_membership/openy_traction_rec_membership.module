@@ -33,12 +33,6 @@ function openy_traction_rec_membership_help(string $route_name, RouteMatchInterf
 function openy_traction_rec_membership_form_openy_traction_rec_import_settings_form_alter(array &$form, FormStateInterface $form_state): void {
   $config = \Drupal::configFactory()->get('openy_traction_rec_import.settings');
 
-  $default_type = $config->get('memberships.default_type');
-  if ($default_type) {
-    $default_type = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
-      ->load($default_type);
-  }
-
   $form['memberships'] = [
     '#type' => 'fieldset',
     '#title' => t('Memberships'),
@@ -48,17 +42,6 @@ function openy_traction_rec_membership_form_openy_traction_rec_import_settings_f
       '#title' => t('Exclude from the import'),
       '#description' => t('Comma separated list of membership TractionRec IDs to exclude from the import'),
       '#default_value' => implode(',', (array) $config->get('memberships.exclude')),
-    ],
-    'default_type' => [
-      '#type' => 'entity_autocomplete',
-      '#target_type' => 'taxonomy_term',
-      '#selection_settings' => [
-        'target_bundles' => ['membership_type'],
-      ],
-      '#title' => t('Default type'),
-      '#description' => t('The membership type term for imported Membership nodes.'),
-      '#required' => TRUE,
-      '#default_value' => $default_type,
     ],
   ];
 
@@ -84,11 +67,4 @@ function _openy_traction_rec_membership_import_settings_form_submit(array $form,
  */
 function openy_traction_rec_membership_entity_query_tag__openy_tr_import_migrations_alter(QueryInterface $query): void {
   $query->condition('id', 'tr_memberships_import', '<>');
-}
-
-/**
- * Implements hook_config_ignore_settings_alter().
- */
-function openy_traction_rec_membership_config_ignore_settings_alter(array &$settings): void {
-  $settings[] = 'openy_traction_rec_import.settings:memberships.default_type';
 }

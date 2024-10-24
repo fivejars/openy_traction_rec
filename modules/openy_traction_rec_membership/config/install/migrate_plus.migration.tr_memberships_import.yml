@@ -33,37 +33,19 @@ source:
       label: Title
       selector: /Name
     -
-      name: price_description
-      label: 'Price description'
-      selector: /Price_Description
+      name: category_description
+      label: 'Category description'
+      selector: /Category_Description
     -
       name: memberships
       label: Memberships
       selector: /memberships
 process:
   title: title
-  field_mbrshp_description/value: price_description
+  field_mbrshp_description/value: category_description
   field_mbrshp_description/format:
     plugin: default_value
     default_value: full_html
-  field_mbrshp_types/target_id:
-    plugin: tr_membership_type
-  field_membership_join_fee/value:
-    -
-      plugin: tr_membership_extract_rates
-      source: price_description
-    -
-      plugin: extract
-      index:
-        - join
-  field_membership_monthly_rate/value:
-    -
-      plugin: tr_membership_extract_rates
-      source: price_description
-    -
-      plugin: extract
-      index:
-        - monthly
   field_mbrshp_info:
     -
       plugin: sub_process
@@ -90,9 +72,7 @@ process:
             source:
               - Id
               - Location/Id
-        _link_title:
-          plugin: default_value
-          default_value: Select
+        _link_title: Name
         target_id:
           -
             plugin: skip_on_empty
