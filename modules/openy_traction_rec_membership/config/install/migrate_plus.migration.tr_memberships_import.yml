@@ -33,6 +33,10 @@ source:
       label: Title
       selector: /Name
     -
+      name: base_url
+      label: 'Category URL'
+      selector: /Membership_Category_URL
+    -
       name: category_description
       label: 'Category description'
       selector: /Category_Description
@@ -50,8 +54,14 @@ process:
     -
       plugin: sub_process
       source: memberships
+      include_source: true,
+      source_key: category_source
       process:
         _remote_id: Id
+        _remote_url:
+          plugin: callback
+          callable: strip_tags
+          source: category_source/base_url
         _location_id:
           -
             plugin: skip_on_empty
@@ -68,10 +78,10 @@ process:
             method: process
             source: Location/Id
           -
-            plugin: tr_membership_link
+            plugin: concat
             source:
-              - Id
-              - Location/Id
+              - '@_remote_url'
+              - Location/Location_URL_Parameter
         _link_title: Name
         target_id:
           -
