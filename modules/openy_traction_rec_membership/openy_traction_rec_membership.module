@@ -1,0 +1,70 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Contains openy_traction_rec_membership.module.
+ */
+
+use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function openy_traction_rec_membership_help(string $route_name, RouteMatchInterface $route_match): string {
+  switch ($route_name) {
+    // Main module help for the openy_traction_rec_membership module.
+    case 'help.page.openy_traction_rec_membership':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides TractionRec integration for the Membership') . '</p>';
+      return $output;
+
+    default:
+      return '';
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function openy_traction_rec_membership_form_openy_traction_rec_import_settings_form_alter(array &$form, FormStateInterface $form_state): void {
+  $config = \Drupal::configFactory()->get('openy_traction_rec_import.settings');
+
+  $form['memberships'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Memberships'),
+    '#tree' => TRUE,
+    'exclude' => [
+      '#type' => 'textarea',
+      '#title' => t('Exclude from the import'),
+      '#description' => t('Comma separated list of membership TractionRec IDs to exclude from the import'),
+      '#default_value' => implode(',', (array) $config->get('memberships.exclude')),
+    ],
+  ];
+
+  $form['#submit'][] = '_openy_traction_rec_membership_import_settings_form_submit';
+}
+
+/**
+ * Form submission handler for import settings form.
+ */
+function _openy_traction_rec_membership_import_settings_form_submit(array $form, FormStateInterface $form_state): void {
+  $config = \Drupal::configFactory()->getEditable('openy_traction_rec_import.settings');
+  $value = $form_state->getValue('memberships');
+  $value['exclude'] = explode(',', $value['exclude']);
+  $value['exclude'] = array_map('trim', $value['exclude']);
+  $value['exclude'] = array_filter($value['exclude']);
+
+  $config->set('memberships', $value);
+  $config->save();
+}
+
+/**
+ * Implements hook_entity_query_tag__TAG_alter().
+ */
+function openy_traction_rec_membership_entity_query_tag__openy_tr_import_migrations_alter(QueryInterface $query): void {
+  $query->condition('id', 'tr_memberships_import', '<>');
+}
