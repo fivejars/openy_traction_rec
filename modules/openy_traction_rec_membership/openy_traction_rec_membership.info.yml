@@ -1,7 +1,7 @@
 name: 'YMCA Website Services Traction Rec: Membership Import'
 type: module
 description: 'Provides TractionRec integration for the Membership import.'
-core_version_requirement: ^8.8 || ^9
+core_version_requirement: ^8.8 || ^9 || ^10
 package: 'YMCA Website Services'
 configure: openy_traction_rec_import.settings
 dependencies:

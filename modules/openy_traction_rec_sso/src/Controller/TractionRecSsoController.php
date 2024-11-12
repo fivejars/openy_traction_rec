@@ -89,14 +89,7 @@ class TractionRecSsoController extends ControllerBase {
 
         $cookie_domain = '.' . $request->getHost();
         $response->headers->setCookie(
-          new Cookie(
-            name: 'tr_sso_logged_in',
-            value: '1',
-            expire: strtotime('+30 day'),
-            path: '/',
-            domain: $cookie_domain,
-            httpOnly: FALSE
-          )
+          Cookie::create(name: 'tr_sso_logged_in', value: '1', expire: strtotime('+30 day'), path: '/', domain: $cookie_domain, httpOnly: FALSE)
         );
         $redirect_url = $config->get('app_url');
         $response->setTrustedTargetUrl($redirect_url);
@@ -155,14 +148,7 @@ class TractionRecSsoController extends ControllerBase {
     $response = new TrustedRedirectResponse($app_url . self::SF_LOGOUT_PATH);
     $cookie_domain = '.' . $request->getHost();
     $response->headers->setCookie(
-      new Cookie(
-        name: 'tr_sso_logged_in',
-        value: '',
-        expire: strtotime('+30 day'),
-        path: '/',
-        domain: $cookie_domain,
-        httpOnly: FALSE
-      )
+      Cookie::create(name: 'tr_sso_logged_in', value: '', expire: strtotime('+30 day'), path: '/', domain: $cookie_domain, httpOnly: FALSE)
     );
     return $response;
   }
