@@ -14,6 +14,6 @@
         "drupal/migrate_plus": "^5.2 || ^6",
         "drupal/migrate_tools": "^5.1 || ^6",
         "drupal/key": "^1.15",
-        "firebase/php-jwt": "^5.2"
+        "firebase/php-jwt": ">=5.2.0"
     }
 }
