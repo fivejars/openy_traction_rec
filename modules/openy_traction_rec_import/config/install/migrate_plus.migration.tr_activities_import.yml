@@ -46,8 +46,12 @@ process:
     plugin: default_value
     default_value: 1
   moderation_state:
-    plugin: default_value
-    default_value: 'published'
+    plugin: static_map
+    source: available
+    bypass: false
+    map:
+      0: 'archived'
+      1: 'published'
   field_activity_category/target_id:
     plugin: migration_lookup
     migration: tr_sub_programs_import
@@ -56,3 +60,6 @@ process:
 destination:
   plugin: 'entity:node'
   default_bundle: activity
+migration_dependencies:
+  required:
+    - tr_sub_programs_import
