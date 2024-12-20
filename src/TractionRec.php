@@ -268,7 +268,7 @@ class TractionRec implements TractionRecInterface {
    * @return array
    *   Results with cleaned keys.
    */
-  private function simplify(array $array): array {
+  protected function simplify(array $array): array {
     $new_array = [];
     foreach ($array as $key => $value) {
       $new_key = str_replace(['TREX1__', '__c', '__r'], '', (string) $key);
