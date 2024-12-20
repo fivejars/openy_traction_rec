@@ -62,6 +62,11 @@ class SessionTime extends ProcessPluginBase implements ContainerFactoryPluginInt
     mixed $plugin_definition,
     ConfigFactoryInterface $config_factory
   ) {
+    // Provide default source date format.
+    if (empty($configuration['source_date_format'])) {
+      $configuration['source_date_format'] = 'Y-m-d h:i a';
+    }
+
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->configFactory = $config_factory;
   }
@@ -132,7 +137,7 @@ class SessionTime extends ProcessPluginBase implements ContainerFactoryPluginInt
     );
 
     return DateTimePlus::createFromFormat(
-      'Y-m-d h:i a',
+      $this->configuration['source_date_format'],
       $datetime,
       $site_timezone,
       ['validate_format' => FALSE]
