@@ -18,8 +18,9 @@ services:
       - '@config.factory'
       - '@openy_traction_rec_import.locations_mapping'
 
+  # Reuse service with other argument for importer service.
   openy_traction_rec_membership.cleaner:
-    class: 'Drupal\openy_traction_rec_membership\MembershipCleaner'
+    class: 'Drupal\openy_traction_rec_import\Cleaner'
     arguments:
       - '@database'
       - '@entity_type.manager'

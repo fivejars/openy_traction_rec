@@ -34,7 +34,7 @@ class Cleaner {
   /**
    * The importer service.
    */
-  protected Importer $importer;
+  protected TractionRecImporterInterface $importer;
 
   /**
    * The file system service.
