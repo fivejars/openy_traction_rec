@@ -26,6 +26,14 @@ interface TractionRecInterface {
   public function loadCourses(): array;
 
   /**
+   * Load the list of all TractionRec course sessions.
+   *
+   * @return array
+   *   The list of course sessions.
+   */
+  public function loadCourseSessions(): array;
+
+  /**
    * Load TractionRec Program Categories Tags.
    *
    * @return array

@@ -17,6 +17,7 @@ services:
       - '@event_dispatcher'
       - '@config.factory'
       - '@openy_traction_rec_import.locations_mapping'
+      - '@logger.channel.tr_import'
 
   # Reuse service with other argument for importer service.
   openy_traction_rec_membership.cleaner:

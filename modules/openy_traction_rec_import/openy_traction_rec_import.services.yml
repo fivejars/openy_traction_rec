@@ -26,6 +26,7 @@ services:
       - '@event_dispatcher'
       - '@config.factory'
       - '@openy_traction_rec_import.locations_mapping'
+      - '@logger.channel.tr_import'
 
   openy_traction_rec_import.locations_mapping:
     class: Drupal\openy_traction_rec_import\LocationsMappingHelper

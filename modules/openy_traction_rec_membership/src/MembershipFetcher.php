@@ -18,17 +18,11 @@ class MembershipFetcher extends TractionRecFetcher {
   protected string $storagePath = 'private://traction_rec_membership_import/json/';
 
   /**
-   * Fetch results (sessions and classes) from Traction Rec and save into file.
+   * Override the queue of methods that should be run during fetch.
    */
-  public function fetch(): string {
-    $this->fetchMemberships();
-
-    // Instantiate our event.
-    $event = new TractionRecPostFetchEvent($this->directory);
-    // Get the event_dispatcher service and dispatch the event.
-    $this->eventDispatcher->dispatch($event, TractionRecPostFetchEvent::EVENT_NAME);
-    return $this->directory;
-  }
+  protected array $queue = [
+    'fetchMemberships',
+  ];
 
   /**
    * Fetches memberships.

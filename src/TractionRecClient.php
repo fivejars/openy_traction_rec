@@ -151,7 +151,7 @@ class TractionRecClient implements TractionRecClientInterface {
   public function executeQuery(string $query): array {
     $access_token = $this->getAccessToken();
     if (!$access_token) {
-      throw new InvalidTokenException();
+      throw new InvalidTokenException('Invalid access token');
     }
 
     $query_url = $this->tractionRecSettings->get('services_base_url') . 'query/';
@@ -167,8 +167,18 @@ class TractionRecClient implements TractionRecClientInterface {
 
     }
     catch (RequestException $e) {
+      $message = $e->getMessage();
+      $this->logger->error($message);
+
+      // Try to get shorter error message from response.
       $response = $e->getResponse();
-      $this->logger->error($e->getMessage());
+      $contents = $response->getBody()->getContents();
+
+      if (!empty($contents)) {
+        $contents = json_decode($contents, TRUE);
+        $message = $contents[0]['message'] ?? $message;
+      }
+      throw new InvalidResponseException($message);
     }
 
     $query_request_body = $response->getBody()->getContents();
@@ -182,7 +192,7 @@ class TractionRecClient implements TractionRecClientInterface {
   public function send(string $method, string $url, array $options = []): mixed {
     $access_token = $this->getAccessToken();
     if (!$access_token) {
-      throw new InvalidTokenException();
+      throw new InvalidTokenException('Invalid access token');
     }
 
     try {
