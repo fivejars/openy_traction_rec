@@ -88,7 +88,32 @@ class TractionRec implements TractionRecInterface {
       return $this->simplify($result);
     }
     catch (\Exception | GuzzleException $e) {
-      $message = 'Can\'t load the list of classes: ' . $e->getMessage();
+      $message = 'Can\'t load the list of courses: ' . $e->getMessage();
+      $this->logger->error($message);
+      return [];
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadCourseSessions(): array {
+    try {
+      $result = $this->tractionRecClient->executeQuery('SELECT
+        TREX1__Course_Session__c.id,
+        TREX1__Course_Session__c.name,
+        TREX1__Course_Session__c.TREX1__Description__c,
+        TREX1__Course_Session__c.TREX1__Rich_Description__c,
+        TREX1__Course_Session__c.TREX1__Available__c,
+        TREX1__Course_Session__c.TREX1__Course__r.id,
+        TREX1__Course_Session__c.TREX1__Course__r.name
+      FROM TREX1__Course_Session__c
+      WHERE TREX1__Available_Online__c = true');
+
+      return $this->simplify($result);
+    }
+    catch (\Exception | GuzzleException $e) {
+      $message = 'Can\'t load the list of course sessions: ' . $e->getMessage();
       $this->logger->error($message);
       return [];
     }
@@ -237,7 +262,7 @@ class TractionRec implements TractionRecInterface {
       return $this->simplify($result);
     }
     catch (\Exception | GuzzleException $e) {
-      $message = 'Can\'t load the list of program category tags: ' . $e->getMessage();
+      $message = 'Can\'t load the list of memberships: ' . $e->getMessage();
       $this->logger->error($message);
       return [];
     }
