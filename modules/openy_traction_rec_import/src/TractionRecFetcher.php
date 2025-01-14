@@ -6,6 +6,7 @@ namespace Drupal\openy_traction_rec_import;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\openy_traction_rec\Event\TractionRecPostFetchEvent;
 use Drupal\openy_traction_rec\TractionRecInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -51,6 +52,11 @@ class TractionRecFetcher {
   protected string $directory;
 
   /**
+   * Logger channel.
+   */
+  protected LoggerChannelInterface $logger;
+
+  /**
    * Constructors TractionRecFetcher.
    *
    * @param \Drupal\openy_traction_rec\TractionRecInterface $traction_rec
@@ -63,13 +69,16 @@ class TractionRecFetcher {
    *   The config factory.
    * @param \Drupal\openy_traction_rec_import\LocationsMappingHelper $locations_mapping
    *   The locations mapping helper.
+   * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
+   *   The Logger channel.
    */
   public function __construct(
     TractionRecInterface $traction_rec,
     FileSystemInterface $file_system,
     EventDispatcherInterface $event_dispatcher,
     ConfigFactoryInterface $config_factory,
-    LocationsMappingHelper $locations_mapping
+    LocationsMappingHelper $locations_mapping,
+    LoggerChannelInterface $logger
   ) {
     $this->tractionRec = $traction_rec;
     $this->fileSystem = $file_system;
@@ -79,22 +88,52 @@ class TractionRecFetcher {
 
     $this->fileSystem->prepareDirectory($this->storagePath, FileSystemInterface::CREATE_DIRECTORY);
     $this->directory = $this->storagePath . date('YmdHi') . '/';
+    $this->logger = $logger;
   }
 
   /**
    * Fetch results (sessions and classes) from Traction Rec and save into file.
    */
   public function fetch(): string {
-    $this->fetchProgramAndCategories();
-    $this->fetchClasses();
-    $this->fetchSessions();
-    $this->fetchLocations();
+    $results = [];
 
-    // Instantiate our event.
-    $event = new TractionRecPostFetchEvent($this->directory);
-    // Get the event_dispatcher service and dispatch the event.
+    foreach ($this->getQueue() as $method) {
+      try {
+        if (!method_exists($this, $method)) {
+          $message = "Something went wrong with fetching queue: Method '{$method}' does not exist.";
+          $this->logger->error($message);
+          throw new \BadMethodCallException($message);
+        }
+
+        $results[$method] = $this->{$method}();
+
+        // Skip records data to reduce memory usage.
+        unset($results[$method]['records']);
+      }
+      catch (\Exception $e) {
+        $results[$method] = [
+          'error' => $e->getMessage(),
+        ];
+      }
+    }
+
+    // Instantiate post fetch event.
+    $event = new TractionRecPostFetchEvent($this->directory, $results);
     $this->eventDispatcher->dispatch($event, TractionRecPostFetchEvent::EVENT_NAME);
+
     return $this->directory;
+  }
+
+  /**
+   * The queue of methods that should be run during fetch.
+   */
+  protected function getQueue(): array {
+    return [
+      'fetchProgramAndCategories',
+      'fetchClasses',
+      'fetchSessions',
+      'fetchLocations',
+    ];
   }
 
   /**
@@ -103,8 +142,8 @@ class TractionRecFetcher {
    * @return array
    *   The array of fetched data.
    *
+   * @throws \Drupal\openy_traction_rec\InvalidResponseException
    * @throws \Drupal\openy_traction_rec\InvalidTokenException
-   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function fetchSessions(): array {
     $result = $this->tractionRec->loadCourseOptions($this->locationsMapping->getMappedIds());
@@ -116,9 +155,8 @@ class TractionRecFetcher {
     $dumper = new JsonStreamDumper($this->buildFilename('sessions'));
     $dumper->pushMultiple($result['records']);
 
-    if (isset($result['nextRecordsUrl']) && !empty($result['nextRecordsUrl'])) {
-      $url = $result['nextRecordsUrl'];
-      $this->paginationFetch($url, $dumper);
+    if (!empty($result['nextRecordsUrl'])) {
+      $this->paginationFetch($result['nextRecordsUrl'], $dumper);
     }
 
     $dumper->close();
@@ -136,8 +174,8 @@ class TractionRecFetcher {
    * @return array
    *   The array with fetched data.
    *
+   * @throws \Drupal\openy_traction_rec\InvalidResponseException
    * @throws \Drupal\openy_traction_rec\InvalidTokenException
-   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   protected function paginationFetch(string $nextUrl, JsonStreamDumper $dumper): array {
     $result = $this->tractionRec->loadNextPage($nextUrl);
@@ -148,9 +186,8 @@ class TractionRecFetcher {
 
     $dumper->pushMultiple($result['records']);
 
-    if (isset($result['nextRecordsUrl']) && !empty($result['nextRecordsUrl'])) {
-      $url = $result['nextRecordsUrl'];
-      $this->paginationFetch($url, $dumper);
+    if (!empty($result['nextRecordsUrl'])) {
+      $result['records'] = array_merge($result['records'], $this->paginationFetch($result['nextRecordsUrl'], $dumper));
     }
 
     return $result['records'];
@@ -161,6 +198,9 @@ class TractionRecFetcher {
    *
    * @return array
    *   The array of fetched locations.
+   *
+   * @throws \Drupal\openy_traction_rec\InvalidResponseException
+   * @throws \Drupal\openy_traction_rec\InvalidTokenException
    */
   public function fetchLocations(): array {
     $result = $this->tractionRec->loadLocations();
@@ -180,25 +220,45 @@ class TractionRecFetcher {
 
   /**
    * Fetches classes.
+   *
+   * @return array
+   *   The array of fetched data.
+   *
+   * @throws \Drupal\openy_traction_rec\InvalidResponseException
+   * @throws \Drupal\openy_traction_rec\InvalidTokenException
    */
-  public function fetchClasses(): void {
+  public function fetchClasses(): array {
     $result = $this->tractionRec->loadCourses();
 
     if (empty($result['records'])) {
-      return;
+      return [];
     }
 
-    $this->dumpToJson($result['records'], $this->buildFilename('classes'));
+    $dumper = new JsonStreamDumper($this->buildFilename('classes'));
+    $dumper->pushMultiple($result['records']);
+
+    if (!empty($result['nextRecordsUrl'])) {
+      $this->paginationFetch($result['nextRecordsUrl'], $dumper);
+    }
+
+    $dumper->close();
+    return $result;
   }
 
   /**
    * Fetches the program data.
+   *
+   * @return array
+   *   The array of fetched data.
+   *
+   * @throws \Drupal\openy_traction_rec\InvalidResponseException
+   * @throws \Drupal\openy_traction_rec\InvalidTokenException
    */
-  public function fetchProgramAndCategories(): void {
+  public function fetchProgramAndCategories(): array {
     $result = $this->tractionRec->loadProgramCategoryTags();
 
     if (empty($result['records'])) {
-      return;
+      return [];
     }
 
     $programs = [];
@@ -225,6 +285,7 @@ class TractionRecFetcher {
 
     $this->dumpToJson(array_values($programs), $this->buildFilename('programs'));
     $this->dumpToJson($categories, $this->buildFilename('program_categories'));
+    return $result;
   }
 
   /**
