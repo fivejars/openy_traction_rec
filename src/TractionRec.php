@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\openy_traction_rec;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelInterface;
-use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * TractionRec API wrapper.
@@ -63,10 +63,8 @@ class TractionRec implements TractionRecInterface {
 
       return $this->simplify($result);
     }
-    catch (\Exception | GuzzleException $e) {
-      $message = 'Can\'t load the list of locations: ' . $e->getMessage();
-      $this->logger->error($message);
-      return [];
+    catch (InvalidResponseException | InvalidTokenException $e) {
+      return $this->processException("Can't load the list of locations", $e);
     }
   }
 
@@ -87,10 +85,31 @@ class TractionRec implements TractionRecInterface {
 
       return $this->simplify($result);
     }
-    catch (\Exception | GuzzleException $e) {
-      $message = 'Can\'t load the list of classes: ' . $e->getMessage();
-      $this->logger->error($message);
-      return [];
+    catch (InvalidResponseException | InvalidTokenException $e) {
+      return $this->processException("Can't load the list of courses", $e);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadCourseSessions(): array {
+    try {
+      $result = $this->tractionRecClient->executeQuery('SELECT
+        TREX1__Course_Session__c.id,
+        TREX1__Course_Session__c.name,
+        TREX1__Course_Session__c.TREX1__Description__c,
+        TREX1__Course_Session__c.TREX1__Rich_Description__c,
+        TREX1__Course_Session__c.TREX1__Available__c,
+        TREX1__Course_Session__c.TREX1__Course__r.id,
+        TREX1__Course_Session__c.TREX1__Course__r.name
+      FROM TREX1__Course_Session__c
+      WHERE TREX1__Available_Online__c = true');
+
+      return $this->simplify($result);
+    }
+    catch (InvalidResponseException | InvalidTokenException $e) {
+      return $this->processException("Can't load the list of course sessions", $e);
     }
   }
 
@@ -115,10 +134,8 @@ class TractionRec implements TractionRecInterface {
       );
       return $this->simplify($result);
     }
-    catch (\Exception | GuzzleException $e) {
-      $message = 'Can\'t load the list of program category tags: ' . $e->getMessage();
-      $this->logger->error($message);
-      return [];
+    catch (InvalidResponseException | InvalidTokenException $e) {
+      return $this->processException("Can't load the list of program category tags", $e);
     }
   }
 
@@ -182,10 +199,8 @@ class TractionRec implements TractionRecInterface {
       $result = $this->tractionRecClient->executeQuery($query);
       return $this->simplify($result);
     }
-    catch (\Exception | GuzzleException $e) {
-      $message = 'Can\'t load the list of course options: ' . $e->getMessage();
-      $this->logger->error($message);
-      return [];
+    catch (InvalidResponseException | InvalidTokenException $e) {
+      return $this->processException("Can't load the list of course options", $e);
     }
   }
 
@@ -236,10 +251,8 @@ class TractionRec implements TractionRecInterface {
       $result = $this->tractionRecClient->executeQuery($query);
       return $this->simplify($result);
     }
-    catch (\Exception | GuzzleException $e) {
-      $message = 'Can\'t load the list of program category tags: ' . $e->getMessage();
-      $this->logger->error($message);
-      return [];
+    catch (InvalidResponseException | InvalidTokenException $e) {
+      return $this->processException("Can't load the list of memberships", $e);
     }
   }
 
@@ -252,10 +265,8 @@ class TractionRec implements TractionRecInterface {
       $result = $this->tractionRecClient->send('GET', $url . $nextUrl);
       return $this->simplify($result);
     }
-    catch (\Exception | GuzzleException | InvalidTokenException $e) {
-      $message = 'Can\'t load results for the next page: ' . $e->getMessage();
-      $this->logger->error($message);
-      return [];
+    catch (InvalidResponseException | InvalidTokenException $e) {
+      return $this->processException("Can't load results for the next page", $e);
     }
   }
 
@@ -283,6 +294,23 @@ class TractionRec implements TractionRecInterface {
       }
     }
     return $new_array;
+  }
+
+  /**
+   * Proceed request exception message.
+   *
+   * @param string $message
+   *   The message provided by referred function.
+   * @param \Drupal\openy_traction_rec\InvalidResponseException|\Drupal\openy_traction_rec\InvalidTokenException $exception
+   *   The exception object provided by service client response.
+   *
+   * @throws \Drupal\openy_traction_rec\InvalidResponseException
+   * @throws \Drupal\openy_traction_rec\InvalidTokenException
+   */
+  protected function processException(string $message, InvalidResponseException | InvalidTokenException $exception): void {
+    $message = (string) new FormattableMarkup($message . ': %message', ['%message' => $exception->getMessage()]);
+    $this->logger->error($message);
+    throw new ($exception::class)($message);
   }
 
 }

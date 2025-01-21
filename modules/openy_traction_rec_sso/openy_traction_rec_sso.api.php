@@ -5,7 +5,7 @@
  * Contains hook examples for the TR SSO module.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use Drupal\user\UserInterface;
 
