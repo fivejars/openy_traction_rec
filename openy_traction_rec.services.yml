@@ -9,6 +9,7 @@ services:
       - '@openy_traction_rec.tr_client'
       - '@logger.channel.traction_rec'
       - '@config.factory'
+      - '@module_handler'
   openy_traction_rec.tr_client:
     class: Drupal\openy_traction_rec\TractionRecClient
     arguments:
