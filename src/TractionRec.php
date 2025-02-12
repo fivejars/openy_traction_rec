@@ -7,6 +7,7 @@ namespace Drupal\openy_traction_rec;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelInterface;
 
@@ -31,6 +32,11 @@ class TractionRec implements TractionRecInterface {
   protected LoggerChannel $logger;
 
   /**
+   * Module handler.
+   */
+  protected ModuleHandlerInterface $moduleHandler;
+
+  /**
    * TractionRec constructor.
    *
    * @param \Drupal\openy_traction_rec\TractionRecClient $traction_rec_client
@@ -39,11 +45,14 @@ class TractionRec implements TractionRecInterface {
    *   Logger channel.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  public function __construct(TractionRecClient $traction_rec_client, LoggerChannelInterface $loggerChannel, ConfigFactoryInterface $config_factory) {
+  public function __construct(TractionRecClient $traction_rec_client, LoggerChannelInterface $loggerChannel, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler) {
     $this->tractionRecClient = $traction_rec_client;
     $this->logger = $loggerChannel;
     $this->tractionRecSettings = $config_factory->get('openy_traction_rec.settings');
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -51,7 +60,7 @@ class TractionRec implements TractionRecInterface {
    */
   public function loadLocations(): array {
     try {
-      $result = $this->tractionRecClient->executeQuery('SELECT
+      $query = 'SELECT
         TREX1__Location__c.id,
         TREX1__Location__c.name,
         TREX1__Location__c.TREX1__Address_City__c,
@@ -59,8 +68,12 @@ class TractionRec implements TractionRecInterface {
         TREX1__Location__c.TREX1__Address_State__c,
         TREX1__Location__c.TREX1__Address_Street__c,
         TREX1__Location__c.TREX1__Address_Postal_Code__c
-        FROM TREX1__Location__c');
+        FROM TREX1__Location__c';
 
+      $context = __METHOD__;
+      $this->moduleHandler->alter('openy_traction_rec_api_query', $query, $context);
+
+      $result = $this->tractionRecClient->executeQuery($query);
       return $this->simplify($result);
     }
     catch (InvalidResponseException | InvalidTokenException $e) {
@@ -73,7 +86,7 @@ class TractionRec implements TractionRecInterface {
    */
   public function loadCourses(): array {
     try {
-      $result = $this->tractionRecClient->executeQuery('SELECT
+      $query = 'SELECT
         TREX1__Course__c.id,
         TREX1__Course__c.name,
         TREX1__Course__c.TREX1__Description__c,
@@ -81,8 +94,12 @@ class TractionRec implements TractionRecInterface {
         TREX1__Course__c.TREX1__Program__r.id,
         TREX1__Course__c.TREX1__Program__r.name,
         TREX1__Course__c.TREX1__Available__c
-      FROM TREX1__Course__c WHERE TREX1__Available_Online__c = true');
+      FROM TREX1__Course__c WHERE TREX1__Available_Online__c = true';
 
+      $context = __METHOD__;
+      $this->moduleHandler->alter('openy_traction_rec_api_query', $query, $context);
+
+      $result = $this->tractionRecClient->executeQuery($query);
       return $this->simplify($result);
     }
     catch (InvalidResponseException | InvalidTokenException $e) {
@@ -95,7 +112,7 @@ class TractionRec implements TractionRecInterface {
    */
   public function loadCourseSessions(): array {
     try {
-      $result = $this->tractionRecClient->executeQuery('SELECT
+      $query = 'SELECT
         TREX1__Course_Session__c.id,
         TREX1__Course_Session__c.name,
         TREX1__Course_Session__c.TREX1__Description__c,
@@ -104,8 +121,12 @@ class TractionRec implements TractionRecInterface {
         TREX1__Course_Session__c.TREX1__Course__r.id,
         TREX1__Course_Session__c.TREX1__Course__r.name
       FROM TREX1__Course_Session__c
-      WHERE TREX1__Available_Online__c = true');
+      WHERE TREX1__Available_Online__c = true';
 
+      $context = __METHOD__;
+      $this->moduleHandler->alter('openy_traction_rec_api_query', $query, $context);
+
+      $result = $this->tractionRecClient->executeQuery($query);
       return $this->simplify($result);
     }
     catch (InvalidResponseException | InvalidTokenException $e) {
@@ -118,8 +139,7 @@ class TractionRec implements TractionRecInterface {
    */
   public function loadProgramCategoryTags(): array {
     try {
-      $result = $this->tractionRecClient->executeQuery(
-        'SELECT
+      $query = 'SELECT
         TREX1__Program_Category_Tag__c.id,
         TREX1__Program_Category_Tag__c.name,
         TREX1__Program_Category_Tag__c.TREX1__Program__r.id,
@@ -130,8 +150,12 @@ class TractionRec implements TractionRecInterface {
         TREX1__Program_Category_Tag__c.TREX1__Program_Category__r.TREX1__Available__c
         FROM TREX1__Program_Category_Tag__c
         WHERE TREX1__Program__r.TREX1__Available_Online__c = true
-          AND TREX1__Program_Category__r.TREX1__Available_Online__c = true'
-      );
+          AND TREX1__Program_Category__r.TREX1__Available_Online__c = true';
+
+      $context = __METHOD__;
+      $this->moduleHandler->alter('openy_traction_rec_api_query', $query, $context);
+
+      $result = $this->tractionRecClient->executeQuery($query);
       return $this->simplify($result);
     }
     catch (InvalidResponseException | InvalidTokenException $e) {
@@ -196,6 +220,9 @@ class TractionRec implements TractionRecInterface {
         $query .= ' AND TREX1__Course_Option__r.TREX1__Location__c IN (' . implode(',', $locations) . ')';
       }
 
+      $context = __METHOD__;
+      $this->moduleHandler->alter('openy_traction_rec_api_query', $query, $context);
+
       $result = $this->tractionRecClient->executeQuery($query);
       return $this->simplify($result);
     }
@@ -248,6 +275,10 @@ class TractionRec implements TractionRecInterface {
       if ($location) {
         $query .= " AND TREX1__Membership_Type__c.TREX1__Location__r.id = '$location'";
       }
+
+      $context = __METHOD__;
+      $this->moduleHandler->alter('openy_traction_rec_api_query', $query, $context);
+
       $result = $this->tractionRecClient->executeQuery($query);
       return $this->simplify($result);
     }
