@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\openy_traction_rec;
 
+use Drupal\openy_traction_rec\QueryBuilder\QueryBuilderInterface;
+
 /**
  * TractionRec Client interface.
  */
@@ -22,8 +24,8 @@ interface TractionRecClientInterface {
   /**
    * Make request to Traction Rec.
    *
-   * @param string $query
-   *   SOQL query.
+   * @param \Drupal\openy_traction_rec\QueryBuilder\QueryBuilderInterface $query
+   *   SOQL query object.
    *
    * @return array
    *   Retrieved results from Traction Rec.
@@ -31,7 +33,7 @@ interface TractionRecClientInterface {
    * @throws \GuzzleHttp\Exception\GuzzleException
    * @throws \Drupal\openy_traction_rec\InvalidTokenException
    */
-  public function executeQuery(string $query): array;
+  public function executeQuery(QueryBuilderInterface $query): array;
 
   /**
    * Sends Traction Rec request.
