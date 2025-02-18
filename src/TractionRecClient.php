@@ -7,9 +7,11 @@ namespace Drupal\openy_traction_rec;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\key\KeyRepositoryInterface;
+use Drupal\openy_traction_rec\QueryBuilder\QueryBuilderInterface;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -55,6 +57,11 @@ class TractionRecClient implements TractionRecClientInterface {
   protected KeyRepositoryInterface $keyRepository;
 
   /**
+   * Module handler.
+   */
+  protected ModuleHandlerInterface $moduleHandler;
+
+  /**
    * Client constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -67,13 +74,16 @@ class TractionRecClient implements TractionRecClientInterface {
    *   Logger factory.
    * @param \Drupal\key\KeyRepositoryInterface $keyRepository
    *   The key repository.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time, LoggerChannelFactoryInterface $logger_channel_factory, KeyRepositoryInterface $keyRepository) {
+  public function __construct(ConfigFactoryInterface $config_factory, Client $http, TimeInterface $time, LoggerChannelFactoryInterface $logger_channel_factory, KeyRepositoryInterface $keyRepository, ModuleHandlerInterface $module_handler) {
     $this->tractionRecSettings = $config_factory->get('openy_traction_rec.settings');
     $this->http = $http;
     $this->time = $time;
     $this->logger = $logger_channel_factory->get('traction_rec');
     $this->keyRepository = $keyRepository;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -148,7 +158,7 @@ class TractionRecClient implements TractionRecClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function executeQuery(string $query): array {
+  public function executeQuery(QueryBuilderInterface $query): array {
     $access_token = $this->getAccessToken();
     if (!$access_token) {
       throw new InvalidTokenException('Invalid access token');
@@ -156,9 +166,11 @@ class TractionRecClient implements TractionRecClientInterface {
 
     $query_url = $this->tractionRecSettings->get('services_base_url') . 'query/';
     try {
+      $this->moduleHandler->alter('openy_traction_rec_api_query', $query);
+
       $response = $this->http->request('GET', $query_url, [
         'query' => [
-          'q' => $query,
+          'q' => $query->build(),
         ],
         'headers' => [
           'Authorization' => 'Bearer ' . $access_token,
