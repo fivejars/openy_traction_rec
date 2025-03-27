@@ -192,6 +192,7 @@ class TractionRec implements TractionRecInterface {
       $query->addCondition('TREX1__Course_Option__r.TREX1__End_Date__c', 'TODAY', '>=');
       $query->addCondition('TREX1__Course_Option__r.TREX1__Start_Date__c', 'null', '!=');
       $query->addCondition('TREX1__Course_Session__r.TREX1__Num_Option_Entitlements__c', '1', '<=');
+      $query->addCondition('TREX1__Course_Session__r.TREX1__Available_Online__c', 'true');
 
       if (!empty($locations)) {
         $locations = array_map(function ($location_id) {
