@@ -79,7 +79,7 @@ The main module itself provides only API that helps fetch data from TractionRec.
         - Search for and enable the [System permissions listed below](#salesforce-permissions).
         - Under **Custom Object Permissions**, add **Read** access to the [Objects listed below](#salesforce-permissions).
       - Save those changes.
-4. Create a new **User** with the new Profile or Permission Set:
+5. Create a new **User** with the new Profile or Permission Set:
   - **Setup** > **Users** > **New User**
     - **User License** - The option under which you created the Profile in the previous step, or **Salesforce**.
     - **Email** - A working email that you will use to receive login verifications.
@@ -89,7 +89,7 @@ The main module itself provides only API that helps fetch data from TractionRec.
     - Assign the User to the **Profile** you created above, or a **Permission Set** that has the [necessary permissions](#salesforce-permissions).
       - Under **Permission Set Assignments**, click **Edit Assignments**
       - Find the **Permission Set** you created in the prior step, select it, click **Add**, then **Save**.
-5. Confirm your **Connected App**, **Profile**, and **User** are connected:
+6. Confirm your **Connected App**, **Profile**, and **User** are connected:
    - Go to **Setup** > **Apps** > **Connected Apps** > **Manage Connected Apps** and choose your new app. Assign the **Profile** or **Permission Set** that contains your new user if it does not already show under the relevant section.
      - Click **Manage Profiles** or **Manage Permission Sets**
      - Search for your Profile or Permission Set and Save.
@@ -319,3 +319,9 @@ erDiagram
   Course_Session__c ||--|{ Course_Session_Option__c : ""
   Course_Option__c ||--|{ Course_Session_Option__c : ""
 ```
+
+## Using Google Tag Manager (GTM)
+
+By [integrating Google Tag Manager (GTM) with your Salesforce Community](https://developer.salesforce.com/blogs/2019/04/google-tag-manager-for-community-cloud), you can enable your marketing team to manage the deployment of marketing tags and tracking pixels, without relying on a developer to modify any code.
+
+You may also want to [configure cross-domain tracking](https://ds-docs.y.org/docs/howto/track-users/#cross-domain-tracking) on your Drupal site.
