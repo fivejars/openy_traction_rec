@@ -44,7 +44,7 @@ interface TractionRecInterface {
   /**
    * Loads the list of TractionRec course options.
    *
-   * @param arraystring $locations
+   * @param array $locations
    *   (Optional) Filters course options by TractionRec locations ID's.
    *
    * @return array
@@ -62,6 +62,17 @@ interface TractionRecInterface {
    *   The array of loaded membership types.
    */
   public function loadMemberships(string $location = NULL): array;
+
+  /**
+   * Loads the Total available for Course Options.
+   *
+   * @param array $locations
+   *   (Optional) Filters course options by TractionRec locations ID's.
+   *
+   * @return array
+   *   The list of total available.
+   */
+  public function loadTotalAvailable(array $locations = []): array;
 
   /**
    * Loads results for the next page.

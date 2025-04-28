@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
 use Drupal\openy_traction_rec_import\Cleaner;
 use Drupal\openy_traction_rec_import\Importer;
 use Drupal\openy_traction_rec_import\TractionRecFetcher;
@@ -93,6 +94,8 @@ class OpenyTractionRecImportCommands extends DrushCommands {
    *
    * @option sync Sync source and destination. Delete destination records that
    *   do not exist in the source.
+   * @option update  In addition to processing unprocessed items from the
+   *   source, update previously-imported items with the current data.
    *
    * @return bool
    *   Execution status.
@@ -226,6 +229,76 @@ class OpenyTractionRecImportCommands extends DrushCommands {
     else {
       $this->logger()->notice("Traction Rec data fetched to " . $fetch);
     }
+  }
+
+  /**
+   * Run Traction Rec Total Available sync.
+   *
+   * @command openy-tr:quick-availability-sync
+   * @aliases tr:qas
+   */
+  public function updateTotalAvailable() {
+    if (!$this->tractionRecFetcher->isEnabled()) {
+      $this->logger()->notice($this->t(
+        'The Traction Rec fetcher is not enabled! Enable the fetcher at @settings',
+        [
+          '@settings' =>
+            Url::fromRoute(
+              'openy_traction_rec_import.settings',
+              [],
+              ['absolute' => TRUE])->toString(),
+        ]));
+      return FALSE;
+    }
+
+    $count = 0;
+    $this->logger()->notice("Fetching data from Traction Rec.");
+    $total_available_list = $this->tractionRecFetcher->fetchTotalAvailable();
+
+    $migration_map = \Drupal::database()->select('migrate_map_tr_sessions_import', 'm')
+      ->fields('m', ['sourceid1', 'destid1'])
+      ->execute()
+      ->fetchAllKeyed();
+
+    $nodes_to_update = [];
+    foreach ($total_available_list as $session_id => $total_available_item) {
+      if (!empty($migration_map[$session_id])) {
+        $nodes_to_update[$migration_map[$session_id]] = $total_available_item;
+      }
+    }
+
+    // Process the nodes in batches.
+    $chunk_size = 50;  // You can adjust this batch size as needed.
+    $chunks = array_chunk($nodes_to_update, $chunk_size, TRUE);
+
+    foreach ($chunks as $chunk) {
+      // Get all node IDs in this batch.
+      $nids = array_keys($chunk);
+      // Load nodes in bulk.
+      $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
+
+      foreach ($nodes as $nid => $node) {
+        // Retrieve the corresponding availability info.
+        $total_available_item = $chunk[$nid];
+
+        if ($node instanceof NodeInterface) {
+          // Calculate the total capacity available.
+          // If 'Unlimited_Capacity' is true, set to 100; otherwise, ensure it's at least 0.
+          $total_capacity_available = $total_available_item['Unlimited_Capacity']
+            ? 100
+            : max((int) $total_available_item['Total_Capacity_Available'], 0);
+
+          // Update the necessary fields.
+          $node->set('field_availability', $total_capacity_available);
+          $node->set('waitlist_unlimited_capacity', $total_available_item['Unlimited_Waitlist_Capacity']);
+          $node->set('waitlist_capacity', $total_available_item['Waitlist_Total']);
+          $node->save();
+          $count++;
+        }
+      }
+    }
+    
+    $this->logger()->notice($this->t('Total available data were synced for @count sessions', ['@count' => $count]));
   }
 
 }

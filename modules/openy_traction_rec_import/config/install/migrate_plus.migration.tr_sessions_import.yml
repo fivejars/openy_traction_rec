@@ -45,6 +45,14 @@ source:
       label: Course Rich Description
       selector: /Course_Session/Course/Rich_Description
     -
+      name: course_session_description
+      label: Course Session Description
+      selector: /Course_Session/Description
+    -
+      name: course_session_rich_description
+      label: Course Session Rich Description
+      selector: /Course_Session/Rich_Description
+    -
       name: start_date
       label: 'Start Date'
       selector: /Course_Option/Start_Date
@@ -97,9 +105,17 @@ source:
       label: 'Online registration date(from)'
       selector: /Course_Option/Register_Online_From_Date
     -
+      name: online_registration_time_from
+      label: 'Online registration time(from)'
+      selector: /Course_Option/Register_Online_From_Time
+    -
       name: online_registration_date_to
       label: 'Online registration date(to)'
       selector: /Course_Option/Register_Online_To_Date
+    -
+      name: online_registration_time_to
+      label: 'Online registration time(to)'
+      selector: /Course_Option/Register_Online_To_Time
     -
       name: spots_allowed
       label: 'Spots allowed'
@@ -139,6 +155,8 @@ process:
     source:
       - course_rich_description
       - course_description
+      - course_session_rich_description
+      - course_session_description
   field_availability:
     plugin: tr_availability
     source: spots_available

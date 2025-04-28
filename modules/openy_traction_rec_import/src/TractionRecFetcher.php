@@ -168,8 +168,8 @@ class TractionRecFetcher {
    *
    * @param string $nextUrl
    *   The URL of the next results page.
-   * @param \Drupal\openy_traction_rec_import\JsonStreamDumper $dumper
-   *   Json dumper.
+   * @param \Drupal\openy_traction_rec_import\JsonStreamDumper|NULL $dumper
+   *   (Optional) Json dumper.
    *
    * @return array
    *   The array with fetched data.
@@ -177,14 +177,16 @@ class TractionRecFetcher {
    * @throws \Drupal\openy_traction_rec\InvalidResponseException
    * @throws \Drupal\openy_traction_rec\InvalidTokenException
    */
-  protected function paginationFetch(string $nextUrl, JsonStreamDumper $dumper): array {
+  protected function paginationFetch(string $nextUrl, ?JsonStreamDumper $dumper = NULL): array {
     $result = $this->tractionRec->loadNextPage($nextUrl);
 
     if (empty($result['records'])) {
       return [];
     }
 
-    $dumper->pushMultiple($result['records']);
+    if ($dumper !== NULL) {
+      $dumper->pushMultiple($result['records']);
+    }
 
     if (!empty($result['nextRecordsUrl'])) {
       $result['records'] = array_merge($result['records'], $this->paginationFetch($result['nextRecordsUrl'], $dumper));
@@ -286,6 +288,28 @@ class TractionRecFetcher {
     $this->dumpToJson(array_values($programs), $this->buildFilename('programs'));
     $this->dumpToJson($categories, $this->buildFilename('program_categories'));
     return $result;
+  }
+
+  /**
+   * Fetches total available.
+   */
+  public function fetchTotalAvailable(): array {
+    $result_list = [];
+    $result = $this->tractionRec->loadTotalAvailable($this->locationsMapping->getMappedIds());
+
+    if (empty($result['records'])) {
+      return [];
+    }
+
+    if (!empty($result['nextRecordsUrl'])) {
+      $result['records'] = array_merge($result['records'], $this->paginationFetch($result['nextRecordsUrl']));
+    }
+
+    foreach ($result['records'] as $record) {
+      $result_list[$record['Course_Option']['Id']] = $record['Course_Option'];
+    }
+
+    return $result_list;
   }
 
   /**

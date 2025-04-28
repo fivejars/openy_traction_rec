@@ -24,3 +24,6 @@ Other available `drush` commands:
 
 * `openy-tr:clean-up` - Removes imported JSON files from the filesystem.
   * Alias: `tr:clean-up`
+
+* `openy-tr:quick-availability-sync` - Sync total availability data for sessions.
+  * Alias: `tr:qas`

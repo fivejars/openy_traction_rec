@@ -25,6 +25,11 @@ class SelectQuery implements QueryBuilderInterface {
   protected array $conditions = [];
 
   /**
+   * Custom conditions for the query.
+   */
+  private array $customConditions = [];
+
+  /**
    * {@inheritdoc}
    */
   public function getTable(): string {
@@ -40,12 +45,7 @@ class SelectQuery implements QueryBuilderInterface {
   }
 
   /**
-   * Adds a field to the query.
-   *
-   * @param string $field
-   *   The field name.
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function addField(string $field): SelectQuery {
     $this->fields[] = $field;
@@ -53,16 +53,7 @@ class SelectQuery implements QueryBuilderInterface {
   }
 
   /**
-   * Adds a condition to the query.
-   *
-   * @param string $field
-   *   The field name.
-   * @param string $value
-   *   The value to compare.
-   * @param string $operator
-   *   (Optional) The comparison operator. Defaults to '='.
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function addCondition(string $field, string $value, string $operator = '='): SelectQuery {
     $this->conditions[] = [
@@ -74,17 +65,20 @@ class SelectQuery implements QueryBuilderInterface {
   }
 
   /**
-   * Removes a condition from the query.
-   *
-   * @param string $field
-   *   The field name to remove conditions for.
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function removeCondition(string $field): SelectQuery {
     $this->conditions = array_filter($this->conditions, function ($condition) use ($field) {
       return $condition['field'] !== $field;
     });
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addCustomCondition(string $condition): SelectQuery {
+    $this->customConditions[] = $condition;
     return $this;
   }
 
@@ -105,6 +99,10 @@ class SelectQuery implements QueryBuilderInterface {
       $where[] = "{$condition['field']} {$condition['operator']} {$condition['value']}";
     }
     $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+
+    foreach ($this->customConditions as $custom_condition) {
+      $where .= 'AND ' . $custom_condition;
+    }
 
     // Construct the full query.
     $query = "SELECT $select FROM {$this->table} $where";

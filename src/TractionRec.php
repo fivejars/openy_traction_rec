@@ -176,6 +176,8 @@ class TractionRec implements TractionRecInterface {
       $query->addField('TREX1__Course_Option__r.TREX1__Type__c');
       $query->addField('TREX1__Course_Option__r.TREX1__Unlimited_Capacity__c');
       $query->addField('TREX1__Course_Session__r.id');
+      $query->addField('TREX1__Course_Session__r.TREX1__Description__c');
+      $query->addField('TREX1__Course_Session__r.TREX1__Rich_Description__c');
       $query->addField('TREX1__Course_Session__r.TREX1__Course__r.name');
       $query->addField('TREX1__Course_Session__r.TREX1__Course__r.id');
       $query->addField('TREX1__Course_Session__r.TREX1__Course__r.TREX1__Description__c');
@@ -259,6 +261,40 @@ class TractionRec implements TractionRecInterface {
     }
     catch (InvalidResponseException | InvalidTokenException $e) {
       return $this->processException("Can't load the list of memberships", $e);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadTotalAvailable(array $locations = []): array {
+    try {
+      $query = new SelectQuery();
+      $query->setTable('TREX1__Course_Session_Option__c');
+      $query->addField('TREX1__Course_Option__r.id');
+      $query->addField('TREX1__Course_Option__r.TREX1__Total_Capacity_Available__c');
+      $query->addField('TREX1__Course_Option__r.TREX1__Unlimited_Waitlist_Capacity__c');
+      $query->addField('TREX1__Course_Option__r.TREX1__Waitlist_Total__c');
+      $query->addField('TREX1__Course_Option__r.TREX1__Unlimited_Capacity__c');
+      $query->addCondition('TREX1__Course_Option__r.TREX1__Available_Online__c', 'true');
+      $query->addCondition('TREX1__Course_Option__r.TREX1__Day_of_Week__c', 'null', '!=');
+      $query->addCondition('TREX1__Course_Option__r.TREX1__Register_Online_To_Date__c', 'YESTERDAY', '>');
+      $query->addCondition('TREX1__Course_Option__r.TREX1__End_Date__c', 'TODAY', '>=');
+      $query->addCondition('TREX1__Course_Option__r.TREX1__Start_Date__c', 'null', '!=');
+      $query->addCondition('TREX1__Course_Session__r.TREX1__Available_Online__c', 'true');
+
+      if (!empty($locations)) {
+        $locations = array_map(function ($location_id) {
+          $location_id = '\'' . $location_id . '\'';
+          return $location_id;
+        }, $locations);
+        $query->addCondition('TREX1__Course_Option__r.TREX1__Location__c', '(' . implode(',', $locations) . ')', 'IN');
+      }
+
+      $result = $this->tractionRecClient->executeQuery($query);
+      return $this->simplify($result);
+    } catch (\Exception $e) {
+      return $this->processException("Can't load results for the next page", $e);
     }
   }
 

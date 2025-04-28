@@ -14,7 +14,7 @@ use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Modified version of OpenYPefSchedule for iterator plugin.
+ * Convert data to session_time paragraph.
  *
  * @MigrateProcessPlugin(
  *   id = "tr_session_time"
