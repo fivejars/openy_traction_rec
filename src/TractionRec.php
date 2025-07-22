@@ -7,7 +7,6 @@ namespace Drupal\openy_traction_rec;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
-use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\openy_traction_rec\QueryBuilder\SelectQuery;
 
@@ -29,7 +28,7 @@ class TractionRec implements TractionRecInterface {
   /**
    * Logger channel.
    */
-  protected LoggerChannel $logger;
+  protected LoggerChannelInterface $logger;
 
   /**
    * TractionRec constructor.
