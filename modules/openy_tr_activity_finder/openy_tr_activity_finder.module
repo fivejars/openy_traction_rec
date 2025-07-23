@@ -28,8 +28,8 @@ function openy_tr_activity_finder_activity_finder_program_process_results_alter(
  * Hide past sessions in AF.
  */
 function openy_tr_activity_finder_search_api_query_alter(QueryInterface $query): void {
-  // 'default' index is weird, but such naming is used in the Activity Finder.
-  if ($query->getIndex()->id() == 'default') {
+  $activity_finder_settings = \Drupal::config('openy_activity_finder.settings');
+  if ($query->getIndex()->id() === $activity_finder_settings->get('index')) {
     // Show session in AF only if end date is greater than current.
     $query->addCondition('field_session_time_date_end', time(), '>');
   }
