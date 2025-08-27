@@ -229,10 +229,8 @@ class TractionRec implements TractionRecInterface {
       $query->addField('TREX1__Membership_Type__c.TREX1__Category__r.id');
       $query->addField('TREX1__Membership_Type__c.TREX1__Category__r.name');
       $query->addField('TREX1__Membership_Type__c.TREX1__Category__r.TREX1__Category_Description__c');
-      $query->addField('TREX1__Membership_Type__c.TREX1__Category__r.Membership_Category_URL__c');
       $query->addField('TREX1__Membership_Type__c.TREX1__Location__r.id');
       $query->addField('TREX1__Membership_Type__c.TREX1__Location__r.name');
-      $query->addField('TREX1__Membership_Type__c.TREX1__Location__r.Location_URL_Parameter__c');
       $query->addField('TREX1__Membership_Type__c.TREX1__Product__r.id');
       $query->addField('TREX1__Membership_Type__c.TREX1__Product__r.name');
       $query->addField('TREX1__Membership_Type__c.TREX1__Product__r.TREX1__Price_Description__c');
