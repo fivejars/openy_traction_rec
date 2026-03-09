@@ -153,8 +153,15 @@ class Importer implements TractionRecImporterInterface {
       $migrations = $this->getMigrations();
       foreach ($migrations as $migration) {
         if ($migration->getStatus() == MigrationInterface::STATUS_IDLE) {
+          // Set syncSource directly on the migration to work around a broken
+          // backward-compat in MigrateExecutable constructor
+          // (migrate_tools 6.1.0+).
+          if (!empty($options['sync'])) {
+            $migration->set('syncSource', TRUE);
+          }
+
           // Get an instance of MigrateExecutable.
-          $migrate_executable = new MigrateExecutable($migration, new MigrateMessage(), $options);
+          $migrate_executable = new MigrateExecutable($migration);
 
           // Call the method to execute the migration.
           $migrate_executable->import();

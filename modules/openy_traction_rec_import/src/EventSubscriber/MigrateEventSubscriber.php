@@ -43,17 +43,14 @@ class MigrateEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    // Create new paragraph if data is passed instead of target_id.
+    // Create the paragraph entity in memory — do NOT save it separately.
+    // Passing the entity object (rather than target_id) causes
+    // EntityReferenceRevisionsFieldItemList::preSave() to save it within
+    // the same transaction as the parent node, eliminating the isolated
+    // INSERT that was causing InnoDB deadlocks on paragraphs_item_field_data.
     $paragraph = Paragraph::create($values);
-    $paragraph->isNew();
-    $paragraph->save();
 
-    $values = [
-      'target_id' => $paragraph->id(),
-      'target_revision_id' => $paragraph->getRevisionId(),
-    ];
-
-    $row->setDestinationProperty('field_session_time', $values);
+    $row->setDestinationProperty('field_session_time', $paragraph);
   }
 
 }
