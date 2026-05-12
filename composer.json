@@ -10,7 +10,7 @@
         "ycloudyusa/yusaopeny": "9.* || dev-9.x-2.x || dev-main || *",
         "ycloudyusa/yusaopeny_activity_finder": "^4.0 || *",
         "open-y-subprojects/openy_features": "^1.5 || *",
-        "drush/drush": "^12 || ^11 || ^10",
+        "drush/drush": "^13 || ^12 || ^11 || ^10",
         "drupal/migrate_plus": "^5.2 || ^6",
         "drupal/migrate_tools": "^5.1 || ^6",
         "drupal/key": "^1.15",
