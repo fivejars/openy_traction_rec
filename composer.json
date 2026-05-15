@@ -1,5 +1,5 @@
 {
-    "name": "ycloudyusa/openy_traction_rec",
+    "name": "fivejars/openy_traction_rec",
     "description": "Provides integration with Traction Rec CRM for YMCA Website Services",
     "type": "drupal-module",
     "license": "LGPL-3.0-or-later",
