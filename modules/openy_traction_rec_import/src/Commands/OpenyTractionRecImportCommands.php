@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\openy_traction_rec_import\Commands;
 
 use Consolidation\SiteAlias\SiteAliasManagerAwareTrait;
-use Consolidation\SiteProcess\ProcessManagerAwareTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -22,7 +21,6 @@ use Drush\Drush;
  */
 class OpenyTractionRecImportCommands extends DrushCommands {
 
-  use ProcessManagerAwareTrait;
   use SiteAliasManagerAwareTrait;
   use StringTranslationTrait;
 
@@ -79,8 +77,8 @@ class OpenyTractionRecImportCommands extends DrushCommands {
     $this->entityTypeManager = $entity_type_manager;
     $this->tractionRecFetcher = $tr_fetch;
 
-    $this->siteAliasManager = Drush::service('site.alias.manager');
-    $this->processManager = Drush::processManager();
+    $this->setSiteAliasManager(Drush::service('site.alias.manager'));
+    $this->setProcessManager(Drush::processManager());
   }
 
   /**
@@ -109,7 +107,7 @@ class OpenyTractionRecImportCommands extends DrushCommands {
         "openy_traction_rec_import" module, then enable the syncer at @settings.',
         [
           '@settings' =>
-          Url::fromRoute(
+            Url::fromRoute(
               'openy_traction_rec_import.settings',
               [],
               ['absolute' => TRUE])->toString(),
@@ -212,7 +210,7 @@ class OpenyTractionRecImportCommands extends DrushCommands {
         'The Traction Rec fetcher is not enabled! Enable the fetcher at @settings',
         [
           '@settings' =>
-          Url::fromRoute(
+            Url::fromRoute(
               'openy_traction_rec_import.settings',
               [],
               ['absolute' => TRUE])->toString(),
@@ -297,7 +295,7 @@ class OpenyTractionRecImportCommands extends DrushCommands {
         }
       }
     }
-    
+
     $this->logger()->notice($this->t('Total available data were synced for @count sessions', ['@count' => $count]));
   }
 
