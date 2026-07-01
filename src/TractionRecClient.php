@@ -22,6 +22,11 @@ use GuzzleHttp\Exception\RequestException;
 class TractionRecClient implements TractionRecClientInterface {
 
   /**
+   * Default request timeout in seconds, used if no config value is set.
+   */
+  const DEFAULT_REQUEST_TIMEOUT = 90;
+
+  /**
    * The Traction Rec settings.
    */
   protected ImmutableConfig $tractionRecSettings;
@@ -105,6 +110,7 @@ class TractionRecClient implements TractionRecClientInterface {
     try {
       $response = $this->http->request('POST', $token_url, [
         'form_params' => $post_fields,
+        'timeout' => $this->getRequestTimeout(),
       ]);
     }
     catch (RequestException $e) {
@@ -175,6 +181,7 @@ class TractionRecClient implements TractionRecClientInterface {
         'headers' => [
           'Authorization' => 'Bearer ' . $access_token,
         ],
+        'timeout' => $this->getRequestTimeout(),
       ]);
 
     }
@@ -211,6 +218,7 @@ class TractionRecClient implements TractionRecClientInterface {
       $options['headers'] = [
         'Authorization' => 'Bearer ' . $access_token,
       ];
+      $options['timeout'] = $options['timeout'] ?? $this->getRequestTimeout();
       $response = $this->http->request($method, $url, $options);
     }
     catch (RequestException $e) {
@@ -224,6 +232,17 @@ class TractionRecClient implements TractionRecClientInterface {
     $query_request_body = $response->getBody()->getContents();
 
     return json_decode($query_request_body, TRUE);
+  }
+
+  /**
+   * Returns the configured request timeout, in seconds.
+   *
+   * @return float
+   *   The request timeout.
+   */
+  protected function getRequestTimeout(): float {
+    $timeout = $this->tractionRecSettings->get('api_request_timeout');
+    return is_numeric($timeout) && $timeout > 0 ? (float) $timeout : self::DEFAULT_REQUEST_TIMEOUT;
   }
 
 }

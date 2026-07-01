@@ -6,3 +6,4 @@ private_key: ''
 services_base_url: ''
 community_url: ''
 api_base_url: ''
+api_request_timeout: 90

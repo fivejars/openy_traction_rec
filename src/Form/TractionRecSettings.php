@@ -6,6 +6,7 @@ namespace Drupal\openy_traction_rec\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\openy_traction_rec\TractionRecClient;
 
 /**
  * Settings form for Traction Rec integration.
@@ -88,6 +89,15 @@ class TractionRecSettings extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
+    $form['api_request_timeout'] = [
+      '#type' => 'number',
+      '#title' => $this->t('API request timeout'),
+      '#default_value' => $config->get('api_request_timeout') ?: TractionRecClient::DEFAULT_REQUEST_TIMEOUT,
+      '#description' => $this->t('Timeout, in seconds, for requests to the Salesforce/Traction Rec API. Increase this if fetch operations are failing with cURL timeout errors.'),
+      '#min' => 1,
+      '#required' => TRUE,
+    ];
+
     $form['private_key'] = [
       '#type' => 'key_select',
       '#key_filters' => ['type' => 'openy_tr_private_key'],
@@ -114,6 +124,7 @@ class TractionRecSettings extends ConfigFormBase {
     $config->set('services_base_url', $form_state->getValue('services_base_url'));
     $config->set('community_url', $form_state->getValue('community_url'));
     $config->set('api_base_url', $form_state->getValue('api_base_url'));
+    $config->set('api_request_timeout', $form_state->getValue('api_request_timeout'));
     $config->save();
 
     parent::submitForm($form, $form_state);
