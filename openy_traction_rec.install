@@ -1,0 +1,18 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Install and update hooks.
+ */
+
+/**
+ * Set a default value for the new API request timeout setting.
+ */
+function openy_traction_rec_update_9101(): void {
+  $config = \Drupal::configFactory()->getEditable('openy_traction_rec.settings');
+  if ($config->get('api_request_timeout') === NULL) {
+    $config->set('api_request_timeout', 90)->save();
+  }
+}
