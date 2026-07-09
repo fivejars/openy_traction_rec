@@ -174,13 +174,13 @@ class TractionRec implements TractionRecInterface {
       $query->addField('TREX1__Course_Option__r.TREX1__Total_Capacity_Available__c');
       $query->addField('TREX1__Course_Option__r.TREX1__Type__c');
       $query->addField('TREX1__Course_Option__r.TREX1__Unlimited_Capacity__c');
-      $query->addField('TREX1__Course_Session__r.id');
-      $query->addField('TREX1__Course_Session__r.TREX1__Description__c');
-      $query->addField('TREX1__Course_Session__r.TREX1__Rich_Description__c');
-      $query->addField('TREX1__Course_Session__r.TREX1__Course__r.name');
-      $query->addField('TREX1__Course_Session__r.TREX1__Course__r.id');
-      $query->addField('TREX1__Course_Session__r.TREX1__Course__r.TREX1__Description__c');
-      $query->addField('TREX1__Course_Session__r.TREX1__Course__r.TREX1__Rich_Description__c');
+      $query->addField('TREX1__cso_Course_Session__r.id');
+      $query->addField('TREX1__cso_Course_Session__r.TREX1__Description__c');
+      $query->addField('TREX1__cso_Course_Session__r.TREX1__Rich_Description__c');
+      $query->addField('TREX1__cso_Course_Session__r.TREX1__Course__r.name');
+      $query->addField('TREX1__cso_Course_Session__r.TREX1__Course__r.id');
+      $query->addField('TREX1__cso_Course_Session__r.TREX1__Course__r.TREX1__Description__c');
+      $query->addField('TREX1__cso_Course_Session__r.TREX1__Course__r.TREX1__Rich_Description__c');
       $query->addField('TREX1__Course_Option__r.TREX1__Product__c');
       $query->addField('TREX1__Course_Option__r.TREX1__Product__r.id');
       $query->addField('TREX1__Course_Option__r.TREX1__Product__r.name');
@@ -192,8 +192,8 @@ class TractionRec implements TractionRecInterface {
       $query->addCondition('TREX1__Course_Option__r.TREX1__Register_Online_To_Date__c', 'YESTERDAY', '>');
       $query->addCondition('TREX1__Course_Option__r.TREX1__End_Date__c', 'TODAY', '>=');
       $query->addCondition('TREX1__Course_Option__r.TREX1__Start_Date__c', 'null', '!=');
-      $query->addCondition('TREX1__Course_Session__r.TREX1__Num_Option_Entitlements__c', '1', '<=');
-      $query->addCondition('TREX1__Course_Session__r.TREX1__Available_Online__c', 'true');
+      $query->addCondition('TREX1__cso_Course_Session__r.TREX1__Num_Option_Entitlements__c', '1', '<=');
+      $query->addCondition('TREX1__cso_Course_Session__r.TREX1__Available_Online__c', 'true');
 
       if (!empty($locations)) {
         $locations = array_map(function ($location_id) {
@@ -278,7 +278,7 @@ class TractionRec implements TractionRecInterface {
       $query->addCondition('TREX1__Course_Option__r.TREX1__Register_Online_To_Date__c', 'YESTERDAY', '>');
       $query->addCondition('TREX1__Course_Option__r.TREX1__End_Date__c', 'TODAY', '>=');
       $query->addCondition('TREX1__Course_Option__r.TREX1__Start_Date__c', 'null', '!=');
-      $query->addCondition('TREX1__Course_Session__r.TREX1__Available_Online__c', 'true');
+      $query->addCondition('TREX1__cso_Course_Session__r.TREX1__Available_Online__c', 'true');
 
       if (!empty($locations)) {
         $locations = array_map(function ($location_id) {
@@ -321,7 +321,7 @@ class TractionRec implements TractionRecInterface {
   protected function simplify(array $array): array {
     $new_array = [];
     foreach ($array as $key => $value) {
-      $new_key = str_replace(['TREX1__', '__c', '__r'], '', (string) $key);
+      $new_key = str_replace(['TREX1__', 'cso_', '__c', '__r'], '', (string) $key);
       if ($new_key === 'attributes') {
         continue;
       }
